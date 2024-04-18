@@ -13,7 +13,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item active"><a href="{{ route('user') }}">User</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('admin.user') }}">User</a></li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -29,7 +29,7 @@
 
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ route('user.create') }}">
+                                <a href="{{ route('admin.user.create') }}">
                                     <button class="btn bg-gradient-primary">Tambah pegawai</button>
                                 </a>
                             </div>
@@ -61,7 +61,7 @@
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <a href="{{ route('user.edit', ['id' => $d->id]) }}">
+                                                            <a href="{{ route('admin.user.edit', ['id' => $d->id]) }}">
                                                                 <button type="button"
                                                                     class="btn btn-sm btn-primary btn-block"><i
                                                                         class="fa fa-pen"></i> Edit</button>
@@ -95,7 +95,8 @@
                                                             </p>
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
-                                                            <form action="{{ route('user.delete', ['id' => $d->id]) }}"
+                                                            <form
+                                                                action="{{ route('admin.user.delete', ['id' => $d->id]) }}"
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -106,7 +107,7 @@
                                                                     </div>
                                                                     <div class="col">
                                                                         <button type="submit"
-                                                                            class="btn btn-primary">Hapus</button>
+                                                                            class="btn btn-danger">Hapus</button>
                                                                     </div>
                                                                 </div>
                                                             </form>

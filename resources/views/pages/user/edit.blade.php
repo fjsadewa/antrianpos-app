@@ -11,7 +11,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('user') }}">User</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.user') }}">User</a></li>
                             <li class="breadcrumb-item active">Edit User</li>
                         </ol>
                     </div><!-- /.col -->
@@ -23,7 +23,7 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <form action=" {{ route('user.update', ['id' => $data->id]) }}" method="POST">
+                <form action=" {{ route('admin.user.update', ['id' => $data->id]) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -41,25 +41,28 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Nama</label>
                                             <input name="nama" value="{{ $data->name }}" type="text"
-                                                class="form-control" id="exampleInputEmail1" placeholder="Enter name">
+                                                class="form-control @error('nama')is-invalid @enderror"
+                                                id="exampleInputEmail1" placeholder="Enter name">
                                             @error('nama')
-                                                <small>{{ $message }}</small>
+                                                <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Email address</label>
                                             <input name="email" value="{{ $data->email }}" type="email"
-                                                class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                                                class="form-control @error('email')is-invalid @enderror"
+                                                id="exampleInputEmail1" placeholder="Enter email">
                                             @error('email')
-                                                <small>{{ $message }}</small>
+                                                <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputPassword1">Password</label>
-                                            <input name="password" type="password" class="form-control"
+                                            <input name="password" type="password"
+                                                class="form-control @error('password')is-invalid @enderror"
                                                 id="exampleInputPassword1" placeholder="Password">
                                             @error('password')
-                                                <small>{{ $message }}</small>
+                                                <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>

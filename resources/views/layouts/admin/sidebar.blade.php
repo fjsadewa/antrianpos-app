@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-light-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{{ route('dashboard') }}" class="brand-link">
+    <a href="{{ route('admin.dashboard') }}" class="brand-link">
         <img src="{{ url('gambar/Pos-Ind.png') }}" alt="POS Logo" class="brand-image" style="opacity: .8">
         <span class="brand-text font-weight-medium">POS INDONESIA</span>
     </a>
@@ -14,7 +14,7 @@
                 data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link ">
+                    <a href="{{ route('admin.dashboard') }}" class="nav-link ">
                         <i class="nav-icon fas fa-solid fa-clipboard"></i>
                         <p>
                             Dashboard
@@ -22,10 +22,18 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('user') }}" class="nav-link">
+                    <a href="{{ route('admin.user') }}" class="nav-link">
                         <i class="nav-icon fas fa-solid fa-users"></i>
                         <p>
                             Petugas Loket
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('logout') }}" class="nav-link">
+                        <i class="nav-icon fas fa-solid fa-users"></i>
+                        <p>
+                            Logout
                         </p>
                     </a>
                 </li>

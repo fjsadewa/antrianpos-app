@@ -83,4 +83,12 @@ class HomeController extends Controller
 
         return redirect()->route('user');
     }
+
+    public function display(){
+        return view('pages.display');
+    }
+
+    public function form(){
+        return view('pages.form');
+    }
 }

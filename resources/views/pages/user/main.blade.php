@@ -38,7 +38,7 @@
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
+                                            <th>No</th>
                                             <th>Nama Panggilan</th>
                                             <th>Email</th>
                                             <th>Username</th>
@@ -68,13 +68,55 @@
                                                             </a>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-danger btn-block"><i
-                                                                    class="fa fa-trash"></i> hapus</button>
+                                                            <a data-toggle="modal"
+                                                                data-target="#modal-hapus{{ $d->id }}">
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-danger btn-block"><i
+                                                                        class="fa fa-trash"></i> hapus</button>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </td>
                                             </tr>
+
+                                            <div class="modal fade" id="modal-hapus{{ $d->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Konfirmasi Hapus Data</h4>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Apakah kamu yakin ingin menghapus data
+                                                                <b>{{ $d->name }}</b> ?
+                                                            </p>
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <form action="{{ route('user.delete', ['id' => $d->id]) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <button type="button" class="btn btn-default"
+                                                                            data-dismiss="modal">Batal</button>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <button type="submit"
+                                                                            class="btn btn-primary">Hapus</button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <!-- /.modal -->
                                         @endforeach
 
                                     </tbody>

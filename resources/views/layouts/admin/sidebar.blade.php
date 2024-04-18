@@ -29,10 +29,29 @@
                         </p>
                     </a>
                 </li>
+
+                <li class="nav-header">Tampilan</li>
+                <li class="nav-item">
+                    <a href="{{ route('display') }}" class="nav-link">
+                        <i class="nav-icon fas fa-tv"></i>
+                        <p>
+                            Tampilan Utama
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('form') }}" class="nav-link">
+                        <i class="nav-icon fas fa-columns"></i>
+                        <p>
+                            Tampilan Formulir
+                        </p>
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a href="{{ route('logout') }}" class="nav-link">
-                        <i class="nav-icon fas fa-sign-out-alt" ></i>
-                        <p >
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p>
                             Logout
                         </p>
                     </a>
@@ -50,23 +69,6 @@
                         <i class="nav-icon fas fa-solid fa-book"></i>
                         <p>
                             Riwayat Antrian
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-header">Tampilan</li>
-                <li class="nav-item">
-                    <a href="{{ route('display') }}" class="nav-link">
-                        <i class="nav-icon fas fa-tv"></i>
-                        <p>
-                            Tampilan Utama
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('form') }}" class="nav-link">
-                        <i class="nav-icon fas fa-columns"></i>
-                        <p>
-                            Tampilan Formulir
                         </p>
                     </a>
                 </li>

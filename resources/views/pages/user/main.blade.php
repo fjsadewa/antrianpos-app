@@ -39,9 +39,9 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Photo</th>
                                             <th>Nama Panggilan</th>
                                             <th>Email</th>
-                                            <th>Username</th>
                                             <th>Nomer Loket</th>
                                             <th>Jenis Pelayanan</th>
                                             <th>Role</th>
@@ -52,9 +52,10 @@
                                         @foreach ($data as $d)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
+                                                <td><img src="{{ asset('storage/photo-profile/' . $d->image) }}"
+                                                        alt="" width="50"></td>
                                                 <td>{{ $d->name }}</td>
                                                 <td>{{ $d->email }}</td>
-                                                <td>-</td>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td>-</td>

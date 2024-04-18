@@ -61,9 +61,11 @@
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-primary btn-block"><i
-                                                                    class="fa fa-pen"></i> Edit</button>
+                                                            <a href="{{ route('user.edit', ['id' => $d->id]) }}">
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-primary btn-block"><i
+                                                                        class="fa fa-pen"></i> Edit</button>
+                                                            </a>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <button type="button"

@@ -43,4 +43,34 @@ class HomeController extends Controller
 
         return redirect()->route('user.create');
     }
+
+    public function edit(Request $request,$id){
+        $data = User::find($id);
+
+        return view ('pages.user.edit',compact('data'));
+    }
+
+    public function update(Request $request,$id){
+        //melakukan validasi terhadap data yang di inputkan 
+        $validator = Validator::make($request->all(),[                    
+        'nama'      => 'required',
+        'email'     => 'required|email',
+        'password'  => 'nullable',
+        ]);
+        
+        //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
+        if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
+        
+        //mengirimkan data ke database
+        $data['name']       = $request->nama;
+        $data['email']      = $request->email;
+        if($request->password){
+            $data['password']   = Hash::make($request->password);
+        }
+
+        //mengirim perintah create ke database
+        User::whereId($id)->update($data);
+
+        return redirect()->route('user');
+    }
 }

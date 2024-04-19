@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CounterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
@@ -23,3 +24,6 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     
     Route::delete('/delete/{id}',[HomeController::class,'delete'])->name('user.delete');
 });
+
+
+Route::get('/counter',[CounterController::class,'dashboardCounter'])->name('dashboardCounter');

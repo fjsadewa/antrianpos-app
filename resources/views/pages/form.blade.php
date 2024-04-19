@@ -52,9 +52,9 @@
                                         style="width: 90px; height:90px">
                                 </i>
                             </div>
-                            <a class="small-box-footer"id="antrian-PENDAFTARAN" data-id-antrian="5">
+                            {{-- <a class="small-box-footer"id="antrian-PENDAFTARAN" data-id-antrian="5">
                                 Print <i class="fas fa-arrow-circle-right"></i>
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                     <div class="col col-12">
@@ -71,9 +71,9 @@
                                         style="width: 90px; height:90px">
                                 </i>
                             </div>
-                            <a class="small-box-footer"id="antrian-informasi" data-id-antrian="21">
+                            {{-- <a class="small-box-footer"id="antrian-informasi" data-id-antrian="21">
                                 Print <i class="fas fa-arrow-circle-right"></i>
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                     <div class="col col-12">
@@ -89,9 +89,9 @@
                                         style="width: 90px; height:90px">
                                 </i>
                             </div>
-                            <a class="small-box-footer"id="antrian-Online" data-id-antrian="22">
+                            {{-- <a class="small-box-footer"id="antrian-Online" data-id-antrian="22">
                                 Print <i class="fas fa-arrow-circle-right"></i>
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                     <div class="col col-12">
@@ -107,9 +107,9 @@
                                         style="width: 90px; height:90px">
                                 </i>
                             </div>
-                            <a class="small-box-footer"id="antrian-Pendataan" data-id-antrian="24">
+                            {{-- <a class="small-box-footer"id="antrian-Pendataan" data-id-antrian="24">
                                 Print <i class="fas fa-arrow-circle-right"></i>
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                 </div>

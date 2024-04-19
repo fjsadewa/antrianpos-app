@@ -62,13 +62,9 @@
         <script src="{{ asset('lte/plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
         <!-- ChartJS -->
         <script src="{{ asset('lte/plugins/chart.js/Chart.min.js') }}"></script>
-        <!-- Get Name File -->
-        <script type="application/javascript">
-            $('input[type="file"]').change(function(e){
-                var fileName = e.target.files[0].name;
-                $('.custom-file-label').html(fileName);
-            });
-        </script>
+
+        @yield('script')
+        
     </body>
 
 </html>

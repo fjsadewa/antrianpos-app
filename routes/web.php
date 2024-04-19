@@ -11,8 +11,6 @@ Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 Route::get('/display',[HomeController::class,'display'])->name('display');
 Route::get('/form',[HomeController::class,'form'])->name('form');
 
-
-
 Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], function(){
     Route::get('/dashboard',[HomeController::class,'dashboard'])->name('dashboard');
     Route::get('/user',[HomeController::class,'user'])->name('user');

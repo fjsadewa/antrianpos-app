@@ -30,7 +30,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <a href="{{ route('admin.user.create') }}">
-                                    <button class="btn bg-gradient-primary">Tambah pegawai</button>
+                                    <button class="btn bg-gradient-primary">Tambah Pengguna</button>
                                 </a>
                             </div>
                             <!-- /.card-header -->

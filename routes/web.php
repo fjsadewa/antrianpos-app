@@ -25,5 +25,6 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     Route::delete('/delete/{id}',[HomeController::class,'delete'])->name('user.delete');
 });
 
-
-Route::get('/counter',[CounterController::class,'dashboardCounter'])->name('dashboardCounter');
+Route::group(['prefix'=>'counter','middleware'=> ['auth'],'as'=> 'counter.'], function(){
+    Route::get('/counterdashboard',[CounterController::class,'dashboardCounter'])->name('dashboardCounter');
+});

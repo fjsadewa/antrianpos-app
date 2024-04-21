@@ -25,7 +25,16 @@ class LoginController extends Controller
         ];
 
         if (Auth::attempt($data)){
-            return redirect()->route('admin.dashboard');
+            $user = auth()->user();
+            $role = $user->roles->first();
+
+            if($role-> name === 'admin'){
+                return redirect()->route('admin.dashboard');
+            } elseif ($role-> name === 'employee') {
+                return redirect()->route('counter.dashboardCounter');
+            } else{
+                return redirect()->route('login')->with('failed','Anda tidak memiliki Akses');
+            }
         }else{
             return redirect()->route('login')->with('failed','Email atau password salah');
         };

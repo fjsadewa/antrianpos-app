@@ -26,5 +26,5 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
 });
 
 Route::group(['prefix'=>'counter','middleware'=> ['auth'],'as'=> 'counter.'], function(){
-    Route::get('/counterdashboard',[CounterController::class,'dashboardCounter'])->name('dashboardCounter');
+    Route::get('/dashboardCounter',[CounterController::class,'dashboardCounter'])->name('dashboardCounter');
 });

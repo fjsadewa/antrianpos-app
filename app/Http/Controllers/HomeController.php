@@ -16,7 +16,7 @@ class HomeController extends Controller
     }
 
     public function dashboard(){
-        return view ('pages.dashboard');
+        return view ('pages.user.dashboard');
     }
 
     public function user(){
@@ -115,5 +115,7 @@ class HomeController extends Controller
         return redirect()->route('admin.user');
     }
 
-
+    public function displaySetting(){
+        return view('pages.setting.displayset');
+    }
 }

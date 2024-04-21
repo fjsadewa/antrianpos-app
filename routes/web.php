@@ -24,6 +24,8 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     Route::put('/update/{id}',[HomeController::class,'update'])->name('user.update');
     
     Route::delete('/delete/{id}',[HomeController::class,'delete'])->name('user.delete');
+
+    Route::get('/displaysetting',[HomeController::class,'displaySetting'])->name('displaysetting');
 });
 
 Route::group(['prefix'=>'counter','middleware'=> ['auth'],'as'=> 'counter.'], function(){

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CounterController;
+use App\Http\Controllers\DisplayController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
@@ -9,8 +10,8 @@ Route::get('/login',[LoginController::class,'login'])->name('login');
 Route::post('/login_process',[LoginController::class,'login_process'])->name('login_process');
 Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 
-Route::get('/display',[HomeController::class,'display'])->name('display');
-Route::get('/form',[HomeController::class,'form'])->name('form');
+Route::get('/display',[DisplayController::class,'display'])->name('display');
+Route::get('/form',[DisplayController::class,'form'])->name('form');
 
 Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], function(){
     Route::get('/dashboard',[HomeController::class,'dashboard'])->name('dashboard');

@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
+
+    public function __construct(){
+    $this->middleware(['role:admin','permission:view_admin']);
+    }
+
     public function dashboard(){
         return view ('pages.dashboard');
     }
@@ -93,11 +98,5 @@ class HomeController extends Controller
         return redirect()->route('admin.user');
     }
 
-    public function display(){
-        return view('pages.display');
-    }
 
-    public function form(){
-        return view('pages.form');
-    }
 }

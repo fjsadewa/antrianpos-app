@@ -27,11 +27,12 @@ class LoginController extends Controller
         if (Auth::attempt($data)){
             $user = auth()->user();
             $role = $user->roles->first();
+            $userId = $user->id;
 
             if($role-> name === 'admin'){
                 return redirect()->route('admin.dashboard');
             } elseif ($role-> name === 'employee') {
-                return redirect()->route('counter.dashboardCounter');
+                return redirect()->route('counter.dashboardCounter',['id'=>$userId]);
             } else{
                 return redirect()->route('login')->with('failed','Anda tidak memiliki Akses');
             }

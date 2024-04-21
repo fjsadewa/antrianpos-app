@@ -23,7 +23,8 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <form action=" {{ route('admin.user.update', ['id' => $data->id]) }}" method="POST">
+                <form action=" {{ route('admin.user.update', ['id' => $data->id]) }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -65,6 +66,33 @@
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
                                         </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputFile">Photo Profile</label>
+                                            <div class="input-group">
+                                                <div class="col-md-1">
+                                                    @if ($data->image)
+                                                        <img src="{{ asset('storage/photo-profile/' . $data->image) }}"
+                                                            alt="" width="100%">
+                                                    @endif
+                                                </div>
+                                                <div class="col-md-11" style="align-content: center">
+                                                    <div class="custom-file">
+                                                        <input name="photo" type="file"
+                                                            class="custom-file-input @error('photo')is-invalid @enderror"
+                                                            id="exampleInputFile">
+                                                        <label class="custom-file-label" for="exampleInputFile">Choose
+                                                            File</label>
+                                                        <span>
+                                                            <p> *Tambahkan file baru jika ingin mengganti foto</p>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @error('photo')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+
                                     </div>
                                     <!-- /.card-body -->
 
@@ -83,4 +111,14 @@
         </section>
         <!-- /.content -->
     </div>
+@endsection
+
+@section('script')
+    <!-- Get Name File -->
+    <script type="application/javascript">
+        $('input[type="file"]').change(function(e){
+            var fileName = e.target.files[0].name;
+            $('.custom-file-label').html(fileName);
+        });
+    </script>
 @endsection

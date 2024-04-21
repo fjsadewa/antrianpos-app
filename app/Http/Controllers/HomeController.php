@@ -70,11 +70,13 @@ class HomeController extends Controller
         'nama'      => 'required',
         'email'     => 'required|email',
         'password'  => 'nullable',
+        'photo'     => 'required|mimes:png,jpg,jpeg|max:2048'
         ]);
         
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
         
+        $find = User::find($id);
         //mengirimkan data ke database
         $data['name']       = $request->nama;
         $data['email']      = $request->email;
@@ -82,8 +84,23 @@ class HomeController extends Controller
             $data['password']   = Hash::make($request->password);
         }
 
+        $photo      = $request->file('photo');
+        if ($photo) {
+            $filename   = date('y-m-d').$photo->getClientOriginalName();
+            $path       = 'photo-profile/'.$filename;
+            
+            if ($find->image) {
+                Storage::disk('public')->delete('photo-profile/'.$find->image);
+            }
+            Storage::disk('public')->put($path,file_get_contents($photo));
+
+            $data ['image']     = $filename;
+        }
+
+        
+
         //mengirim perintah create ke database
-        User::whereId($id)->update($data);
+        $find->update($data);
 
         return redirect()->route('admin.user');
     }

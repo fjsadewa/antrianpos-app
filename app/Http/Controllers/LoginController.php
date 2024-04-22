@@ -32,7 +32,7 @@ class LoginController extends Controller
             if($role-> name === 'admin'){
                 return redirect()->route('admin.dashboard');
             } elseif ($role-> name === 'employee') {
-                return redirect()->route('counter.dashboardCounter',['id'=>$userId]);
+                return redirect()->route('employee.dashboardEmployee',['id'=>$userId]);
             } else{
                 return redirect()->route('login')->with('failed','Anda tidak memiliki Akses');
             }

@@ -47,30 +47,24 @@
                         </p>
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a href="{{ route('counter') }}" class="nav-link">
+
+                <li class="nav-header">Antrian</li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.category') }}" class="nav-link">
                         <i class="nav-icon fas fa-solid fa-store"></i>
                         <p>
-                            Kategori Loket
+                            Kategori Pelayanan
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('history') }}" class="nav-link">
-                        <i class="nav-icon fas fa-solid fa-book"></i>
+                    <a href="{{ route('admin.counter') }}" class="nav-link">
+                        <i class="nav-icon fas fa-solid fa-store"></i>
                         <p>
-                            Riwayat Antrian
+                            Loket
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('displaycounter') }}" class="nav-link">
-                        <i class="nav-icon fas fa-desktop"></i>
-                        <p>
-                            Tampilan Loket
-                        </p>
-                    </a>
-                </li> --}}
                 <li class="nav-header"> Pengaturan </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.displaysetting') }}" class="nav-link">
@@ -88,6 +82,14 @@
                         </p>
                     </a>
                 </li>
+                {{-- <li class="nav-item">
+                    <a href="{{ route('history') }}" class="nav-link">
+                        <i class="nav-icon fas fa-solid fa-book"></i>
+                        <p>
+                            Riwayat Antrian
+                        </p>
+                    </a>
+                </li> --}}
                 <div class="dropdown-divider"></div>
                 <li class="nav-item">
                     <a href="{{ route('logout') }}" class="nav-link">

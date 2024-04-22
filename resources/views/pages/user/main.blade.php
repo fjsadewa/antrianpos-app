@@ -1,7 +1,5 @@
 @extends('layouts.admin.main')
 
-@section('title', 'Daftar Petugas Loket')
-
 @section('content')
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -136,6 +134,4 @@
         </section>
         <!-- /.content -->
     </div>
-
-
 @endsection

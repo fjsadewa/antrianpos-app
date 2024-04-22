@@ -14,7 +14,7 @@
                 data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{{ route('admin.dashboard') }}" class="nav-link ">
+                    <a href="{{ route('employee.dashboardEmployee', ['id' => $data->id]) }}" class="nav-link ">
                         <i class="nav-icon fas fa-solid fa-clipboard"></i>
                         <p>
                             Dashboard

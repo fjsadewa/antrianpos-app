@@ -28,18 +28,18 @@
             </div>
 
             <!-- Navbar -->
-            @include('layouts.counter.navbar')
+            @include('layouts.employee.navbar')
             <!-- /.navbar -->
 
             <!-- Main Sidebar Container -->
-            @include('layouts.counter.sidebar')
+            @include('layouts.employee.sidebar')
 
             <!-- Content Wrapper. Contains page content -->
             @yield('content')
             <!-- /.content-wrapper -->
 
             <!-- Main Footer -->
-            @include('layouts.counter.footer')
+            @include('layouts.employee.footer')
 
         </div>
         <!-- ./wrapper -->

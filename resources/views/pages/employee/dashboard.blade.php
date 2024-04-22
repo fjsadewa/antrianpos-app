@@ -1,4 +1,4 @@
-@extends('layouts.counter.main')
+@extends('layouts.employee.main')
 
 @section('title', 'Dashboard Loket - Pos Indonesia')
 

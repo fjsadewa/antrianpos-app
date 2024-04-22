@@ -7,15 +7,11 @@ use Illuminate\Http\Request;
 
 class CounterController extends Controller
 {
+    public function category (){
+        return view ('pages.categories.main');
+    }
 
-    public function __construct(){
-        $this->middleware(['role_or_permission:employee|view_admin']);
-        }
-
-    public function dashboardCounter(Request $request,$id){ 
-
-        $data = User::find($id);
-
-        return view ('pages.counter.dashboard',compact('data'));
+    public function counter (){
+        return view ('pages.counter.main');
     }
 }

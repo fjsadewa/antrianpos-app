@@ -12,7 +12,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('admin.category') }}">Kategori Pelayanan</a></li>
-                            <li class="breadcrumb-item active">Edit Kategori</li>
+                            <li class="breadcrumb-item active">Tambah Kategori</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -23,16 +23,15 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <form action=" {{ route('admin.category.update', ['id' => $data_category->id]) }}" method="POST">
+                <form action="{{ route('admin.category.store') }}" method="POST">
                     @csrf
-                    @method('PUT')
                     <div class="row">
                         <!-- left column -->
                         <div class="col-md-12">
                             <!-- general form elements -->
                             <div class="card card-primary">
                                 <div class="card-header">
-                                    <h3 class="card-title">Form Tambah User</h3>
+                                    <h3 class="card-title">Formulir Tambah Kategori Pelayanan</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
@@ -41,7 +40,6 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Kode Pelayanan</label>
                                             <input name="kode_pelayanan" type="text"
-                                                value="{{ $data_category->kode_pelayanan }}"
                                                 class="form-control @error('kode_pelayanan')is-invalid @enderror"
                                                 id="exampleInputEmail1" placeholder="Contoh: A">
                                             @error('kode_pelayanan')
@@ -51,7 +49,6 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Nama Pelayanan</label>
                                             <input name="nama_pelayanan" type="text"
-                                                value="{{ $data_category->nama_pelayanan }}"
                                                 class="form-control @error('nama_pelayanan')is-invalid @enderror"
                                                 id="exampleInputEmail1" placeholder="Contoh: Customer Service">
                                             @error('nama_pelayanan')
@@ -60,16 +57,14 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Deskripsi</label>
-                                            <textarea name="deskripsi" type="text" value="{{ $data_category->deskripsi }}"
-                                                class="form-control @error('password')is-invalid @enderror" rows="3" placeholder="Masukkan Deskripsi"></textarea>
+                                            <textarea name="deskripsi" class="form-control @error('password')is-invalid @enderror" type="text" rows="3"
+                                                placeholder="Masukkan Deskripsi"></textarea>
                                             @error('password')
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
                                         </div>
-
                                     </div>
                                     <!-- /.card-body -->
-
                                     <div class="card-footer">
                                         <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>

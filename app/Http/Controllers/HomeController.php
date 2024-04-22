@@ -97,23 +97,36 @@ class HomeController extends Controller
             $data ['image']     = $filename;
         }
 
-        
-
         //mengirim perintah create ke database
-        $find->update($data);
 
-        return redirect()->route('admin.user');
+        $data = User::find($id);
+
+        if($data){
+            if($data->update()){
+                return redirect()->route('admin.user')->with('success','Berhasil Melakukan Update! ');
+            } else {
+                return redirect()->route('admin.user')->with('failed','Update gagal Gagal');
+            }
+        }else {
+        return redirect()->route('admin.user')->with('warning', 'User dengan ID tersebut tidak ditemukan');
+        }
+
     }
 
     public function delete(Request $request,$id){
         $data = User::find($id);
 
         if($data){
-            $data->delete();
+            if($data->delete()){
+                return redirect()->route('admin.user')->with('success','User berhasil dihapus');
+            } else {
+                return redirect()->route('admin.user')->with('failed','Penghapusan Gagal');
+            }
+        }else {
+            return redirect()->route('admin.user')->with('warning', 'User dengan ID tersebut tidak ditemukan');
         }
-
-        return redirect()->route('admin.user');
     }
+
 
     public function displaySetting(){
         return view('pages.setting.displayset');

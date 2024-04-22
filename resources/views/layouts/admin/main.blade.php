@@ -62,9 +62,22 @@
         <script src="{{ asset('lte/plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
         <!-- ChartJS -->
         <script src="{{ asset('lte/plugins/chart.js/Chart.min.js') }}"></script>
+        <!-- SweetAlert -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         @yield('script')
-        
+
+        @if ($message = Session::get('failed'))
+            <script>
+                Swal.fire('{{ $message }}');
+            </script>
+        @endif
+        @if ($message = Session::get('success'))
+            <script>
+                Swal.fire('{{ $message }}');
+            </script>
+        @endif
+
     </body>
 
 </html>

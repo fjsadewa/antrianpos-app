@@ -20,15 +20,18 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     
     Route::get('/create',[HomeController::class,'createUser'])->name('user.create');
     Route::post('/store',[HomeController::class,'store'])->name('user.store');
-    
     Route::get('/edit/{id}',[HomeController::class,'edit'])->name('user.edit');
     Route::put('/update/{id}',[HomeController::class,'update'])->name('user.update');
-    
     Route::delete('/delete/{id}',[HomeController::class,'delete'])->name('user.delete');
-
+    
     Route::get('/displaysetting',[HomeController::class,'displaySetting'])->name('displaysetting');
     
     Route::get('/category',[CounterController::class,'category'])->name('category');
+    Route::get('/createCategory',[CounterController::class,'createCategory'])->name('category.create');
+    Route::post('/storeCategory',[CounterController::class,'storeCategory'])->name('category.store');
+    Route::get('/editCategory/{id}',[CounterController::class,'editCategory'])->name('category.edit');
+    Route::put('/updateCategory/{id}',[CounterController::class,'updateCategory'])->name('category.update');
+    Route::delete('/deleteCategory/{id}',[CounterController::class,'deleteCategory'])->name('category.delete');
 
     Route::get('/counter',[CounterController::class,'counter'])->name('counter');
 

@@ -5,30 +5,35 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Antrian extends Model
+class antrian extends Model
 {
     use HasFactory;
 
     protected $table = 'antrian';
 
     protected $fillable = [
-        'nomor_antrian',
-        'kategori_pelayanan_id',
-        'status',
-        'waktu_daftar',
-        'waktu_panggilan',
-        'waktu_selesai',
-        'nomor_loket',
-        'user_id',
+        'id_kategori_layanan',
+        'nomor_urut',
+        'status_antrian',
+        'id_loket_panggil',
+        'waktu_panggil',
+        'id_loket_layani',
+        'waktu_mulai_layani',
+        'waktu_selesai_layani',
     ];
 
-    public function kategoriPelayanan()
+    public function kategoriLayanan()
     {
-        return $this->belongsTo(KategoriPelayanan::class);
+        return $this->belongsTo(KategoriPelayanan::class, 'id_kategori_layanan');
     }
 
-    public function petugas()
+    public function loketPanggil()
     {
-        return $this->belongsTo(User::class, 'petugas_id');
+        return $this->belongsTo(Loket::class, 'id_loket_panggil');
+    }
+
+    public function loketLayani()
+    {
+        return $this->belongsTo(Loket::class, 'id_loket_layani');
     }
 }

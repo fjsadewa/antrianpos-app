@@ -56,7 +56,13 @@
                                                 <td>{{ $d->email }}</td>
                                                 <td>-</td>
                                                 <td>-</td>
-                                                <td>-</td>
+                                                <td>
+                                                    @foreach ($d->roles as $role)
+                                                        {{ $role->name }}@if (!$loop->last)
+                                                            ,
+                                                        @endif
+                                                    @endforeach
+                                                </td>
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-md-6">

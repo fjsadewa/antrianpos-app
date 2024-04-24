@@ -12,7 +12,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('admin.counter') }}">Loket</a></li>
-                            <li class="breadcrumb-item active">Edit Loket</li>
+                            <li class="breadcrumb-item active">Tambah Loket</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -23,16 +23,15 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <form action="{{ route('admin.counter.update', ['id' => $data_counter->id]) }}" method="POST">
+                <form action="{{ route('admin.counter.store') }}" method="POST">
                     @csrf
-                    @method('PUT')
                     <div class="row">
                         <!-- left column -->
                         <div class="col-md-12">
                             <!-- general form elements -->
                             <div class="card card-primary">
                                 <div class="card-header">
-                                    <h3 class="card-title">Formulir Edit Loket</h3>
+                                    <h3 class="card-title">Formulir Tambah Loket</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
@@ -42,7 +41,7 @@
                                             <label for="exampleInputEmail1">Nomor Loket</label>
                                             <input name="nomor_loket" type="text"
                                                 class="form-control @error('nomor_loket')is-invalid @enderror"
-                                                id="exampleInputEmail1" value="{{ $data_counter->nomor_loket }}"
+                                                id="exampleInputEmail1" value="{{ old('nomor_loket') }}"
                                                 placeholder="Contoh: 8">
                                             @error('nomor_loket')
                                                 <span class="invalid-feedback">{{ $message }}</span>
@@ -53,9 +52,7 @@
                                             <select name="kategori_pelayanan_id" class="custom-select rounded-2"
                                                 id="exampleSelectRounded0">
                                                 @foreach ($categories as $category)
-                                                    <option value="{{ $category->id }}"
-                                                        {{ $data_counter->kategoriPelayanan->id == $category->id ? 'selected' : '' }}>
-                                                        {{ $category->nama_pelayanan }}
+                                                    <option value="{{ $category->id }}">{{ $category->nama_pelayanan }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -73,9 +70,7 @@
                                             <select name="user_id" class="custom-select rounded-2"
                                                 id="exampleSelectRounded0">
                                                 @foreach ($user as $employee)
-                                                    <option value="{{ $employee->id }}"
-                                                        {{ $data_counter->employee->user_id == $employee->id ? 'selected' : '' }}>
-                                                        {{ $employee->name }}</option>
+                                                    <option value="{{ $employee->id }}">{{ $employee->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

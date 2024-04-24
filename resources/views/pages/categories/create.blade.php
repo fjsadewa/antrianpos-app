@@ -57,9 +57,9 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Deskripsi</label>
-                                            <textarea name="deskripsi" class="form-control @error('password')is-invalid @enderror" type="text" rows="3"
+                                            <textarea name="deskripsi"type="text" class="form-control @error('deskripsi')is-invalid @enderror" rows="3"
                                                 placeholder="Masukkan Deskripsi"></textarea>
-                                            @error('password')
+                                            @error('deskripsi')
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
                                         </div>

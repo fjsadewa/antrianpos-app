@@ -11,7 +11,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item active"><a href="">Loket</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('admin.counter') }}">Loket</a></li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -27,7 +27,7 @@
 
                         <div class="card">
                             <div class="card-header">
-                                <a href="">
+                                <a href="{{ route('admin.counter.create') }}">
                                     <button class="btn bg-gradient-primary">Tambah Loket Baru</button>
                                 </a>
                             </div>
@@ -38,78 +38,93 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nomor Loket</th>
-                                            <th>Kode Antrian</th>
+                                            <th>Jenis Pelayanan</th>
                                             <th>Nama Petugas</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($data as $d) --}}
-                                        <tr>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>-</td>
-                                            <td>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <a href="">
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-primary btn-block"><i
-                                                                    class="fa fa-pen"></i> Edit</button>
-                                                        </a>
+                                        @foreach ($data_counter as $d)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $d->nomor_loket }}</td>
+                                                <td>
+                                                    @if ($d->kategoriPelayanan)
+                                                        {{ $d->kategoriPelayanan->nama_pelayanan }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if ($d->employee)
+                                                        {{ $d->employee->name }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td>{{ $d->status }}</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <a href="{{ route('admin.counter.edit', ['id' => $d->id]) }}">
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-primary btn-block"><i
+                                                                        class="fa fa-pen"></i> Edit</button>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <a data-toggle="modal"
+                                                                data-target="#modal-hapus{{ $d->id }}">
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-danger btn-block"><i
+                                                                        class="fa fa-trash"></i> hapus</button>
+                                                            </a>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <a data-toggle="modal" data-target="#modal-hapus">
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-danger btn-block"><i
-                                                                    class="fa fa-trash"></i> hapus</button>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
 
-                                        <div class="modal fade" id="modal-hapus">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Konfirmasi Hapus Data</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>Apakah kamu yakin ingin menghapus data
-                                                            <b></b> ?
-                                                        </p>
-                                                    </div>
-                                                    <div class="modal-footer justify-content-between">
-                                                        <form action="" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    <button type="button" class="btn btn-default"
-                                                                        data-dismiss="modal">Batal</button>
+                                            <div class="modal fade" id="modal-hapus{{ $d->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Konfirmasi Hapus Data</h4>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Apakah kamu yakin ingin menghapus nomor loket
+                                                                <b>{{ $d->nomor_loket }}</b> ?
+                                                            </p>
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <form
+                                                                action="{{ route('admin.counter.delete', ['id' => $d->id]) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <button type="button" class="btn btn-default"
+                                                                            data-dismiss="modal">Batal</button>
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger">Hapus</button>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col">
-                                                                    <button type="submit"
-                                                                        class="btn btn-danger">Hapus</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
+                                                            </form>
+                                                        </div>
                                                     </div>
+                                                    <!-- /.modal-content -->
                                                 </div>
-                                                <!-- /.modal-content -->
+                                                <!-- /.modal-dialog -->
                                             </div>
-                                            <!-- /.modal-dialog -->
-                                        </div>
-                                        <!-- /.modal -->
-                                        {{-- @endforeach --}}
+                                            <!-- /.modal -->
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

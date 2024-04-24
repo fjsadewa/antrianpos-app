@@ -20,7 +20,7 @@ class HomeController extends Controller
     }
 
     public function user(){
-        $data = User::get();
+        $data = User::with('roles')->get();
         return view ('pages.user.main',compact('data'));
     }
 

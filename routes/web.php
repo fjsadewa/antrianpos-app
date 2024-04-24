@@ -34,7 +34,11 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     Route::delete('/deleteCategory/{id}',[CounterController::class,'deleteCategory'])->name('category.delete');
 
     Route::get('/counter',[CounterController::class,'counter'])->name('counter');
-
+    Route::get('/createCounter',[CounterController::class,'createCounter'])->name('counter.create');
+    Route::post('/storeCounter',[CounterController::class,'storeCounter'])->name('counter.store');
+    Route::get('/editCounter/{id}',[CounterController::class,'editCounter'])->name('counter.edit');
+    Route::put('/updateCounter/{id}',[CounterController::class,'updateCounter'])->name('counter.update');
+    Route::delete('/deleteCounter/{id}',[CounterController::class,'deleteCounter'])->name('counter.delete');
 });
 
 Route::group(['prefix'=>'employee','middleware'=> ['auth'],'as'=> 'employee.'], function(){

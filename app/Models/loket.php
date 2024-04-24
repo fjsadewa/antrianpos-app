@@ -9,13 +9,13 @@ class Loket extends Model
 {
     use HasFactory;
 
-    protected $table = 'loket';
+    protected $table = 'lokets';
 
     protected $fillable = [
         'nomor_loket',
         'status', 
         'kategori_pelayanan_id', 
-        'petugas_id', 
+        'user_id', 
     ];
 
     public function antrian()
@@ -23,13 +23,14 @@ class Loket extends Model
         return $this->hasMany(Antrian::class);
     }
 
-    public function kategoriLayanan()
+    public function kategoriPelayanan()
     {
         return $this->belongsTo(KategoriPelayanan::class);
     }
 
     public function employee()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
     }
+
 }

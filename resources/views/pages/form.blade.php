@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="row" style="justify-content: space-between;">
+        <div class="row" style="justify-content: center;">
             <!-- /.Carousel-->
-            <div class="col-md-5" style="margin-left: 200px;align-content: center">
-                <div class="card">
+            <div class="col-md-7 d-flex justify-content-center">
+                <div class="card" style="width: 700px">
                     <div class="card-body p-1">
                         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
@@ -31,15 +31,36 @@
                 <!-- /.card -->
             </div>
 
-            <div class="col-sm-4" style="margin-right: 100px">
-                <!-- Small Box (Stat card) -->
-                <div class="col">
+            <div class="col-sm-5 ">
+                <div class="row">
                     <button class="btn col-lg-12 mb-4 p-2" style="background-color: #EE3F22!important">
                         <h2 class="mt-2 text-center" style="font-weight:bold; color: #ffffff!important">
                             Pilih Antrian Loket
                         </h2>
                     </button>
-                    <div class="col col-12">
+                </div>
+
+                <!-- Small Box (Stat card) -->
+                <div class="row d-flex justify-content-center">
+                    @foreach ($kategoriLayanan as $kategori)
+                        <div class="col-md-11">
+                            <div class="small-box bg-light" data-kategori-id="{{ $kategori->id }}">
+                                <div class="inner">
+                                    <h3>{{ $kategori->nama_pelayanan }}</h3>
+                                    <p> {{ $kategori->deskripsi }}</p>
+                                </div>
+                                {{-- <div class="icon">
+                                        <i class="fas"><img src="" alt="icon-loket"
+                                                style="width: 90px; height:90px"></i>
+                                    </div> --}}
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+
+            </div>
+            {{-- <div class="col col-12">
                         <!-- small card -->
                         <div class="small-box bg-light" id="pendaftaran">
                             <div class="inner">
@@ -52,15 +73,11 @@
                                         style="width: 90px; height:90px">
                                 </i>
                             </div>
-                            {{-- <a class="small-box-footer"id="antrian-PENDAFTARAN" data-id-antrian="5">
-                                Print <i class="fas fa-arrow-circle-right"></i>
-                            </a> --}}
                         </div>
                     </div>
                     <div class="col col-12">
                         <!-- small card -->
                         <div class="small-box bg-success" id="informasi">
-
                             <div class="inner">
                                 <h3> Customer Service</h3>
                                 <p> Antrian untuk ke pelayanan customer service</p>
@@ -71,9 +88,6 @@
                                         style="width: 90px; height:90px">
                                 </i>
                             </div>
-                            {{-- <a class="small-box-footer"id="antrian-informasi" data-id-antrian="21">
-                                Print <i class="fas fa-arrow-circle-right"></i>
-                            </a> --}}
                         </div>
                     </div>
                     <div class="col col-12">
@@ -89,9 +103,6 @@
                                         style="width: 90px; height:90px">
                                 </i>
                             </div>
-                            {{-- <a class="small-box-footer"id="antrian-Online" data-id-antrian="22">
-                                Print <i class="fas fa-arrow-circle-right"></i>
-                            </a> --}}
                         </div>
                     </div>
                     <div class="col col-12">
@@ -107,13 +118,58 @@
                                         style="width: 90px; height:90px">
                                 </i>
                             </div>
-                            {{-- <a class="small-box-footer"id="antrian-Pendataan" data-id-antrian="24">
-                                Print <i class="fas fa-arrow-circle-right"></i>
-                            </a> --}}
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </div> --}}
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        var toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 1500
+        });
+
+        const smallBoxes = document.querySelectorAll('.small-box');
+
+        smallBoxes.forEach(smallBox => {
+            smallBox.addEventListener('click', () => {
+                const kategoriId = smallBox.dataset.kategoriId;
+                createAntrian(kategoriId); // Panggil fungsi createAntrian
+            });
+        });
+
+        function createAntrian(kategoriId) {
+            fetch(`<?= url('/createForm/${kategoriId}') ?>`, {
+                    method: 'GET', // Ubah method menjadi GET
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Tambahkan header X-CSRF-TOKEN
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // alert('Antrian berhasil dibuat!'); // Tampilkan alert sukses
+                        toast.fire({
+                            icon: "success",
+                            title: 'Berhasil membuat antrian',
+                        })
+                        location.reload(); // Muat ulang halaman
+                    } else {
+                        // alert('Gagal membuat antrian: ' + data.message); // Tampilkan alert error
+                        toast.fire({
+                            icon: "failed",
+                            title: 'Gagal membuat antrian: ' + data.message,
+                        })
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error); // Tampilkan error di console
+                });
+        }
+    </script>
 @endsection

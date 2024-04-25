@@ -19,7 +19,6 @@ return new class extends Migration
             $table->unsignedBigInteger('id_loket_panggil')->nullable();
             $table->timestamp('waktu_panggil')->nullable();
             $table->unsignedBigInteger('id_loket_layani')->nullable();
-            $table->timestamp('waktu_mulai_layani')->nullable();
             $table->timestamp('waktu_selesai_layani')->nullable();
 
             $table->foreign('id_kategori_layanan')->references('id')->on('kategori_pelayanans');

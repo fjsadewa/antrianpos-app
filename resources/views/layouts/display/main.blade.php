@@ -42,6 +42,10 @@
         <script src="{{ asset('lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
         <!-- AdminLTE App -->
         <script src="{{ asset('lte/dist/js/adminlte.js') }}"></script>
+        <!-- SweetAlert -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        @yield('script')
     </body>
 
 </html>

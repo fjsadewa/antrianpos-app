@@ -9,7 +9,7 @@ class antrian extends Model
 {
     use HasFactory;
 
-    protected $table = 'antrian';
+    protected $table = 'antrians';
 
     protected $fillable = [
         'id_kategori_layanan',
@@ -18,7 +18,6 @@ class antrian extends Model
         'id_loket_panggil',
         'waktu_panggil',
         'id_loket_layani',
-        'waktu_mulai_layani',
         'waktu_selesai_layani',
     ];
 

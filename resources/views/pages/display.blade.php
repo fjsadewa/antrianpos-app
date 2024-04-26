@@ -34,7 +34,7 @@
                         </h3>
                         <br>
                         <h3 style="font-weight: bold; font-size:42px;">
-                            Customer Service
+                            2 - Customer Service
                         </h3>
                     </div>
 
@@ -71,7 +71,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title" style="font-weight: bold; font-size:28px;">
-                                Nomor Antrian
+                                {{ $antrians->kategoriLayanan->nama_pelayanan }}
                             </h3>
                         </div>
                         <div class="card-body">
@@ -79,54 +79,13 @@
                             <h3 style="font-weight: bold; font-size:50px;">
                                 {{ $antrians->kategoriLayanan->kode_pelayanan }} -
                                 {{ formatNomorUrut($antrians->nomor_urut_terendah) }}
+                                {{-- {{ $antrians->nomor_urut_terendah }} --}}
                             </h3>
                             <br>
                         </div>
                     </div>
                 </div>
             @endforeach
-            {{-- <div class="col-lg-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title" style="font-weight: bold; font-size:28px;">
-                            Nomor Antrian
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <br>
-                        <h3 style="font-weight: bold; font-size:50px;">A - 0001</h3>
-                        <br>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title" style="font-weight: bold; font-size:28px;">
-                            Nomor Antrian
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <br>
-                        <h3 style="font-weight: bold; font-size:50px;">A - 0001</h3>
-                        <br>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title" style="font-weight: bold; font-size:28px;">
-                            Nomor Antrian
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <br>
-                        <h3 style="font-weight: bold; font-size:50px;">A - 0001</h3>
-                        <br>
-                    </div>
-                </div>
-            </div> --}}
         </div>
 
         <!-- /.card-body -->

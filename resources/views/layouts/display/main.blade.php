@@ -46,6 +46,35 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         @yield('script')
+
+        <!-- Showtime -->
+        <script>
+            $(function() {
+                function updateClock() {
+                    var date = new Date();
+                    var dateOptions = {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    };
+                    var timeOptions = {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                    };
+                    var formattedDate = date.toLocaleDateString('id-ID', dateOptions);
+                    var formattedTime = date.toLocaleTimeString('id-ID', timeOptions).replace("Pukul ", "").replace(
+                        /\./g, ':');
+                    $("#datetime").html(formattedDate + ' ' + formattedTime);
+                }
+                setInterval(updateClock, 1000);
+
+                updateClock();
+            });
+        </script>
+
     </body>
 
 </html>

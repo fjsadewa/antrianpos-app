@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role;
 
 class HomeController extends Controller
 {
@@ -25,7 +26,8 @@ class HomeController extends Controller
     }
 
     public function createUser(){
-        return view('pages.user.create');
+        $roles = Role::all();
+        return view('pages.user.create',compact('roles'));
     }
 
     public function store(Request $request){
@@ -34,7 +36,8 @@ class HomeController extends Controller
             'nama'      => 'required',
             'email'     => 'required|email',
             'password'  => 'required',
-            'photo'     => 'required|mimes:png,jpg,jpeg|max:2048'
+            'photo'     => 'required|mimes:png,jpg,jpeg|max:2048',
+            'role'      => 'required'
         ]);
 
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
@@ -53,15 +56,22 @@ class HomeController extends Controller
         $data['image']      = $filename;
 
         //mengirim perintah create ke database
-        User::create($data);
+        $user = User::create($data);
+
+        if ($request->role == 1) {
+            $user->assignRole(['admin']);
+        } else {
+            $user->assignRole(['employee']);
+        }
 
         return redirect()->route('admin.user');
     }
 
     public function edit(Request $request,$id){
         $data = User::find($id);
+        $roles = Role::all();
 
-        return view ('pages.user.edit',compact('data'));
+        return view ('pages.user.edit',compact('data','roles'));
     }
 
     public function update(Request $request,$id){
@@ -97,10 +107,16 @@ class HomeController extends Controller
             $data ['image']     = $filename;
         }
 
-        //mengirim perintah create ke database
-
+        
         $data = User::find($id);
-
+        
+        if ($request->role == 1) {
+            $data->assignRole(['admin']);
+        } else {
+            $data->assignRole(['employee']);
+        }
+        
+        //mengirim perintah update ke database
         if($data){
             if($data->update()){
                 return redirect()->route('admin.user')->with('success','Berhasil Melakukan Update! ');
@@ -118,7 +134,7 @@ class HomeController extends Controller
 
         if($data){
             if($data->delete()){
-                return redirect()->route('admin.user')->with('success','User berhasil dihapus');
+                return redirect()->route('admin.user')->with('success','Pengguna berhasil dihapus');
             } else {
                 return redirect()->route('admin.user')->with('failed','Penghapusan Gagal');
             }

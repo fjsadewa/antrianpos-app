@@ -57,8 +57,6 @@
                         </div>
                     @endforeach
                 </div>
-
-
             </div>
             {{-- <div class="col col-12">
                         <!-- small card -->

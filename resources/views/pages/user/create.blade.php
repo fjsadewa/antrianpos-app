@@ -65,6 +65,19 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
+                                            <label for="exampleSelectRounded0">Role</label>
+                                            <select name="role"
+                                                class="custom-select rounded-2  @error('role')is-invalid @enderror"
+                                                id="exampleSelectRounded0">
+                                                @foreach ($roles as $role)
+                                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('role')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
                                             <label for="exampleInputFile">Photo Profile</label>
                                             <div class="input-group">
                                                 <div class="custom-file">

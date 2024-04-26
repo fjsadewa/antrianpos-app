@@ -66,7 +66,7 @@
         <!-- /.row -->
 
         <div class="row text-center pt-2 pb-2">
-            @foreach ($antrianTeratas as $kodeKategori => $antrian)
+            @foreach ($antrian as $antrians)
                 <div class="col-lg-3 ">
                     <div class="card">
                         <div class="card-header">
@@ -76,13 +76,10 @@
                         </div>
                         <div class="card-body">
                             <br>
-                            @if ($antrian)
-                                <h3 style="font-weight: bold; font-size:50px;">
-                                    {{ $antrian->kategoriLayanan->kode_pelayanan }} -
-                                    {{ formatNomorUrut($antrian->nomor_urut) }}</h3>
-                            @else
-                                <h3 style="font-weight: bold; font-size:50px;">-</h3>
-                            @endif
+                            <h3 style="font-weight: bold; font-size:50px;">
+                                {{ $antrians->kategoriLayanan->kode_pelayanan }} -
+                                {{ formatNomorUrut($antrians->nomor_urut_terendah) }}
+                            </h3>
                             <br>
                         </div>
                     </div>

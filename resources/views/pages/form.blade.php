@@ -158,6 +158,7 @@
                             icon: "success",
                             title: 'Berhasil membuat antrian',
                         })
+                        displayAntrian(data.dataForm);
                         location.reload(); // Muat ulang halaman
                     } else {
                         // alert('Gagal membuat antrian: ' + data.message); // Tampilkan alert error

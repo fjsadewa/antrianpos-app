@@ -66,7 +66,29 @@
         <!-- /.row -->
 
         <div class="row text-center pt-2 pb-2">
-            <div class="col-lg-3 ">
+            @foreach ($antrianTeratas as $kodeKategori => $antrian)
+                <div class="col-lg-3 ">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title" style="font-weight: bold; font-size:28px;">
+                                Nomor Antrian
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <br>
+                            @if ($antrian)
+                                <h3 style="font-weight: bold; font-size:50px;">
+                                    {{ $antrian->kategoriLayanan->kode_pelayanan }} -
+                                    {{ formatNomorUrut($antrian->nomor_urut) }}</h3>
+                            @else
+                                <h3 style="font-weight: bold; font-size:50px;">-</h3>
+                            @endif
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+            {{-- <div class="col-lg-3">
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title" style="font-weight: bold; font-size:28px;">
@@ -107,23 +129,16 @@
                         <br>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title" style="font-weight: bold; font-size:28px;">
-                            Nomor Antrian
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <br>
-                        <h3 style="font-weight: bold; font-size:50px;">A - 0001</h3>
-                        <br>
-                    </div>
-                </div>
-            </div>
+            </div> --}}
         </div>
 
         <!-- /.card-body -->
     </div>
+
+    @php
+        function formatNomorUrut($nomor)
+        {
+            return str_pad($nomor, 4, '0', STR_PAD_LEFT);
+        }
+    @endphp
 @endsection

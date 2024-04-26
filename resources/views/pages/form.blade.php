@@ -32,7 +32,7 @@
             </div>
 
             <div class="col-sm-5">
-                <div class="row">
+                <div class="row" style="margin-right:50px">
                     <div class="info-box" style="background-color: #EE3F22">
                         <div class="info-box-content">
                             <h2 class="info-box-text text-center" style="font-weight:bold; color:#fff!important">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div class="row d-flex justify-content-center">
+                <div class="row d-flex justify-content-center" style="margin-right:50px">
                     <!-- Card) -->
                     @foreach ($kategoriLayanan as $kategori)
                         <div class="col-11">

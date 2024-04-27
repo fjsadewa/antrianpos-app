@@ -63,6 +63,11 @@
                                             @error('password')
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="showPassword">
+                                                <label class="form-check-label" for="showPassword">Tampilkan
+                                                    Password</label>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleSelectRounded0">Role</label>
@@ -117,6 +122,19 @@
         $('input[type="file"]').change(function(e){
             var fileName = e.target.files[0].name;
             $('.custom-file-label').html(fileName);
+        });
+    </script>
+
+    <!-- Show password -->
+    <script type="application/javascript">
+        $(document).ready(function() {
+            $('#showPassword').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#exampleInputPassword1').attr('type', 'text');
+                } else {
+                    $('#exampleInputPassword1').attr('type', 'password');
+                }
+            });
         });
     </script>
 @endsection

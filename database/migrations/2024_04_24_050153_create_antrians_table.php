@@ -21,9 +21,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_loket_layani')->nullable();
             $table->timestamp('waktu_selesai_layani')->nullable();
 
-            $table->foreign('id_kategori_layanan')->references('id')->on('kategori_pelayanans');
-            $table->foreign('id_loket_panggil')->references('id')->on('lokets');
-            $table->foreign('id_loket_layani')->references('id')->on('lokets');
+            $table->foreign('id_kategori_layanan')->references('id')->on('kategori_pelayanans')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_loket_panggil')->references('id')->on('lokets')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('id_loket_layani')->references('id')->on('lokets')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

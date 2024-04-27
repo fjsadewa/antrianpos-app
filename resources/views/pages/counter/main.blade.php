@@ -37,28 +37,28 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Nama Petugas</th>
                                             <th>Nomor Loket</th>
                                             <th>Jenis Pelayanan</th>
-                                            <th>Nama Petugas</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($data_counter as $d)
+                                        @foreach ($data_counter->sortBy('nomor_loket') as $d)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $d->nomor_loket }}</td>
                                                 <td>
-                                                    @if ($d->kategoriPelayanan)
-                                                        {{ $d->kategoriPelayanan->nama_pelayanan }}
+                                                    @if ($d->employee)
+                                                        {{ $d->employee->name }}
                                                     @else
                                                         -
                                                     @endif
                                                 </td>
+                                                <td>{{ $d->nomor_loket }}</td>
                                                 <td>
-                                                    @if ($d->employee)
-                                                        {{ $d->employee->name }}
+                                                    @if ($d->kategoriPelayanan)
+                                                        {{ $d->kategoriPelayanan->nama_pelayanan }}
                                                     @else
                                                         -
                                                     @endif

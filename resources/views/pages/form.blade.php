@@ -49,7 +49,7 @@
                             <div class="card card-body p-3" data-kategori-id="{{ $kategori->id }}">
                                 <div class="row">
                                     <div class="col-9 d-flex flex-column align-items-center justify-content-center">
-                                        <h3 class="card-text" style="font-weight: bold; font-size:32px; color:#000">
+                                        <h3 class="card-text" style="font-weight: bold; font-size:32px">
                                             {{ $kategori->nama_pelayanan }}</h3>
                                     </div>
                                     <div class="col-3 d-flex align-items-center justify-content-end">
@@ -62,7 +62,6 @@
                             </div>
                         </div>
                     @endforeach
-
                 </div>
             </div>
         </div>
@@ -71,7 +70,7 @@
 @endsection
 
 @section('script')
-    <script>
+    <script type="application/javascript">
         var toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -99,15 +98,16 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // alert('Antrian berhasil dibuat!'); // Tampilkan alert sukses
+                        // Tampilkan alert sukses
                         toast.fire({
                             icon: "success",
                             title: 'Berhasil membuat antrian',
                         })
                         displayAntrian(data.dataForm);
                         location.reload(); // Muat ulang halaman
+
                     } else {
-                        // alert('Gagal membuat antrian: ' + data.message); // Tampilkan alert error
+                        // Tampilkan alert error
                         toast.fire({
                             icon: "failed",
                             title: 'Gagal membuat antrian: ' + data.message,

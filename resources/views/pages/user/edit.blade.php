@@ -65,6 +65,11 @@
                                             @error('password')
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="showPassword">
+                                                <label class="form-check-label" for="showPassword">Tampilkan
+                                                    Password</label>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleSelectRounded0">Role</label>
@@ -73,7 +78,7 @@
                                                 id="exampleSelectRounded0">
                                                 @foreach ($roles as $role)
                                                     <option
-                                                        value="{{ $role->id }} {{ $data->hasRole($role->name) ? 'selected' : '' }}">
+                                                        value="{{ $role->id }} {{ in_array($role->id, $data->roles->pluck('id')->toArray()) ? 'selected' : '' }}">
                                                         {{ $role->name }}</option>
                                                 @endforeach
                                             </select>
@@ -98,14 +103,14 @@
                                                         <label class="custom-file-label" for="exampleInputFile">Choose
                                                             File</label>
                                                         <span>
-                                                            <p> *Tambahkan file baru jika ingin mengganti foto</p>
+                                                            *Tambahkan file baru jika ingin mengganti foto
                                                         </span>
+                                                        @error('photo')
+                                                            <span class="invalid-feedback">{{ $message }}</span>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                             </div>
-                                            @error('photo')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
                                         </div>
 
                                     </div>
@@ -135,5 +140,18 @@
             var fileName = e.target.files[0].name;
             $('.custom-file-label').html(fileName);
         });
+        </script>
+
+    <!-- Show password -->
+    <script type="application/javascript">
+    $(document).ready(function() {
+        $('#showPassword').change(function() {
+            if ($(this).is(':checked')) {
+                $('#exampleInputPassword1').attr('type', 'text');
+            } else {
+                $('#exampleInputPassword1').attr('type', 'password');
+            }
+        });
+    });
     </script>
 @endsection

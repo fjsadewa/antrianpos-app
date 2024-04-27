@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->integer('nomor_loket')->unique();
             $table->enum('status', ['terbuka', 'tertutup'])->default('terbuka');
-            $table->foreignIdFor(KategoriPelayanan::class)->nullable()->constrained('kategori_pelayanans');
-            $table->foreignIdFor(User::class)->nullable()->constrained('users');
+            $table->foreignIdFor(KategoriPelayanan::class)->nullable()->constrained('kategori_pelayanans')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignIdFor(User::class)->nullable()->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

@@ -60,8 +60,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Deskripsi</label>
-                                            <textarea name="deskripsi" type="text" value="{{ $data_category->deskripsi }}"
-                                                class="form-control @error('password')is-invalid @enderror" rows="3" placeholder="Masukkan Deskripsi"></textarea>
+                                            <textarea name="deskripsi" type="text" class="form-control @error('password')is-invalid @enderror" rows="3"
+                                                placeholder="Masukkan Deskripsi">{{ $data_category->deskripsi }}</textarea>
                                             @error('password')
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror

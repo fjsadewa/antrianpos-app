@@ -70,7 +70,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleSelectRounded0">Nama Petugas</label>
-                                            <select name="user_id" class="custom-select rounded-2"
+                                            <select name="user_id"
+                                                class="custom-select rounded-2 @error('user_id')is-invalid @enderror"
                                                 id="exampleSelectRounded0">
                                                 @foreach ($user as $employee)
                                                     <option value="{{ $employee->id }}"
@@ -78,6 +79,9 @@
                                                         {{ $employee->name }}</option>
                                                 @endforeach
                                             </select>
+                                            @error('user_id')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
                                         </div>
 
                                     </div>

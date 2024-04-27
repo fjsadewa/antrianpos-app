@@ -55,7 +55,7 @@ class CounterController extends Controller
     public function updateCategory(Request $request,$id){
         //melakukan validasi terhadap data yang di inputkan 
         $validator = Validator::make($request->all(),[
-            'kode_pelayanan'        => 'required|max:3|unique:kategori_pelayanans,kode_pelayanan',
+            'kode_pelayanan'        => 'required|max:3|unique:kategori_pelayanans,kode_pelayanan,'.$request->id.',id',
             'nama_pelayanan'        => 'required',
             'deskripsi'             => 'nullable',
         ]);
@@ -67,13 +67,13 @@ class CounterController extends Controller
         $data_category['kode_pelayanan']    = $request->kode_pelayanan;
         $data_category['nama_pelayanan']    = $request->nama_pelayanan;
         $data_category['deskripsi']         = $request->deskripsi;
-
+        
         //mengirim perintah create ke database
-
-        $data_category = KategoriPelayanan::find($id);
-
-        if($data_category){
-            if($data_category->update()){
+        
+        $data = KategoriPelayanan::find($id);
+        
+        if($data){
+            if($data->update($data_category)){
                 return redirect()->route('admin.category')->with('success','Berhasil Melakukan Update! ');
             } else {
                 return redirect()->route('admin.category')->with('failed','Update Telah Gagal');
@@ -115,7 +115,7 @@ class CounterController extends Controller
             'nomor_loket'           => 'required|integer|unique:lokets,nomor_loket',
             'status'                => 'required|in:terbuka,tertutup',
             'kategori_pelayanan_id' => 'required|integer|exists:kategori_pelayanans,id',
-            'user_id'               => 'required|integer|exists:users,id'
+            'user_id'               => 'required|integer|exists:users,id|unique:lokets,user_id,'.$request->id.',id'
         ]);
 
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
@@ -143,25 +143,24 @@ class CounterController extends Controller
     public function updateCounter(Request $request, $id){
         //melakukan validasi terhadap data yang di inputkan 
         $validator = Validator::make($request->all(),[
-            'nomor_loket'           => 'required|integer|unique:lokets,nomor_loket',
+            'nomor_loket'           => 'required|integer|unique:lokets,nomor_loket,'.$request->id.',id',
             'status'                => 'required|in:terbuka,tertutup',
             'kategori_pelayanan_id' => 'required|integer|exists:kategori_pelayanans,id',
-            'user_id'               => 'required|integer|exists:users,id'
+            'user_id'               => 'required|integer|exists:users,id|unique:lokets,user_id,'.$request->id.',id'
         ]);
 
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
-        dd($request->all());
 
         $data_counter['nomor_loket']            = $request->nomor_loket;
         $data_counter['status']                 = $request->status;
         $data_counter['kategori_pelayanan_id']  = $request->kategori_pelayanan_id;
         $data_counter['user_id']                = $request->user_id;
 
-        $data_counter = KategoriPelayanan::find($id);
+        $data = Loket::find($id);
 
-        if($data_counter){
-            if($data_counter->update()){
+        if($data){
+            if($data->update($data_counter)){
                 return redirect()->route('admin.counter')->with('success','Berhasil Melakukan Update! ');
             } else {
                 return redirect()->route('admin.counter')->with('failed','Update Telah Gagal');

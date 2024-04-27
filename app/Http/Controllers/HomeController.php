@@ -80,7 +80,7 @@ class HomeController extends Controller
         'nama'      => 'required',
         'email'     => 'required|email',
         'password'  => 'nullable',
-        'photo'     => 'required|mimes:png,jpg,jpeg|max:2048'
+        'photo'     => 'nullable|mimes:png,jpg,jpeg|max:2048'
         ]);
         
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
@@ -93,7 +93,6 @@ class HomeController extends Controller
         if($request->password){
             $data['password']   = Hash::make($request->password);
         }
-
         $photo      = $request->file('photo');
         if ($photo) {
             $filename   = date('y-m-d').$photo->getClientOriginalName();
@@ -106,19 +105,16 @@ class HomeController extends Controller
 
             $data ['image']     = $filename;
         }
-
-        
-        $data = User::find($id);
         
         if ($request->role == 1) {
-            $data->assignRole(['admin']);
+            $find->syncRoles(['admin']);
         } else {
-            $data->assignRole(['employee']);
+            $find->syncRoles(['employee']);
         }
         
         //mengirim perintah update ke database
-        if($data){
-            if($data->update()){
+        if($find){
+            if($find->update($data)){
                 return redirect()->route('admin.user')->with('success','Berhasil Melakukan Update! ');
             } else {
                 return redirect()->route('admin.user')->with('failed','Update gagal Gagal');
@@ -133,7 +129,7 @@ class HomeController extends Controller
         $data = User::find($id);
 
         if($data){
-            if($data->delete()){
+            if($data->delete($data)){
                 return redirect()->route('admin.user')->with('success','Pengguna berhasil dihapus');
             } else {
                 return redirect()->route('admin.user')->with('failed','Penghapusan Gagal');

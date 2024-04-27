@@ -15,7 +15,7 @@ class Loket extends Model
         'nomor_loket',
         'status', 
         'kategori_pelayanan_id', 
-        'user_id', 
+        'user_id'
     ];
 
     public function antrian()

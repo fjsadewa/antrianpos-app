@@ -41,6 +41,7 @@
                                             <th>Kode Antrian</th>
                                             <th>Nama Pelayanan</th>
                                             <th>Deskripsi</th>
+                                            <th>Photo</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -51,6 +52,8 @@
                                                 <td> {{ $d->kode_pelayanan }}</td>
                                                 <td> {{ $d->nama_pelayanan }}</td>
                                                 <td> {{ $d->deskripsi }}</td>
+                                                <td><img src="{{ asset('storage/icon-category/' . $d->image) }}"
+                                                        alt="" width="50"></td>
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-md-6">

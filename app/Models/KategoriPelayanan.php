@@ -15,6 +15,7 @@ class KategoriPelayanan extends Model
         'kode_pelayanan',
         'nama_pelayanan',
         'deskripsi',
+        'image',
     ];
 
     public function antrian()

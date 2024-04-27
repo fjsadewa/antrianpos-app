@@ -79,7 +79,6 @@
                             <h3 style="font-weight: bold; font-size:50px;">
                                 {{ $antrians->kategoriLayanan->kode_pelayanan }} -
                                 {{ formatNomorUrut($antrians->nomor_urut_terendah) }}
-                                {{-- {{ $antrians->nomor_urut_terendah }} --}}
                             </h3>
                             <br>
                         </div>

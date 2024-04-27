@@ -54,8 +54,8 @@
                                     </div>
                                     <div class="col-3 d-flex align-items-center justify-content-end">
                                         <i class="fas">
-                                            <img src="{{ asset('gambar/Loket.png') }}" alt="icon-loket"
-                                                style="width: 80px; height:80px">
+                                            <img src="{{ asset('storage/icon-category/' . $kategori->image) }}"
+                                                alt="icon-loket" style="width: 80px; height:80px">
                                         </i>
                                     </div>
                                 </div>

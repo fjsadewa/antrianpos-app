@@ -14,7 +14,6 @@ class EmployeeController extends Controller
     public function dashboardEmployee(Request $request,$id){ 
 
         $data = User::find($id);
-
         return view ('pages.employee.dashboard',compact('data'));
     }
 }

@@ -23,7 +23,8 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <form action=" {{ route('admin.category.update', ['id' => $data_category->id]) }}" method="POST">
+                <form action=" {{ route('admin.category.update', ['id' => $data_category->id]) }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -66,6 +67,32 @@
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
                                         </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputFile">Photo Profile</label>
+                                            <div class="input-group">
+                                                <div class="col-md-1">
+                                                    @if ($data_category->image)
+                                                        <img src="{{ asset('storage/icon-category/' . $data_category->image) }}"
+                                                            alt="" width="100%">
+                                                    @endif
+                                                </div>
+                                                <div class="col-md-11" style="align-content: center">
+                                                    <div class="custom-file">
+                                                        <input name="photo" type="file"
+                                                            class="custom-file-input @error('photo')is-invalid @enderror"
+                                                            id="exampleInputFile">
+                                                        <label class="custom-file-label" for="exampleInputFile">Choose
+                                                            File</label>
+                                                        <span>
+                                                            *Tambahkan file baru jika ingin mengganti foto
+                                                        </span>
+                                                        @error('photo')
+                                                            <span class="invalid-feedback">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                     </div>
                                     <!-- /.card-body -->
@@ -85,4 +112,27 @@
         </section>
         <!-- /.content -->
     </div>
+@endsection
+
+@section('script')
+    <!-- Get Name File -->
+    <script type="application/javascript">
+        $('input[type="file"]').change(function(e){
+            var fileName = e.target.files[0].name;
+            $('.custom-file-label').html(fileName);
+        });
+        </script>
+
+    <!-- Show password -->
+    <script type="application/javascript">
+    $(document).ready(function() {
+        $('#showPassword').change(function() {
+            if ($(this).is(':checked')) {
+                $('#exampleInputPassword1').attr('type', 'text');
+            } else {
+                $('#exampleInputPassword1').attr('type', 'password');
+            }
+        });
+    });
+    </script>
 @endsection

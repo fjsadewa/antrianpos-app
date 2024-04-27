@@ -6,7 +6,9 @@ use App\Models\KategoriPelayanan;
 use App\Models\Loket;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+
 
 class CounterController extends Controller
 {
@@ -30,19 +32,25 @@ class CounterController extends Controller
             'kode_pelayanan'        => 'required|max:3|unique:kategori_pelayanans,kode_pelayanan',
             'nama_pelayanan'        => 'required',
             'deskripsi'             => 'nullable',
+            'photo'                 => 'required|mimes:png,jpg,jpeg|max:2048',
         ]);
 
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
 
+        $photo      = $request->file('photo');
+        $filename   = date('y-m-d').$photo->getClientOriginalName();
+        $path       = 'icon-category/'. $filename;
+        Storage::disk('public')->put($path,file_get_contents($photo));
+
         //mengirimkan data ke database
         $data_category['kode_pelayanan']    = $request->kode_pelayanan;
         $data_category['nama_pelayanan']    = $request->nama_pelayanan;
         $data_category['deskripsi']         = $request->deskripsi;
-
+        $data_category['image']             = $filename;
+        
         //mengirim perintah create ke database
         KategoriPelayanan::create($data_category);
-
         return redirect()->route('admin.category')->with('success','Kategori berhasil ditambahkan');
     }
 
@@ -58,20 +66,32 @@ class CounterController extends Controller
             'kode_pelayanan'        => 'required|max:3|unique:kategori_pelayanans,kode_pelayanan,'.$request->id.',id',
             'nama_pelayanan'        => 'required',
             'deskripsi'             => 'nullable',
+            'photo'                 => 'nullable|mimes:png,jpg,jpeg|max:2048'
         ]);
 
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
         
+        $data = KategoriPelayanan::find($id);
+        
         //mengirimkan data ke database
         $data_category['kode_pelayanan']    = $request->kode_pelayanan;
         $data_category['nama_pelayanan']    = $request->nama_pelayanan;
         $data_category['deskripsi']         = $request->deskripsi;
-        
+        $photo      = $request->file('photo');
+        if ($photo) {
+            $filename   = date('y-m-d').$photo->getClientOriginalName();
+            $path       = 'icon-category/'.$filename;
+            
+            if ($data->image) {
+                Storage::disk('public')->delete('icon-category/'.$data->image);
+            }
+            Storage::disk('public')->put($path,file_get_contents($photo));
+
+            $data_category ['image']     = $filename;
+        }
+
         //mengirim perintah create ke database
-        
-        $data = KategoriPelayanan::find($id);
-        
         if($data){
             if($data->update($data_category)){
                 return redirect()->route('admin.category')->with('success','Berhasil Melakukan Update! ');

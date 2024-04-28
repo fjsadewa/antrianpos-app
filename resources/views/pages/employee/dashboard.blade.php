@@ -14,21 +14,23 @@
                         <div class="card-body box-profile">
                             <div class="text-center">
                                 <img class="profile-user-img img-fluid img-circle"
-                                    src="{{ asset('lte/dist/img/user4-128x128.jpg') }}" alt="User profile picture">
+                                    src="{{ asset('storage/photo-profile/' . $data->employee->image) }}"
+                                    alt="User profile picture" width="50">
                             </div>
 
-                            <h3 class="profile-username text-center">{{ $data->name }}</h3>
+                            <h3 class="profile-username text-center">{{ $data->employee->name }}</h3>
                             <p class="text-muted text-center">Software Engineer</p>
 
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
-                                    <b>Nomor Loket</b> <a class="float-right">1</a>
+                                    <b>Nomor Loket</b> <a class="float-right"> {{ $data->nomor_loket }}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Jenis Pelayanan</b> <a class="float-right">LOKET</a>
+                                    <b>Jenis Pelayanan</b> <a
+                                        class="float-right">{{ $data->kategoriPelayanan->nama_pelayanan }}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Pelayanan Hari Ini</b> <a class="float-right">543</a>
+                                    <b>Pelayanan Hari Ini</b> <a class="float-right">-</a>
                                 </li>
                             </ul>
                         </div>

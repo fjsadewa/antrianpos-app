@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Loket;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +10,11 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
+    // private $loket;
+    // public function __construct(Loket $loket) {
+    //     $this->loket = $loket;
+    // }
+
     public function login(){
         return view('auth.login');
     }
@@ -27,11 +33,13 @@ class LoginController extends Controller
         if (Auth::attempt($data)){
             $user = auth()->user();
             $role = $user->roles->first();
+            // $loket = $user->loket;
+            // $userId = $loket->id;
             $userId = $user->id;
 
             if($role-> name === 'admin'){
                 return redirect()->route('admin.dashboard');
-            } elseif ($role-> name === 'employee') {
+            } elseif ($role-> name === 'employee') {;
                 return redirect()->route('employee.dashboardEmployee',['id'=>$userId]);
             } else{
                 return redirect()->route('login')->with('failed','Anda tidak memiliki Akses');

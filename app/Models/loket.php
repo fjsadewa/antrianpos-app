@@ -25,7 +25,7 @@ class Loket extends Model
 
     public function kategoriPelayanan()
     {
-        return $this->belongsTo(KategoriPelayanan::class);
+        return $this->belongsTo(KategoriPelayanan::class,'kategori_pelayanan_id');
     }
 
     public function employee()

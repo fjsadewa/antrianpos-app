@@ -14,20 +14,20 @@
                         <div class="card-body box-profile">
                             <div class="text-center">
                                 <img class="profile-user-img img-fluid img-circle"
-                                    src="{{ asset('storage/photo-profile/' . $data->employee->image) }}"
-                                    alt="User profile picture" width="50">
+                                    src="{{ asset('storage/photo-profile/' . $data['loket']->employee->image) }}"
+                                    alt="User profile picture">
                             </div>
 
-                            <h3 class="profile-username text-center">{{ $data->employee->name }}</h3>
+                            <h3 class="profile-username text-center">{{ $data['loket']->employee->name }}</h3>
                             <p class="text-muted text-center">Software Engineer</p>
 
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
-                                    <b>Nomor Loket</b> <a class="float-right"> {{ $data->nomor_loket }}</a>
+                                    <b>Nomor Loket</b> <a class="float-right"> {{ $data['loket']->nomor_loket }}</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b>Jenis Pelayanan</b> <a
-                                        class="float-right">{{ $data->kategoriPelayanan->nama_pelayanan }}</a>
+                                        class="float-right">{{ $data['loket']->kategoriPelayanan->nama_pelayanan }}</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b>Pelayanan Hari Ini</b> <a class="float-right">-</a>
@@ -85,7 +85,7 @@
                     <div class="row card">
                         <div class="card-header p-2">
                             <h3 class="card-title "> Antrian Belum Terpanggil
-                                <span class="right badge badge-info ml-2">23 Menunggu</span>
+                                <span class="right badge badge-warning ml-2">{{ $jumlahAntrian }} Menunggu</span>
                             </h3>
                         </div>
                         <!-- /.card-header -->
@@ -100,36 +100,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>A</td>
-                                        <td>0001</td>
-                                        <td>Loket</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>A</td>
-                                        <td>0001</td>
-                                        <td>Loket</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>A</td>
-                                        <td>0001</td>
-                                        <td>Loket</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>A</td>
-                                        <td>0001</td>
-                                        <td>Loket</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>A</td>
-                                        <td>0001</td>
-                                        <td>Loket</td>
-                                    </tr>
+                                    @foreach ($data['antrian'] as $antrian)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $antrian->kategoriLayanan->kode_pelayanan }}</td>
+                                            <td>{{ $antrian->nomor_urut }}</td>
+                                            <td>{{ $antrian->kategoriLayanan->nama_pelayanan }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div><!-- /.card-body -->

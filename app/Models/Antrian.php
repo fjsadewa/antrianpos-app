@@ -35,4 +35,9 @@ class antrian extends Model
     {
         return $this->belongsTo(Loket::class, 'id_loket_layani');
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
 }

@@ -32,8 +32,42 @@ class EmployeeController extends Controller
 
         $data = ['loket' => $loket, 'antrian' => $antrian]; // Simpan data loket dan antrian dalam variabel $data
 
-        // $data = $loket; // Simpan data loket dalam variabel $data
-
         return view('pages.employee.dashboard', compact('data','jumlahAntrian')); // Kembalikan view dengan data loket
+    }
+
+    public function callAntrian($id){
+        $loket = Loket::find($id);
+        $kategoriLayananId = $loket->kategori_pelayanan_id;
+        
+        $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+        ->where('status_antrian', 'menunggu')
+        ->first();
+        // dd($antrianTerdepan);
+
+        if ($antrianTerdepan) {
+            $antrianTerdepan->status_antrian = 'dipanggil';
+            $antrianTerdepan->id_loket_panggil = $loket->id;
+            $antrianTerdepan->waktu_panggil = now();
+            $antrianTerdepan->save();
+
+            // $audio = [];
+            // $audio[] = 'bell.mp3'; // Bunyi bell
+            // $audio[] = 'kalimat/antrian-nomor-' . $antrianTerdepan->nomor_urut . '.mp3'; // Nomor antrian
+            // $audio[] = 'kalimat/silahkan-ke-loket.mp3'; // Kalimat "silahkan ke loket"
+            
+            // // Gabungkan audio menjadi string URL
+            // $audioUrl = route('playAudio', ['audio' => implode(',', $audio)]);
+
+            // // Buat request ke halaman pemutar audio
+            // \Http::get($audioUrl);
+            
+            // return response()->json([
+            //     'status' => 'success',
+            //     'message' => 'Antrian berhasil dipanggil',
+            //     'kodeAntri' => $antrianTerdepan->kategoriLayanan->kode_pelayanan,
+            //     'nomorUrut' => $antrianTerdepan->nomor_urut,
+            //     'namaLoket' => $loket->nama,
+            // ]);
+        }
     }
 }

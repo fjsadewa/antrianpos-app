@@ -18,6 +18,7 @@
             </div>
             <!-- /.col -->
 
+            <!-- Antrian dalam panggilan -->
             <div class="col-lg-4 col-md-12 text-center">
                 <div class="card">
                     <div class="card-header mt-2 mb-1">
@@ -27,19 +28,22 @@
                     </div>
                     <!-- /.card-header -->
 
+                    <!-- Nomor Antrian yang akan dipanggil -->
                     <div class="card-body">
                         <br>
-                        <h3 style="font-weight: bold; font-size:80px;">
+                        <!-- kode pelayanan dan nomor antrian -->
+                        <h3 id="nomorAntrian" style="font-weight: bold; font-size:80px;">
                             A - 0001
                         </h3>
                         <br>
-                        <h3 style="font-weight: bold; font-size:42px;">
+                        <!-- nomor loket dan nama pelayanan yang dijalankan -->
+                        <h3 id="loketPelayanan" style="font-weight: bold; font-size:42px;">
                             2 - Customer Service
                         </h3>
                     </div>
 
                     <div class="dropdown-divider"></div>
-
+                    <!-- profile petugas -->
                     <div class="col-12 d-flex align-items-stretch flex-column">
                         <div class="card d-flex flex-fill pt-3" style="background-color: #EE3F22!important ">
                             <div class="card-body pt-0 mb-0">
@@ -55,16 +59,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- /.card-body -->
                         </div>
                     </div>
-                    <!-- /.card-body -->
+                    <!-- /.card -->
+                    <!-- /. profile petugas-->
                 </div>
-                <!-- /.card -->
             </div>
             <!-- /.col -->
+            <!-- /.Antrian dalam panggilan -->
         </div>
         <!-- /.row -->
 
+        <!-- pemanggilan selanjutnya -->
         <div class="row text-center pt-2 pb-2">
             @foreach ($antrian as $antrians)
                 <div class="col-lg-3 ">
@@ -97,3 +104,26 @@
         }
     @endphp
 @endsection
+{{-- 
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('#nomorAntrian').text('Menunggu panggilan ..');
+            $('#loketPelayanan').text('-');
+
+            $.ajax({
+                url: '/antrian/info',
+                method: 'GET',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        var data = response.data;
+                        $('#nomorAntrian').text(data.kodeAntri + ' - ' + data.nomorUrut);
+                        $('#loketPelayanan').text(data.namaLoket);
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+        });
+    </script>
+@endsection --}}

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_kategori_layanan');
             $table->integer('nomor_urut');
-            $table->enum('status_antrian', ['menunggu', 'dipanggil', 'selesai']);
+            $table->enum('status_antrian', ['menunggu', 'dipanggil','dilayani','selesai','lewati']);
             $table->unsignedBigInteger('id_loket_panggil')->nullable();
             $table->timestamp('waktu_panggil')->nullable();
             $table->unsignedBigInteger('id_loket_layani')->nullable();

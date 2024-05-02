@@ -45,9 +45,15 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <button type="button" class="btn btn-primary btn-block btn-warning"><i class="fa fa-play"></i>
-                                Panggil</button>
-                            <button type="button" class="btn btn-primary btn-block btn-info"><i class="fa fa-forward"></i>
+                            <form action="{{ route('employee.callAntrian', $data['loket']->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-primary btn-block btn-warning"><i
+                                        class="fa fa-bell"></i> Panggil</button>
+                            </form>
+                            <button type="button" class="btn btn-primary btn-block btn-info"><i class="fa fa-play"></i>
+                                Mulai Layani</button>
+                            <button type="button" class="btn btn-primary btn-block btn-danger"><i
+                                    class="fa fa-forward"></i>
                                 Selanjutnya</button>
                             <button type="button" class="btn btn-primary btn-block btn-success"><i class="fa fa-check"></i>
                                 Selesai</button>
@@ -118,6 +124,5 @@
             </div>
             <!-- /.row -->
         </div><!-- /.container-fluid -->
-
     </div>
 @endsection

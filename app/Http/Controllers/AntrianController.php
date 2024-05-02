@@ -27,8 +27,6 @@ class AntrianController extends Controller
         ];
 
         antrian::create($dataForm);
-    
-        // return redirect()->route('form');
         return Response::json(['success' => true, 'dataForm' => $dataForm, 'message' => 'Form antrian berhasil dibuat!'], 200);
     }
 

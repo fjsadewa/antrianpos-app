@@ -36,21 +36,46 @@ class EmployeeController extends Controller
     }
 
     public function callAntrian($id){
-        $loket = Loket::find($id);
-        $kategoriLayananId = $loket->kategori_pelayanan_id;
-        
-        $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
-        ->where('status_antrian', 'menunggu')
-        ->first();
+        $loket = Loket::where('user_id',$id)->first();
+        if($loket !=null){
+            $kategoriLayananId = $loket->kategori_pelayanan_id;
+            
+            $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->where('status_antrian', 'menunggu')
+            ->first();
+        }
         // dd($antrianTerdepan);
 
-        if ($antrianTerdepan) {
+        if ($antrianTerdepan !=null) {
             $antrianTerdepan->status_antrian = 'dipanggil';
             $antrianTerdepan->id_loket_panggil = $loket->id;
             $antrianTerdepan->waktu_panggil = now();
             $antrianTerdepan->save();
 
-            // $audio = [];
+            $kodeAntrian = $antrianTerdepan->kategoriLayanan->kode_pelayanan;
+            $nomorAntrian = $antrianTerdepan->nomor_urut;
+            $nomorLoket = $loket->nomor_loket;
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Antrian berhasil dipanggil',
+                'data' => [
+                    'kodeAntrian' => $kodeAntrian,
+                    'nomorAntrian' => $nomorAntrian,
+                    'nomorLoket'=> $nomorLoket,
+                ],
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Antrian tidak ditemukan',
+            ]);
+        }
+    }
+}
+
+
+// $audio = [];
             // $audio[] = 'bell.mp3'; // Bunyi bell
             // $audio[] = 'kalimat/antrian-nomor-' . $antrianTerdepan->nomor_urut . '.mp3'; // Nomor antrian
             // $audio[] = 'kalimat/silahkan-ke-loket.mp3'; // Kalimat "silahkan ke loket"
@@ -61,13 +86,3 @@ class EmployeeController extends Controller
             // // Buat request ke halaman pemutar audio
             // \Http::get($audioUrl);
             
-            // return response()->json([
-            //     'status' => 'success',
-            //     'message' => 'Antrian berhasil dipanggil',
-            //     'kodeAntri' => $antrianTerdepan->kategoriLayanan->kode_pelayanan,
-            //     'nomorUrut' => $antrianTerdepan->nomor_urut,
-            //     'namaLoket' => $loket->nama,
-            // ]);
-        }
-    }
-}

@@ -14,7 +14,7 @@ Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 
 Route::get('/display',[DisplayController::class,'display'])->name('display');
 Route::get('/form',[DisplayController::class,'form'])->name('form');
-Route::get('/createForm/{id}',[AntrianController::class,'createAntrian'])->name('form.create');
+Route::post('/createForm/{id}',[AntrianController::class,'createAntrian'])->name('form.create');
 
 Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], function(){
     Route::get('/dashboard',[HomeController::class,'dashboard'])->name('dashboard');

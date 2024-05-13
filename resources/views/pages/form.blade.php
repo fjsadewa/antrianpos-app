@@ -66,11 +66,13 @@
             </div>
         </div>
     </div>
-    </div>
 @endsection
 
 @section('script')
     <script type="application/javascript">
+        const socket = io();
+        var sequence = [];
+
         var toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -89,7 +91,7 @@
 
         function createAntrian(kategoriId) {
             fetch(`<?= url('/createForm/${kategoriId}') ?>`, {
-                    method: 'GET', // Ubah method menjadi GET
+                    method: 'POST', 
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}' // Tambahkan header X-CSRF-TOKEN
@@ -103,7 +105,7 @@
                             icon: "success",
                             title: 'Berhasil membuat antrian',
                         })
-                        displayAntrian(data.dataForm);
+                        // displayAntrian(data.dataForm);   
                         location.reload(); // Muat ulang halaman
 
                     } else {
@@ -118,5 +120,97 @@
                     console.error('Error:', error); // Tampilkan error di console
                 });
         }
+
+        function playAudio() {
+            socket.on('sequence', (receivedSequence) => {
+            // Pastikan sequence yang diterima valid
+                if (!validateSequenceData(receivedSequence)) {
+                    console.error("Format data sequence tidak valid");
+            return;
+            }
+
+            // Update sequence with the received data
+            sequence = receivedSequence;
+
+            // Inisialisasi pointer untuk melacak urutan audio
+            let pointer = 0;
+
+            function playNextAudio() {
+            // Periksa apakah pointer masih dalam batas array sequence
+                if (pointer < sequence.length) {
+                    // Dapatkan path file audio dari sequence
+                    const audioFilePath = sequence[pointer];
+
+                    // Perbarui sumber audio dari elemen pemutar audio
+                    $("#player").attr("src", "<?= asset('audio/') ?>" + audioFilePath);
+
+                    // Putar audio
+                    $("#player")[0].play();
+
+                    // Perbarui pointer untuk audio berikutnya
+                    pointer++;
+
+                    // Panggil playNextAudio lagi setelah audio selesai diputar
+                    $("#player").on('ended', playNextAudio);
+                } else {
+                    // Semua audio telah diputar, reset pointer
+                    pointer = 0;
+                }
+            }
+
+            // Mulai pemutaran audio
+            playNextAudio();
+            });
+        }
+
+        function validateSequenceData(sequenceData) {
+            // Regex untuk memvalidasi path file audio (sama seperti di dashboard.blade.php)
+            const audioFileRegex = /^([a-z0-9_-]+)\.wav$/i;
+
+            // Periksa setiap elemen dalam array sequenceData
+            for (const element of sequenceData) {
+                if (!audioFileRegex.test(element)) {
+                // Elemen tidak valid, tampilkan pesan error
+                console.error("Format data sequence tidak valid:", element);
+                return false;
+                }
+            }
+
+            // Semua elemen valid, kembalikan true
+            return true;
+        }
+
     </script>
 @endsection
+
+{{--         // function playAudio(){
+        //     socket.on('sequence', sequence => {
+        //         sequence = audio;
+        //     });
+
+        //     changeAudio(pointer);
+        // }
+
+        // function changeAudio(seqIndex) {
+        //         var audio = $("#player");
+        //         var audioFile = sequence[seqIndex];
+        //         var audioPath = "<?= asset('audio/') ?>/";
+
+        //         $("#mp3_src").attr("src", audioPath + audioFile);
+
+        //         audio[0].pause();
+        //         audio[0].load(); //suspends and restores all audio element
+        //         audio[0].oncanplaythrough = audio[0].play();
+        // }
+
+        //     $('#player').on('ended', function() {
+        //         console.log('ended');
+        //         // enable button/link
+        //         if (pointer == sequence.length - 1) {
+        //             pointer = 0;
+        //         } else {
+        //             pointer++;
+        //             changeAudio(pointer);
+        //         }
+                
+        //     }); --}}

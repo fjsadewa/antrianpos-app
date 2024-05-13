@@ -135,7 +135,6 @@
 @section('script')
     <script>
         $(document).ready(function() {
-
             var pointer = 0;
             var sequence = [];
 
@@ -173,10 +172,15 @@
                         sequence.push("bel.wav");
 
                         console.log(sequence);
+                        $.ajax({
+                            url: "http://localhost:3000/call",
+                            data: {
+                                sequence: sequence
+                            },
+                            success: function(data) {
 
-                        changeAudio(pointer);
-
-
+                            }
+                        })
                     }
                 })
             });
@@ -201,50 +205,85 @@
                 }
             }
 
+            function procesTens(number, audioFiles) {
+                var tensDigit = Math.floor(number / 10) % 10;
+                var unitsDigit = number % 10;
+
+                if (tensDigit === 1 && unitsDigit >= 1 && unitsDigit <= 9) {
+                    audioFiles.push("angka/" + (tensDigit * 10 + unitsDigit) + ".wav");
+                } else if (tensDigit >= 2 && unitsDigit === 0) {
+                    audioFiles.push("angka/" + tensDigit + "0.wav");
+                } else if (tensDigit >= 2 && unitsDigit >= 1 && unitsDigit <= 9) {
+                    audioFiles.push("angka/" + tensDigit + "0.wav");
+                    audioFiles.push("angka/" + unitsDigit + ".wav");
+                } else if (tensDigit === 0 && unitsDigit > 0) {
+                    audioFiles.push("angka/" + unitsDigit + ".wav");
+                }
+            }
+
             function parseNumberToAudioFiles(number) {
                 var audioFiles = [];
-                while (number > 0) {
-                    var digit = number % 10;
-                    audioFiles.unshift("angka/" + digit + ".wav");
-                    number = Math.floor(number / 10);
+
+                var numDigits = 0;
+                var tempNumber = number;
+                while (tempNumber > 0) {
+                    numDigits++;
+                    tempNumber = Math.floor(tempNumber / 10);
+                }
+
+                switch (numDigits) {
+                    case 1:
+                        audioFiles.push("angka/" + (number % 10) + ".wav");
+                        break;
+
+                    case 2:
+                        procesTens(number, audioFiles);
+                        break;
+
+                    case 3:
+                        var hundredsDigit = Math.floor(number / 100) % 10;
+                        var tensDigit = Math.floor(number / 10) % 10;
+                        var unitsDigit = number % 10;
+
+                        if (hundredsDigit === 1 && tensDigit === 0 && unitsDigit === 0) {
+                            audioFiles.push("angka/100.wav");
+                            break;
+                        }
+
+                        if (hundredsDigit > 0) {
+                            audioFiles.push("angka/" + hundredsDigit + "00.wav");
+                        }
+                        procesTens(number, audioFiles);
+                        break;
+
+                    case 4:
+                        var thousandsDigit = Math.floor(number / 1000) % 10;
+                        var hundredsDigit = Math.floor(number / 100) % 10;
+
+                        if (thousandsDigit === 1 && hundredsDigit === 0 && tensDigit === 0 && unitsDigit === 0) {
+                            audioFiles.push("angka/1000.wav");
+                            break;
+                        }
+
+                        if (thousandsDigit > 0) {
+                            audioFiles.push("angka/" + thousandsDigit + "000.wav");
+                        }
+
+                        if (hundredsDigit > 0) {
+                            audioFiles.push("angka/" + hundredsDigit + "00.wav");
+                        }
+                        procesTens(number, audioFiles);
+                        break;
                 }
                 return audioFiles;
             }
-
-            function changeAudio(seqIndex) {
-                var audio = $("#player");
-                var audioFile = sequence[seqIndex];
-                var audioPath = "<?= asset('audio/') ?>/";
-
-                // if (audioFile.startsWith("angka/")) {
-                //     audioPath += "angka/";
-                // } else if (audioFile.startsWith("abjad/")) {
-                //     audioPath += "abjad/";
-                // }
-                $("#mp3_src").attr("src", audioPath + audioFile);
-
-                audio[0].pause();
-                audio[0].load(); //suspends and restores all audio element
-                audio[0].oncanplaythrough = audio[0].play();
-
-            }
-
-            $('#player').on('ended', function() {
-                console.log('ended');
-                // enable button/link
-                if (pointer == sequence.length - 1) {
-                    pointer = 0;
-                } else {
-                    pointer++;
-                    changeAudio(pointer);
-                }
-            });
         });
     </script>
 @endsection
 
 
 {{-- 
+    // const socket = io();
     // var sequence = [
             //     'bel.wav',
             //     'antrian-nomor.wav',
@@ -260,6 +299,12 @@
                 // $("#btn-call").click(function() {
             //     changeAudio(pointer);
             // });
+
+            // if (audioFile.startsWith("angka/")) {
+                //     audioPath += "angka/";
+                // } else if (audioFile.startsWith("abjad/")) {
+                //     audioPath += "abjad/";
+                // }
     // $('#player').on('ended', function() {
     //     console.log('ended');
     //     // enable button/link
@@ -268,6 +313,41 @@
     //         changeAudio(pointer);
     //     } else {
 
+        function parseNumberToAudioFiles(number) {
+                var audioFiles = [];
+                while (number > 0) {
+                    var digit = number % 10;
+                    audioFiles.unshift("angka/" + digit + ".wav");
+                    number = Math.floor(number / 10);
+                }
+                return audioFiles;
+            }
 
+// if (!validateSequenceData(sequence)) {
+                        //     console.error("Invalid sequence data format");
+                        //     return;
+                        // }
+
+                        // socket.emit('sequence', sequence);
     //     }
-    // }); --}}
+    // }); 
+    
+    
+            // function validateSequenceData(sequenceData) {
+            //     // Regex untuk memvalidasi path file audio
+            //     const audioFileRegex = /^([a-z0-9_-]+)\.wav$/i;
+
+            //     // Periksa setiap elemen dalam array sequenceData
+            //     for (const element of sequenceData) {
+            //         if (!audioFileRegex.test(element)) {
+            //             // Elemen tidak valid, tampilkan pesan error
+            //             console.error("Format data sequence tidak valid:", element);
+            //             return false;
+            //         }
+            //     }
+
+            //     // Semua elemen valid, kembalikan true
+            //     return true;
+            // }
+            
+            --}}

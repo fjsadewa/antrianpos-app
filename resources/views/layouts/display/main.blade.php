@@ -18,13 +18,13 @@
     </head>
 
     <body>
-        <div class="wrapper hw-100">
+        <div class="wrapper">
 
             <!-- Navbar -->
             @include('layouts.display.navbar')
 
             <!-- Main Content -->
-            <div class="content p-2" style="background-color: #1B2C5A">
+            <div class="content" style="background-color: #1B2C5A">
                 @yield('content')
             </div>
             <!-- /.content -->
@@ -44,6 +44,8 @@
         <script src="{{ asset('lte/dist/js/adminlte.js') }}"></script>
         <!-- SweetAlert -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- Socket IO -->
+        <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
         @yield('script')
         <!-- Showtime -->

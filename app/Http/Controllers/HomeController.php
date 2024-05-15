@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Loket;
 use App\Models\User;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -143,5 +144,52 @@ class HomeController extends Controller
 
     public function displaySetting(){
         return view('pages.setting.displayset');
+    }
+
+    public function createVideo(){
+        return view('pages.setting.createVideo');
+    }
+
+    public function storeVideo(Request $request){
+        $validator = Validator::make($request->all(), [
+            'judul' => 'required|string|max:255',
+            'tipe' => 'required|in:youtube,local',
+            'link_sumber' => 'required|string',
+        ]);
+        if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
+        
+        $data = $request->validated();
+        $judul = $data['judul'];
+        $tipe = $data['tipe'];
+        $linkSumber = $data['link_sumber'];
+        
+        // dd($request->validated());
+        // Menyimpan video berdasarkan tipe
+        if ($tipe === 'youtube') {
+            // Simpan link Youtube langsung ke database
+            Video::create([
+                'judul' => $judul,
+                'tipe' => $tipe,
+                'link_sumber' => $linkSumber,
+            ]);
+        } else if ($tipe === 'local') {
+            // Simpan video ke storage dan url ke database
+            $fileName = uniqid() . '.' . $request->file('link_sumber')->getClientOriginalExtension();
+            $request->file('link_sumber')->storeAs('public/videos', $fileName);
+            $linkSumber = storage_path('app/public/videos/') . $fileName;
+    
+            Video::create([
+                'judul' => $judul,
+                'tipe' => $tipe,
+                'link_sumber' => $linkSumber,
+            ]);
+        }
+    
+        // Pesan sukses
+        return redirect()->back()->with('success', 'Video berhasil ditambahkan!');
+    }
+
+    public function createBanner(){
+        return view('pages.setting.createBanner');
     }
 }

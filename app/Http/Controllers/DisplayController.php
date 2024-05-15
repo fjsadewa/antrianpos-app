@@ -19,9 +19,7 @@ class DisplayController extends Controller
     }
 
     public function form(){
-        $kategoriLayanan = KategoriPelayanan::get();
-        return view('pages.form',compact('kategoriLayanan'));
-        // $kategoriLayanan = KategoriPelayanan::all();
-        // return response()->json($kategoriLayanan);
+        $kategoriLayanan = KategoriPelayanan::all();
+        return response()->json($kategoriLayanan);
     }
 }

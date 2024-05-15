@@ -7,6 +7,7 @@ use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/login',[LoginController::class,'login'])->name('login');
 Route::post('/login_process',[LoginController::class,'login_process'])->name('login_process');
@@ -14,6 +15,17 @@ Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 
 Route::get('/display',[DisplayController::class,'display'])->name('display');
 Route::get('/form',[DisplayController::class,'form'])->name('form');
+Route::get('/icon/{filename}', function ($filename) {
+    $path = 'icon-category/' . $filename;
+    if (Storage::disk('public')->exists($path)) {
+        $image = Storage::disk('public')->get($path);
+        return response($image, 200, [
+            'Content-Type' => 'image/jpeg', // Ubah sesuai jenis gambar
+        ]);
+    } else {
+        return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
+    }
+});
 Route::post('/createForm/{id}',[AntrianController::class,'createAntrian'])->name('form.create');
 
 Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], function(){
@@ -27,6 +39,10 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     Route::delete('/delete/{id}',[HomeController::class,'delete'])->name('user.delete');
     
     Route::get('/displaysetting',[HomeController::class,'displaySetting'])->name('displaysetting');
+    Route::get('/createVideo',[HomeController::class,'createVideo'])->name('video.create');
+    Route::post('/storeVideo',[HomeController::class,'storeVideo'])->name('video.store');
+    
+    Route::get('/createaBanner',[HomeController::class,'createBanner'])->name('banner.create');
     
     Route::get('/category',[CounterController::class,'category'])->name('category');
     Route::get('/createCategory',[CounterController::class,'createCategory'])->name('category.create');

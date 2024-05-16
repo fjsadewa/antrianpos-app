@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Footer;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,5 +21,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        view()->composer(
+            'layouts.display.footer', 
+            function ($view) {
+                $view->with('footer', Footer::all());
+            }
+        );
     }
 }

@@ -10,7 +10,11 @@
             </div>
             <div class="col-md-10 marquee-content-footer">
                 <marquee scrollamount="10" style="white-space:nowrap; overflow:hidden">
-                    <h4 class="font-weight-bold">
+                    @foreach ($footer as $footerItem)
+                        <h4 class="font-weight-bold">{{ $footerItem->text }}</h4>
+                    @endforeach
+                    {{-- <h4 class="font-weight-bold">
+                        {{ $footer->text }}
                         Kantor POS Indonesia Cabang Utama Malang
                         | Cargo & Freight Company
                         | 🕗 24 Jam
@@ -18,7 +22,7 @@
                         | Gratis Pick Up/Jemput Paket Hub. 081133365100
                         | FB: posindonesiamalang | Instagram: posaja_malang
                         | Copyright © 2024 POS INDONESIA. All rights reserved.
-                    </h4>
+                    </h4> --}}
                 </marquee>
             </div>
         </div>

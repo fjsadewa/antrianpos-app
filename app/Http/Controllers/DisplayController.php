@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\antrian;
+use App\Models\Footer;
 use App\Models\KategoriPelayanan;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,6 @@ class DisplayController extends Controller
         ->groupBy('id_kategori_layanan')
         ->selectRaw('id_kategori_layanan, MIN(nomor_urut) AS nomor_urut_terendah')
         ->get();
-
         // Kembalikan view display antrian dengan data antrian teratas per kategori
         return view('pages.display', compact('antrian'));
     }

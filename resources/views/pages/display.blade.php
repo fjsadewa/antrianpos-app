@@ -85,7 +85,8 @@
                             <br>
                             <h3 style="font-weight: bold; font-size:50px;">
                                 {{ $antrians->kategoriLayanan->kode_pelayanan }} -
-                                {{ formatNomorUrut($antrians->nomor_urut_terendah) }}
+                                {{-- {{ formatNomorUrut($antrians->nomor_urut_terendah) }} --}}
+                                {{ $antrians->nomor_urut_terendah }}
                             </h3>
                             <br>
                         </div>
@@ -97,12 +98,12 @@
         <!-- /.card-body -->
     </div>
 
-    @php
+    {{-- @php
         function formatNomorUrut($nomor)
         {
             return str_pad($nomor, 4, '0', STR_PAD_LEFT);
         }
-    @endphp
+    @endphp --}}
 @endsection
 {{-- 
 @section('script')

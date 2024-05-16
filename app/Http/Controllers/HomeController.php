@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use App\Models\Loket;
 use App\Models\User;
 use App\Models\Video;
@@ -143,7 +144,8 @@ class HomeController extends Controller
 
 
     public function displaySetting(){
-        return view('pages.setting.displayset');
+        $banner = Banner::get();
+        return view('pages.setting.displayset',compact('banner'));
     }
 
     public function createVideo(){
@@ -185,11 +187,92 @@ class HomeController extends Controller
             ]);
         }
     
-        // Pesan sukses
-        return redirect()->back()->with('success', 'Video berhasil ditambahkan!');
+        return redirect()->route('admin.displaysetting')->with('success','Video berhasil ditambahkan');
     }
 
     public function createBanner(){
         return view('pages.setting.createBanner');
+    }
+
+    public function storeBanner(Request $request){
+        //melakukan validasi terhadap data yang di inputkan 
+        $validator = Validator::make($request->all(),[
+            'judul'         => 'required|string|max:255',
+            'image_banner'  => 'required|mimes:png,jpg,jpeg|max:2048',
+        ]);
+
+        //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
+        if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
+
+        $photo      = $request->file('image_banner');
+        $filename   = date('y-m-d').$photo->getClientOriginalName();
+        $path       = 'banner/'. $filename;
+        Storage::disk('public')->put($path,file_get_contents($photo));
+
+        //mengirimkan data ke database
+        
+        $data['judul']          = $request->judul;
+        $data['image_banner']   = $filename;
+        
+        //mengirim perintah create ke database
+        Banner::create($data);
+        return redirect()->route('admin.displaysetting')->with('success','Banner berhasil ditambahkan');
+    }
+    public function editBanner(Request $request,$id){
+        $banner = Banner::find($id);
+        return view ('pages.setting.editBanner',compact('banner'));
+    }
+
+    public function updateBanner(Request $request,$id){
+        //melakukan validasi terhadap data yang di inputkan 
+        $validator = Validator::make($request->all(),[
+            'judul'         => 'required|string|max:255',
+            'image_banner'  => 'required|mimes:png,jpg,jpeg|max:2048',
+        ]);
+
+        //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
+        if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
+        
+        $banner = Banner::find($id);
+        
+        //mengirimkan data ke database
+        $data['judul']          = $request->judul;
+        $photo      = $request->file('image_banner');
+        if ($photo) {
+            $filename   = date('y-m-d').$photo->getClientOriginalName();
+            $path       = 'banner/'.$filename;
+            
+            if ($banner->image) {
+                Storage::disk('public')->delete('banner/'.$banner->image_banner);
+            }
+            Storage::disk('public')->put($path,file_get_contents($photo));
+
+            $data ['image_banner']     = $filename;
+        }
+
+        //mengirim perintah create ke database
+        if($banner){
+            if($banner->update($data)){
+                return redirect()->route('admin.displaysetting')->with('success','Berhasil Melakukan Update Banner!');
+            } else {
+                return redirect()->route('admin.displaysetting')->with('failed','Update Telah Gagal');
+            }
+        }else {
+        return redirect()->route('admin.displaysetting')->with('warning', 'Gambar dengan ID tersebut tidak ditemukan');
+        }
+    }
+
+    public function deleteBanner(Request $request,$id){
+        $banner = Banner::find($id);
+
+        if($banner){
+            if($banner->delete()){
+                return redirect()->route('admin.displaysetting')->with('success','Banner berhasil dihapus');
+            } else {
+                return redirect()->route('admin.displaysetting')->with('failed','Penghapusan Gagal');
+            }
+        }else {
+            return redirect()->route('admin.displaysetting')->with('warning', 'Gambar dengan ID tersebut tidak ditemukan');
+        }
     }
 }

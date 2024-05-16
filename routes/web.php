@@ -26,6 +26,17 @@ Route::get('/icon/{filename}', function ($filename) {
         return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
     }
 });
+Route::get('/banner/{filename}', function ($filename) {
+    $path = 'banner/' . $filename;
+    if (Storage::disk('public')->exists($path)) {
+        $image = Storage::disk('public')->get($path);
+        return response($image, 200, [
+            'Content-Type' => 'image/jpeg', // Ubah sesuai jenis gambar
+        ]);
+    } else {
+        return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
+    }
+});
 Route::post('/createForm/{id}',[AntrianController::class,'createAntrian'])->name('form.create');
 
 Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], function(){
@@ -43,6 +54,10 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     Route::post('/storeVideo',[HomeController::class,'storeVideo'])->name('video.store');
     
     Route::get('/createaBanner',[HomeController::class,'createBanner'])->name('banner.create');
+    Route::post('/storeBanner',[HomeController::class,'storeBanner'])->name('banner.store');
+    Route::get('/editBanner/{id}',[HomeController::class,'editBanner'])->name('banner.edit');
+    Route::put('/updateBanner/{id}',[HomeController::class,'updateBanner'])->name('banner.update');
+    Route::delete('/deleteBanner/{id}',[HomeController::class,'deleteBanner'])->name('banner.delete');
     
     Route::get('/category',[CounterController::class,'category'])->name('category');
     Route::get('/createCategory',[CounterController::class,'createCategory'])->name('category.create');

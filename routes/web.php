@@ -58,6 +58,9 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     Route::get('/editBanner/{id}',[HomeController::class,'editBanner'])->name('banner.edit');
     Route::put('/updateBanner/{id}',[HomeController::class,'updateBanner'])->name('banner.update');
     Route::delete('/deleteBanner/{id}',[HomeController::class,'deleteBanner'])->name('banner.delete');
+
+    Route::get('/editFooter/{id}',[HomeController::class,'editFooter'])->name('footer.edit');
+    Route::put('/updateFooter/{id}',[HomeController::class,'updateFooter'])->name('footer.update');
     
     Route::get('/category',[CounterController::class,'category'])->name('category');
     Route::get('/createCategory',[CounterController::class,'createCategory'])->name('category.create');

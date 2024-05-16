@@ -99,8 +99,7 @@
                                                         </p>
                                                     </div>
                                                     <div class="modal-footer justify-content-between">
-                                                        <form
-                                                            action="{{ route('admin.banner.delete', ['id' => $d->id]) }}"
+                                                        <form action="{{ route('admin.banner.delete', ['id' => $d->id]) }}"
                                                             method="POST">
                                                             @csrf
                                                             @method('DELETE')
@@ -140,16 +139,36 @@
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form>
-                                <div class="card-body">
-                                </div>
-                                <!-- /.card-body -->
-                                <div class="card-footer">
-                                    <a href="">
-                                        <button class="btn bg-gradient-primary">Edit Footer</button>
-                                    </a>
-                                </div>
-                            </form>
+                            <div class="card-body">
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Text</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($footer as $d)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td> {{ $d->text }}</td>
+                                                <td>
+                                                    <div class="row">
+                                                        {{-- <div class="col-md-6"> --}}
+                                                        <a href="{{ route('admin.footer.edit', ['id' => $d->id]) }}">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-primary btn-block"><i
+                                                                    class="fa fa-pen"></i> Edit</button>
+                                                        </a>
+                                                        {{-- </div> --}}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     <!-- /.card -->

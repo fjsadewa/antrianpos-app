@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
+use App\Models\Footer;
 use App\Models\Loket;
 use App\Models\User;
 use App\Models\Video;
@@ -145,7 +146,8 @@ class HomeController extends Controller
 
     public function displaySetting(){
         $banner = Banner::get();
-        return view('pages.setting.displayset',compact('banner'));
+        $footer = Footer::get();
+        return view('pages.setting.displayset',compact('banner','footer'));
     }
 
     public function createVideo(){
@@ -273,6 +275,37 @@ class HomeController extends Controller
             }
         }else {
             return redirect()->route('admin.displaysetting')->with('warning', 'Gambar dengan ID tersebut tidak ditemukan');
+        }
+    }
+
+    public function editFooter(Request $request,$id){
+        $data = Footer::find($id);
+        return view ('pages.setting.editFooter',compact('data'));
+    }
+
+    public function updateFooter(Request $request,$id){
+        //melakukan validasi terhadap data yang di inputkan 
+        $validator = Validator::make($request->all(),[
+            'text'         => 'required|string',
+        ]);
+
+        //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
+        if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
+        
+        $footer = Footer::find($id);
+        
+        //mengirimkan data ke database
+        $data['text']          = $request->text;
+
+        //mengirim perintah create ke database
+        if($footer){
+            if($footer->update($data)){
+                return redirect()->route('admin.displaysetting')->with('success','Berhasil Melakukan Update Footer!');
+            } else {
+                return redirect()->route('admin.displaysetting')->with('failed','Update Telah Gagal');
+            }
+        }else {
+        return redirect()->route('admin.displaysetting')->with('warning', 'Footer dengan ID tersebut tidak ditemukan');
         }
     }
 }

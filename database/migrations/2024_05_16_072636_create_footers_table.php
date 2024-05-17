@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('footer', function (Blueprint $table) {
             $table->id();
-            $table->string('text');
+            $table->Lo('text');
             $table->timestamps();
         });
     }

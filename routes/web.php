@@ -15,6 +15,7 @@ Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 
 Route::get('/display',[DisplayController::class,'display'])->name('display');
 Route::get('/form',[DisplayController::class,'form'])->name('form');
+Route::get('/footer',[DisplayController::class,'getFooter'])->name('footer');
 Route::get('/icon/{filename}', function ($filename) {
     $path = 'icon-category/' . $filename;
     if (Storage::disk('public')->exists($path)) {
@@ -26,17 +27,9 @@ Route::get('/icon/{filename}', function ($filename) {
         return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
     }
 });
-Route::get('/banner/{filename}', function ($filename) {
-    $path = 'banner/' . $filename;
-    if (Storage::disk('public')->exists($path)) {
-        $image = Storage::disk('public')->get($path);
-        return response($image, 200, [
-            'Content-Type' => 'image/jpeg', // Ubah sesuai jenis gambar
-        ]);
-    } else {
-        return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
-    }
-});
+
+Route::get('/bannerImage',[DisplayController::class, 'getImages'])->name('image');
+
 Route::post('/createForm/{id}',[AntrianController::class,'createAntrian'])->name('form.create');
 
 Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], function(){

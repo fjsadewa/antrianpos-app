@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\antrian;
+use App\Models\Banner;
 use App\Models\Footer;
 use App\Models\KategoriPelayanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DisplayController extends Controller
 {
@@ -20,6 +22,41 @@ class DisplayController extends Controller
 
     public function form(){
         $kategoriLayanan = KategoriPelayanan::all();
+        if (!$kategoriLayanan) {
+            return response()->json([
+                'message' => 'Data Kategori tidak ditemukan',
+            ], 404);
+        }
         return response()->json($kategoriLayanan);
+    }
+
+    public function getFooter(){
+        $footerData = Footer::first();
+
+        if (!$footerData) {
+            return response()->json([
+                'message' => 'Data footer tidak ditemukan',
+            ], 404);
+        }
+
+        return response()->json($footerData);
+    }
+
+    public function getImages(){
+        $images = Storage::files('banner');
+        $imageUrls = [];
+
+        foreach ($images as $image) {
+            $imageUrl = Storage::url($image);
+            $imageInfo = pathinfo($image);
+            $imageName = $imageInfo['filename'];
+
+            $imageUrls[] = [
+                'name' => $imageName,
+                'url' => $imageUrl,
+            ];
+        }
+
+        return response()->json($imageUrls);
     }
 }

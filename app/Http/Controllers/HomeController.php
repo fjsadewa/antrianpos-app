@@ -286,7 +286,7 @@ class HomeController extends Controller
     public function updateFooter(Request $request,$id){
         //melakukan validasi terhadap data yang di inputkan 
         $validator = Validator::make($request->all(),[
-            'text'         => 'required|string',
+            'text'         => 'required|string|max:255',
         ]);
 
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error

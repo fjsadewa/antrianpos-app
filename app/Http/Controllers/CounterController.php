@@ -103,7 +103,7 @@ class CounterController extends Controller
         }
     }
 
-    public function deleteCategory(Request $request,$id){
+    public function deleteCategory($id){
         $data_category = KategoriPelayanan::find($id);
 
         if($data_category){
@@ -190,7 +190,7 @@ class CounterController extends Controller
         }
     }
 
-    public function deleteCounter(Request $request,$id){
+    public function deleteCounter($id){
         $data_counter = Loket::find($id);
 
         if($data_counter){

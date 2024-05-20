@@ -30,7 +30,6 @@ Route::get('/icon/{filename}', function ($filename) {
 
 Route::get('/bannerImage',[DisplayController::class, 'getImages'])->name('image');
 
-Route::post('/createForm/{id}',[AntrianController::class,'createAntrian'])->name('form.create');
 
 Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], function(){
     Route::get('/dashboard',[HomeController::class,'dashboard'])->name('dashboard');

@@ -97,8 +97,8 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}' // Tambahkan header X-CSRF-TOKEN
                     },
                 })
-                .then(response => response.json())
-                .then(data => {
+                .then((response) => response.json())
+                .then((data) => {
                     if (data.success) {
                         // Tampilkan alert sukses
                         toast.fire({
@@ -116,7 +116,7 @@
                         })
                     }
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Error:', error); // Tampilkan error di console
                 });
         }

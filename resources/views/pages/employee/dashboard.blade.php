@@ -45,19 +45,17 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            {{-- <form action="{{ route('employee.callAntrian', $data['loket']->id) }}" method="POST"> --}}
-                            {{-- @csrf --}}
                             <input type="hidden" name="token" value="{{ csrf_token() }}" />
                             <button type="button" class="btn btn-primary btn-block btn-warning" id="btn-call"><i
                                     class="fa fa-bell"></i> Panggil</button>
-                            {{-- </form> --}}
                             {{-- <button type="button" class="btn btn-primary btn-block btn-info"><i class="fa fa-play"></i>
-                                Mulai Layani</button>
-                            <button type="button" class="btn btn-primary btn-block btn-danger"><i
-                                    class="fa fa-forward"></i>
-                                Selanjutnya</button>
+                                Mulai Pelayanan</button>
                             <button type="button" class="btn btn-primary btn-block btn-success"><i class="fa fa-check"></i>
-                                Selesai</button> --}}
+                                Selesai</button>
+                                --}}
+                            {{-- <button type="button" class="btn btn-primary btn-block btn-danger"><i
+                                    class="fa fa-forward"></i>
+                                Selanjutnya</button> --}}
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -126,10 +124,10 @@
             <!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
-    <audio id="player" style="display:none;">
+    {{-- <audio id="player" style="display:none;">
         <source id="mp3_src" src="" type="audio/wav">
         Your browser does not support the audio element.
-    </audio>
+    </audio> --}}
 
 @endsection
 @section('script')
@@ -137,53 +135,52 @@
         $(document).ready(function() {
             var pointer = 0;
             var sequence = [];
+            var onQueue = null;
+            var loketId = document.querySelector('.card').dataset.loketId;
+            updateQueue(loketId);
 
-            $("#btn-call").click(function() {
-                var loketId = document.querySelector('.card').dataset.loketId;
-
+            function updateQueue($loketId) {
                 $.ajax({
                     url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
-                        loketId + "/call",
-                    method: "POST",
-                    data: {
-                        _token: $('input[name=token]').val()
-                    },
+                        loketId + "/getAntrian",
+                    method: "GET",
                     success: function(data) {
-                        var kodeAntrian = data.data.kodeAntrian;
-                        var nomorAntrian = data.data.nomorAntrian;
-                        var nomorLoket = data.data.nomorLoket;
-
-                        sequence = [
-                            "bel.wav",
-                            "antrian-nomor.wav"
-                        ];
-
-                        // Parse kode antrian dan nomor antrian
-                        var parsedKodeAntrian = parseKodeAntrian(kodeAntrian);
-                        if (parsedKodeAntrian.kodeAntrian.length > 0) {
-                            for (var i in parsedKodeAntrian.kodeAntrian) {
-                                sequence.push(parsedKodeAntrian.kodeAntrian[i].toLowerCase());
-                            }
+                        if (data.data) {
+                            onQueue = data.data;
+                            console.log(onQueue);
+                            $("#btn-call").prop("disabled", false);
+                        } else {
+                            onQueue = null;
+                            console.log(onQueue);
+                            $("#btn-call").prop("disabled", true);
                         }
-
-                        sequence.push(...parseNumberToAudioFiles(nomorAntrian));
-                        sequence.push("silahkan-ke-loket.wav");
-                        sequence.push(...parseNumberToAudioFiles(nomorLoket));
-                        sequence.push("bel.wav");
-
-                        console.log(sequence);
-                        $.ajax({
-                            url: "http://localhost:3000/call",
-                            data: {
-                                sequence: sequence
-                            },
-                            success: function(data) {
-
-                            }
-                        })
                     }
-                })
-            });
+                });
+            }
+
+            function updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket) {
+                if (onQueue) {
+                    sequence = [
+                        "bel.wav",
+                        "antrian-nomor.wav"
+                    ];
+
+                    var parsedKodeAntrian = parseKodeAntrian(kodeAntrian);
+                    if (parsedKodeAntrian.kodeAntrian.length > 0) {
+                        for (var i in parsedKodeAntrian.kodeAntrian) {
+                            sequence.push(parsedKodeAntrian.kodeAntrian[i].toLowerCase());
+                        }
+                    }
+                    sequence.push(...parseNumberToAudioFiles(nomorAntrian));
+                    sequence.push("silahkan-ke-loket.wav");
+                    sequence.push(...parseNumberToAudioFiles(nomorLoket));
+                    sequence.push("bel.wav");
+                    console.log(sequence);
+
+                } else {
+                    sequence = [];
+                }
+            }
 
             function parseKodeAntrian(kodeAntrianString) {
                 var regex = /^([a-z]{1,3})$/i; // Ubah regex
@@ -277,6 +274,52 @@
                 }
                 return audioFiles;
             }
+
+            $("#btn-call").click(function() {
+                if (onQueue) {
+
+                    var token = $('input[name=token]').val();
+                    $.ajax({
+                        url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
+                            loketId + "/updateAntrian",
+                        method: "POST",
+                        data: {
+                            _token: token
+                        },
+                        success: function(data) {
+                            if (onQueue) {
+                                var kodeAntrian = onQueue.kodeAntrian;
+                                var nomorAntrian = onQueue.nomorAntrian;
+                                var nomorLoket = onQueue.nomorLoket;
+
+                                console.log(onQueue);
+                                updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
+                                $.ajax({
+                                    url: "http://localhost:3000/call",
+                                    data: {
+                                        sequence: sequence
+                                    },
+                                    success: function(data) {},
+                                    error: function(error) {
+                                        console.error(error);
+                                    }
+                                });
+                            } else {
+                                console.error("Failed to update queue status:", data.message);
+                            }
+
+                        },
+                        error: function(error) {
+                            console.error("Error sending POST request:", error);
+                        }
+                    });
+
+
+                    // Simpan flag untuk menandakan sequence suara telah diputar
+                    localStorage.setItem("sequenceDiputar", true);
+                }
+            });
+
         });
     </script>
 @endsection

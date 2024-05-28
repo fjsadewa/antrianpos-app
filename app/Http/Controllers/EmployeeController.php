@@ -14,29 +14,28 @@ class EmployeeController extends Controller
         }
 
     public function dashboardEmployee(Request $request){
-        $userId = Auth::user()->id; // Dapatkan user id saat login
-        $loket = Loket::where('user_id', $userId)->first(); // Cari loket berdasarkan user id
+        $userId = Auth::user()->id; 
+        $loket = Loket::where('user_id', $userId)->first(); 
         
         if (!$loket) {
-            // Handle error jika loket tidak ditemukan
             return redirect()->back()->withError('Loket tidak ditemukan');
         }
 
         $kategoriLayananId = $loket->kategori_pelayanan_id;
         
         $antrian = antrian::where('id_kategori_layanan', $kategoriLayananId)
-        ->where('status_antrian', 'menunggu') // Ubah status antrian yang ingin ditampilkan
-        ->get(); // Ambil data antrian
+        ->where('status_antrian', 'menunggu') 
+        ->get(); 
         
         $antrianSekarang = antrian::where('id_kategori_layanan', $kategoriLayananId)
-        ->where('status_antrian', 'dipanggil') // Ubah status antrian yang ingin ditampilkan
-        ->get(); // Ambil data antrian
+        ->whereIn('status_antrian', ['dipanggil', 'dilayani']) 
+        ->get(); 
 
         $jumlahAntrian = $antrian->count();
 
-        $data = ['loket' => $loket, 'antrian' => $antrian, 'antrianSekarang' => $antrianSekarang]; // Simpan data loket dan antrian dalam variabel $data
+        $data = ['loket' => $loket, 'antrian' => $antrian, 'antrianSekarang' => $antrianSekarang];
 
-        return view('pages.employee.dashboard', compact('data','jumlahAntrian')); // Kembalikan view dengan data loket
+        return view('pages.employee.dashboard', compact('data','jumlahAntrian')); 
     }
 
     public function getAntrian($id){
@@ -51,7 +50,7 @@ class EmployeeController extends Controller
         }
 
         $antrianDipanggil = Antrian::where('id_kategori_layanan', $kategoriLayananId)
-        ->where('status_antrian', 'dipanggil')
+        ->whereIn('status_antrian', ['dipanggil', 'dilayani'])
         ->first();
 
         if ($antrianDipanggil) {
@@ -151,6 +150,68 @@ class EmployeeController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Antrian berhasil dilewati',
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Antrian tidak ditemukan',
+            ]);
+        }
+    }
+
+    public function mulaiAntrian($id){
+        $loket = Loket::where('user_id',$id)->first();
+        if($loket){
+            $kategoriLayananId = $loket->kategori_pelayanan_id;
+            
+            $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->where('status_antrian', 'dipanggil')
+            ->first();
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Loket tidak ditemukan'
+            ]);
+        }
+
+        if ($antrianTerdepan !=null) {
+            $antrianTerdepan->status_antrian = 'dilayani';
+            $antrianTerdepan->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil memulai antrian',
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Antrian tidak ditemukan',
+            ]);
+        }
+    }
+
+    public function selesai($id){
+        $loket = Loket::where('user_id',$id)->first();
+        if($loket){
+            $kategoriLayananId = $loket->kategori_pelayanan_id;
+            
+            $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->where('status_antrian', 'dilayani')
+            ->first();
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Loket tidak ditemukan'
+            ]);
+        }
+
+        if ($antrianTerdepan !=null) {
+            $antrianTerdepan->status_antrian = 'selesai';
+            $antrianTerdepan->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil memulai antrian',
             ]);
         }else{
             return response()->json([

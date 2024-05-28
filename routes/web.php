@@ -74,4 +74,6 @@ Route::group(['prefix'=>'employee','middleware'=> ['auth'],'as'=> 'employee.'], 
     Route::get('/dashboard-employee/{id}/getAntrian',[EmployeeController::class,'getAntrian'])->name('getAntrian');
     Route::post('/dashboard-employee/{id}/panggilAntrian',[EmployeeController::class,'panggilAntrian'])->name('panggilAntrian');
     Route::post('/dashboard-employee/{id}/lewatiAntrian',[EmployeeController::class,'lewatiAntrian'])->name('lewatiAntrian');
+    Route::post('/dashboard-employee/{id}/mulaiAntrian',[EmployeeController::class,'mulaiAntrian'])->name('mulaiAntrian');
+    Route::post('/dashboard-employee/{id}/selesai',[EmployeeController::class,'selesai'])->name('selesai');
 });

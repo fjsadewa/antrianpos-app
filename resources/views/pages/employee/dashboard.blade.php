@@ -67,8 +67,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Apakah kamu yakin ingin melewati antrian ini ?
-                                        </p>
+                                        <p id="modal-text"></p>
                                     </div>
                                     <div class="modal-footer d-flex justify-content-end">
                                         <div class="row">
@@ -168,6 +167,7 @@
             var sequence = [];
             var onQueue = null;
             var isQueueCalled = false;
+            var isQueueStart = false;
             var loketId = document.querySelector('.card').dataset.loketId;
             getQueue(loketId);
 
@@ -180,10 +180,17 @@
                         if (data.data) {
                             onQueue = data.data;
                             console.log(onQueue);
+                            var kodeAntrian = onQueue.kodeAntrian;
+                            var nomorAntrian = onQueue.nomorAntrian;
+                            $('#modal-text').text('Apakah kamu yakin ingin melewati nomor antrian ' +
+                                kodeAntrian + ' - ' + nomorAntrian + '?');
 
                             if (onQueue.status_antrian === "dipanggil") {
                                 isQueueCalled = true;
                                 console.log("Queue is called:", isQueueCalled);
+                            } else if (onQueue.status_antrian === "dilayani") {
+                                isQueueStart = true;
+                                console.log("Queue is start:", isQueueStart);
                             } else {
                                 isQueueCalled = false;
                                 console.log("Queue is not called:", isQueueCalled);
@@ -195,6 +202,11 @@
                                 $("#btn-skip").prop("disabled", false);
                                 $("#btn-start").prop("disabled", false);
                                 $("#btn-finish").prop("disabled", true);
+                            } else if (isQueueStart) {
+                                $("#btn-call").prop("disabled", true);
+                                $("#btn-skip").prop("disabled", true);
+                                $("#btn-start").prop("disabled", true);
+                                $("#btn-finish").prop("disabled", false);
                             } else {
                                 $("#btn-call").prop("disabled", false);
                                 $("#btn-skip").prop("disabled", true);
@@ -369,6 +381,7 @@
 
                                     isQueueCalled = true;
                                     $("#btn-skip").prop("disabled", false);
+                                    $("#btn-start").prop("disabled", false);
                                 } else {
                                     console.error("Failed to update queue status:", data
                                         .message);
@@ -381,6 +394,69 @@
                         });
                     }
                     localStorage.setItem("sequenceDiputar", true);
+                }
+            });
+
+            $("#btn-start").click(function() {
+                if (isQueueCalled && onQueue) {
+                    var token = $('input[name=token]').val();
+                    $.ajax({
+                        url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
+                            loketId +
+                            "/mulaiAntrian",
+                        method: "POST",
+                        data: {
+                            _token: token,
+                            antrianId: onQueue.id
+                        },
+                        success: function(data) {
+
+                            $("#btn-call").prop("disabled", true);
+                            $("#btn-skip").prop("disabled", true);
+                            $("#btn-start").prop("disabled", true);
+                            $("#btn-finish").prop("disabled", false);
+
+                            isQueueStart = true;
+                            alert("Mulai Pelayanan.");
+                        },
+                        error: function(error) {
+                            console.error("Error sending POST request:", error);
+                        }
+                    });
+                }
+            });
+
+            $("#btn-finish").click(function() {
+                if (isQueueStart && onQueue) {
+                    var token = $('input[name=token]').val();
+                    $.ajax({
+                        url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
+                            loketId +
+                            "/selesai",
+                        method: "POST",
+                        data: {
+                            _token: token,
+                            antrianId: onQueue.id
+                        },
+                        success: function(data) {
+
+                            onQueue = null;
+                            $("#btn-call").prop("disabled", false);
+                            $("#btn-skip").prop("disabled", true);
+                            $("#btn-start").prop("disabled", true);
+                            $("#btn-finish").prop("disabled", true);
+
+                            isQueueCalled = false;
+                            isQueueStart = false;
+                            getQueue(loketId);
+                            console.log(onQueue);
+
+                            alert("berhasil");
+                        },
+                        error: function(error) {
+                            console.error("Error sending POST request:", error);
+                        }
+                    });
                 }
             });
 
@@ -401,12 +477,15 @@
                             onQueue = null;
                             $("#btn-call").prop("disabled", true);
                             $("#btn-skip").prop("disabled", true);
+                            $("#btn-start").prop("disabled", true);
 
                             alert("Antrian telah dilewati.");
 
                             isQueueCalled = false;
                             getQueue(loketId);
                             console.log(onQueue);
+
+                            $('#modal-skip').modal('hide');
                         },
                         error: function(error) {
                             console.error("Error sending POST request:", error);

@@ -72,5 +72,6 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
 Route::group(['prefix'=>'employee','middleware'=> ['auth'],'as'=> 'employee.'], function(){
     Route::get('/dashboard-employee/{id}',[EmployeeController::class,'dashboardEmployee'])->name('dashboardEmployee');
     Route::get('/dashboard-employee/{id}/getAntrian',[EmployeeController::class,'getAntrian'])->name('getAntrian');
-    Route::post('/dashboard-employee/{id}/updateAntrian',[EmployeeController::class,'updateAntrian'])->name('updateAntrian');
+    Route::post('/dashboard-employee/{id}/panggilAntrian',[EmployeeController::class,'panggilAntrian'])->name('panggilAntrian');
+    Route::post('/dashboard-employee/{id}/lewatiAntrian',[EmployeeController::class,'lewatiAntrian'])->name('lewatiAntrian');
 });

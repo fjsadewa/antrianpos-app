@@ -27,10 +27,14 @@ class EmployeeController extends Controller
         $antrian = antrian::where('id_kategori_layanan', $kategoriLayananId)
         ->where('status_antrian', 'menunggu') // Ubah status antrian yang ingin ditampilkan
         ->get(); // Ambil data antrian
+        
+        $antrianSekarang = antrian::where('id_kategori_layanan', $kategoriLayananId)
+        ->where('status_antrian', 'dipanggil') // Ubah status antrian yang ingin ditampilkan
+        ->get(); // Ambil data antrian
 
         $jumlahAntrian = $antrian->count();
 
-        $data = ['loket' => $loket, 'antrian' => $antrian]; // Simpan data loket dan antrian dalam variabel $data
+        $data = ['loket' => $loket, 'antrian' => $antrian, 'antrianSekarang' => $antrianSekarang]; // Simpan data loket dan antrian dalam variabel $data
 
         return view('pages.employee.dashboard', compact('data','jumlahAntrian')); // Kembalikan view dengan data loket
     }
@@ -45,7 +49,27 @@ class EmployeeController extends Controller
                 'message' => 'Loket tidak ditemukan'
             ]);
         }
-    
+
+        $antrianDipanggil = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+        ->where('status_antrian', 'dipanggil')
+        ->first();
+
+        if ($antrianDipanggil) {
+            $kodeAntrian = $antrianDipanggil->kategoriLayanan->kode_pelayanan;
+            $nomorAntrian = $antrianDipanggil->nomor_urut;
+            $nomorLoket = $loket->nomor_loket;
+
+            $antrianDipanggil['kodeAntrian'] = $kodeAntrian;
+            $antrianDipanggil['nomorAntrian'] = $nomorAntrian;
+            $antrianDipanggil['nomorLoket'] = $nomorLoket;
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Antrian sedang dipanggil',
+                'data' => $antrianDipanggil
+            ]);
+        }
+
         $antrianTerkini = Antrian::where('id_kategori_layanan', $kategoriLayananId)
             ->where('status_antrian', 'menunggu')
             ->first();
@@ -61,7 +85,7 @@ class EmployeeController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Antrian berhasil dipanggil',
+                'message' => 'Antrian sedang menunggu',
                 'data' => $antrianTerkini,
             ]);
         } else {
@@ -72,7 +96,7 @@ class EmployeeController extends Controller
         }
     }
 
-    public function updateAntrian($id){
+    public function panggilAntrian($id){
         $loket = Loket::where('user_id',$id)->first();
         if($loket){
             $kategoriLayananId = $loket->kategori_pelayanan_id;
@@ -86,7 +110,6 @@ class EmployeeController extends Controller
                 'message' => 'Loket tidak ditemukan'
             ]);
         }
-        // dd($antrianTerdepan);
 
         if ($antrianTerdepan !=null) {
             $antrianTerdepan->status_antrian = 'dipanggil';
@@ -94,18 +117,9 @@ class EmployeeController extends Controller
             $antrianTerdepan->waktu_panggil = now();
             $antrianTerdepan->save();
 
-            // $kodeAntrian = $antrianTerdepan->kategoriLayanan->kode_pelayanan;
-            // $nomorAntrian = $antrianTerdepan->nomor_urut;
-            // $nomorLoket = $loket->nomor_loket;
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Antrian berhasil diupdate',
-                // 'data' => [
-                //     'kodeAntrian' => $kodeAntrian,
-                //     'nomorAntrian' => $nomorAntrian,
-                //     'nomorLoket'=> $nomorLoket,
-                // ],
             ]);
         }else{
             return response()->json([
@@ -115,6 +129,36 @@ class EmployeeController extends Controller
         }
     }
 
+    public function lewatiAntrian($id){
+        $loket = Loket::where('user_id',$id)->first();
+        if($loket){
+            $kategoriLayananId = $loket->kategori_pelayanan_id;
+            
+            $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->where('status_antrian', 'dipanggil')
+            ->first();
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Loket tidak ditemukan'
+            ]);
+        }
+
+        if ($antrianTerdepan !=null) {
+            $antrianTerdepan->status_antrian = 'lewati';
+            $antrianTerdepan->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Antrian berhasil dilewati',
+            ]);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Antrian tidak ditemukan',
+            ]);
+        }
+    }
 }
 
 // $audio = [];

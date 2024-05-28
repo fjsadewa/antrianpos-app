@@ -13,7 +13,7 @@
                     <div class="card" data-loket-id="{{ $data['loket']->employee->id }}">
                         <div class="card-body box-profile">
                             <div class="text-center">
-                                <img class="profile-user-img img-fluid img-circle"
+                                <img class="img-fluid img-circle"
                                     src="{{ asset('storage/photo-profile/' . $data['loket']->employee->image) }}"
                                     alt="User profile picture">
                             </div>
@@ -46,18 +46,47 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <input type="hidden" name="token" value="{{ csrf_token() }}" />
-                            <button type="button" class="btn btn-primary btn-block btn-warning" id="btn-call"><i
+                            <button type="button" class="btn btn-block btn-warning" id="btn-call"><i
                                     class="fa fa-bell"></i> Panggil</button>
-                            {{-- <button type="button" class="btn btn-primary btn-block btn-info"><i class="fa fa-play"></i>
-                                Mulai Pelayanan</button>
-                            <button type="button" class="btn btn-primary btn-block btn-success"><i class="fa fa-check"></i>
-                                Selesai</button>
-                                --}}
-                            {{-- <button type="button" class="btn btn-primary btn-block btn-danger"><i
-                                    class="fa fa-forward"></i>
-                                Selanjutnya</button> --}}
+                            <button type="button" class="btn btn-primary btn-block btn-info" id="btn-start"><i
+                                    class="fa fa-play"></i> Mulai Pelayanan</button>
+                            <button type="button" class="btn btn-primary btn-block btn-success" id="btn-finish"><i
+                                    class="fa fa-check"></i> Selesai</button>
+                            <button type="button" class="btn btn-block btn-danger" id="btn-skip" data-toggle="modal"
+                                data-target="#modal-skip"><i class="fa fa-forward"></i> Selanjutnya</button>
                         </div>
                         <!-- /.card-body -->
+
+                        <div class="modal fade" id="modal-skip">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Konfirmasi Lewati Antrian</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Apakah kamu yakin ingin melewati antrian ini ?
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-end">
+                                        <div class="row">
+                                            <div class="col">
+                                                <button type="button" class="btn btn-default"
+                                                    data-dismiss="modal">Batal</button>
+                                            </div>
+                                            <div class="col">
+                                                <button type="button" id="btn-next" class="btn btn-danger">Yakin</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
                     </div>
                     <!-- /.card -->
                 </div>
@@ -77,11 +106,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>A</td>
-                                        <td>0001</td>
-                                        <td>Loket</td>
-                                    </tr>
+                                    @foreach ($data['antrianSekarang'] as $as)
+                                        <tr>
+                                            <td>{{ $as->kategoriLayanan->kode_pelayanan }}</td>
+                                            <td>{{ $as->nomor_urut }}</td>
+                                            <td>{{ $as->kategoriLayanan->nama_pelayanan }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div><!-- /.card-body -->
@@ -136,10 +167,11 @@
             var pointer = 0;
             var sequence = [];
             var onQueue = null;
+            var isQueueCalled = false;
             var loketId = document.querySelector('.card').dataset.loketId;
-            updateQueue(loketId);
+            getQueue(loketId);
 
-            function updateQueue($loketId) {
+            function getQueue($loketId) {
                 $.ajax({
                     url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
                         loketId + "/getAntrian",
@@ -148,11 +180,34 @@
                         if (data.data) {
                             onQueue = data.data;
                             console.log(onQueue);
-                            $("#btn-call").prop("disabled", false);
+
+                            if (onQueue.status_antrian === "dipanggil") {
+                                isQueueCalled = true;
+                                console.log("Queue is called:", isQueueCalled);
+                            } else {
+                                isQueueCalled = false;
+                                console.log("Queue is not called:", isQueueCalled);
+                            }
+
+                            // Update button states based on queue status
+                            if (isQueueCalled) {
+                                $("#btn-call").prop("disabled", false);
+                                $("#btn-skip").prop("disabled", false);
+                                $("#btn-start").prop("disabled", false);
+                                $("#btn-finish").prop("disabled", true);
+                            } else {
+                                $("#btn-call").prop("disabled", false);
+                                $("#btn-skip").prop("disabled", true);
+                                $("#btn-start").prop("disabled", true);
+                                $("#btn-finish").prop("disabled", true);
+                            }
                         } else {
                             onQueue = null;
                             console.log(onQueue);
                             $("#btn-call").prop("disabled", true);
+                            $("#btn-skip").prop("disabled", true);
+                            $("#btn-start").prop("disabled", true);
+                            $("#btn-finish").prop("disabled", true);
                         }
                     }
                 });
@@ -177,6 +232,18 @@
                     sequence.push("bel.wav");
                     console.log(sequence);
 
+                    $.ajax({
+                        url: "http://localhost:3000/call",
+                        data: {
+                            sequence: sequence
+                        },
+                        success: function(data) {
+                            console.log("Sequence sound updated and sent to localhost:3000:", data);
+                        },
+                        error: function(error) {
+                            console.error("Error sending sequence data to localhost:3000:", error);
+                        }
+                    });
                 } else {
                     sequence = [];
                 }
@@ -277,121 +344,139 @@
 
             $("#btn-call").click(function() {
                 if (onQueue) {
+                    if (isQueueCalled) {
+                        var kodeAntrian = onQueue.kodeAntrian;
+                        var nomorAntrian = onQueue.nomorAntrian;
+                        var nomorLoket = onQueue.nomorLoket;
 
+                        updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
+                    } else {
+                        var token = $('input[name=token]').val();
+                        $.ajax({
+                            url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
+                                loketId + "/panggilAntrian",
+                            method: "POST",
+                            data: {
+                                _token: token
+                            },
+                            success: function(data) {
+                                if (onQueue) {
+                                    var kodeAntrian = onQueue.kodeAntrian;
+                                    var nomorAntrian = onQueue.nomorAntrian;
+                                    var nomorLoket = onQueue.nomorLoket;
+
+                                    updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
+
+                                    isQueueCalled = true;
+                                    $("#btn-skip").prop("disabled", false);
+                                } else {
+                                    console.error("Failed to update queue status:", data
+                                        .message);
+                                }
+
+                            },
+                            error: function(error) {
+                                console.error("Error sending POST request:", error);
+                            }
+                        });
+                    }
+                    localStorage.setItem("sequenceDiputar", true);
+                }
+            });
+
+            $("#btn-next").click(function() {
+                if (isQueueCalled && onQueue) {
                     var token = $('input[name=token]').val();
                     $.ajax({
                         url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
-                            loketId + "/updateAntrian",
+                            loketId +
+                            "/lewatiAntrian",
                         method: "POST",
                         data: {
-                            _token: token
+                            _token: token,
+                            antrianId: onQueue.id
                         },
                         success: function(data) {
-                            if (onQueue) {
-                                var kodeAntrian = onQueue.kodeAntrian;
-                                var nomorAntrian = onQueue.nomorAntrian;
-                                var nomorLoket = onQueue.nomorLoket;
 
-                                console.log(onQueue);
-                                updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
-                                $.ajax({
-                                    url: "http://localhost:3000/call",
-                                    data: {
-                                        sequence: sequence
-                                    },
-                                    success: function(data) {},
-                                    error: function(error) {
-                                        console.error(error);
-                                    }
-                                });
-                            } else {
-                                console.error("Failed to update queue status:", data.message);
-                            }
+                            onQueue = null;
+                            $("#btn-call").prop("disabled", true);
+                            $("#btn-skip").prop("disabled", true);
 
+                            alert("Antrian telah dilewati.");
+
+                            isQueueCalled = false;
+                            getQueue(loketId);
+                            console.log(onQueue);
                         },
                         error: function(error) {
                             console.error("Error sending POST request:", error);
                         }
                     });
-
-
-                    // Simpan flag untuk menandakan sequence suara telah diputar
-                    localStorage.setItem("sequenceDiputar", true);
                 }
             });
-
         });
     </script>
 @endsection
 
+{{--  
+// const socket = io();
+// var sequence = [
+// 'bel.wav',
+// 'antrian-nomor.wav',
+// 'abjad/a.wav',
+// 'angka/1000.wav',
+// 'angka/200.wav',
+// 'angka/30.wav',
+// 'angka/4.wav',
+// 'silahkan-ke-loket.wav',
+// 'angka/3.wav', 'bel.wav'
+// ];
 
-{{-- 
-    // const socket = io();
-    // var sequence = [
-            //     'bel.wav',
-            //     'antrian-nomor.wav',
-            //     'abjad/a.wav',
-            //     'angka/1000.wav',
-            //     'angka/200.wav',
-            //     'angka/30.wav',
-            //     'angka/4.wav',
-            //     'silahkan-ke-loket.wav',
-            //     'angka/3.wav', 'bel.wav'
-            // ];
+// $("#btn-call").click(function() {
+// changeAudio(pointer);
+// });
 
-                // $("#btn-call").click(function() {
-            //     changeAudio(pointer);
-            // });
+// if (audioFile.startsWith("angka/")) {
+// audioPath += "angka/";
+// } else if (audioFile.startsWith("abjad/")) {
+// audioPath += "abjad/";
+// }
 
-            // if (audioFile.startsWith("angka/")) {
-                //     audioPath += "angka/";
-                // } else if (audioFile.startsWith("abjad/")) {
-                //     audioPath += "abjad/";
-                // }
-                
-    // $('#player').on('ended', function() {
-    //     console.log('ended');
-    //     // enable button/link
-    //     if (pointer < sequence.length) {
-    //         pointer++;
-    //         changeAudio(pointer);
-    //     } else {
+// $('#player').on('ended', function() {
+// console.log('ended');
+// // enable button/link
+// if (pointer < sequence.length) { // pointer++; // changeAudio(pointer); // } else { // function
+    parseNumberToAudioFiles(number) { // var audioFiles=[]; // while (number> 0) {
+    // var digit = number % 10;
+    // audioFiles.unshift("angka/" + digit + ".wav");
+    // number = Math.floor(number / 10);
+    // }
+    // return audioFiles;
+    // }
 
-        function parseNumberToAudioFiles(number) {
-                var audioFiles = [];
-                while (number > 0) {
-                    var digit = number % 10;
-                    audioFiles.unshift("angka/" + digit + ".wav");
-                    number = Math.floor(number / 10);
-                }
-                return audioFiles;
-            }
+    // if (!validateSequenceData(sequence)) {
+    // console.error("Invalid sequence data format");
+    // return;
+    // }
 
-// if (!validateSequenceData(sequence)) {
-                        //     console.error("Invalid sequence data format");
-                        //     return;
-                        // }
+    // socket.emit('sequence', sequence);
+    // }
+    // });
 
-                        // socket.emit('sequence', sequence);
-    //     }
-    // }); 
-    
-    
-            // function validateSequenceData(sequenceData) {
-            //     // Regex untuk memvalidasi path file audio
-            //     const audioFileRegex = /^([a-z0-9_-]+)\.wav$/i;
 
-            //     // Periksa setiap elemen dalam array sequenceData
-            //     for (const element of sequenceData) {
-            //         if (!audioFileRegex.test(element)) {
-            //             // Elemen tidak valid, tampilkan pesan error
-            //             console.error("Format data sequence tidak valid:", element);
-            //             return false;
-            //         }
-            //     }
+    // function validateSequenceData(sequenceData) {
+    // // Regex untuk memvalidasi path file audio
+    // const audioFileRegex = /^([a-z0-9_-]+)\.wav$/i;
 
-            //     // Semua elemen valid, kembalikan true
-            //     return true;
-            // }
-            
-            --}}
+    // // Periksa setiap elemen dalam array sequenceData
+    // for (const element of sequenceData) {
+    // if (!audioFileRegex.test(element)) {
+    // // Elemen tidak valid, tampilkan pesan error
+    // console.error("Format data sequence tidak valid:", element);
+    // return false;
+    // }
+    // }
+
+    // // Semua elemen valid, kembalikan true
+    // return true;
+    // } --}}

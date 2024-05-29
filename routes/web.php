@@ -28,6 +28,17 @@ Route::get('/icon/{filename}', function ($filename) {
         return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
     }
 });
+Route::get('/profile/{filename}', function ($filename) {
+    $path = 'photo-profile/' . $filename;
+    if (Storage::disk('public')->exists($path)) {
+        $image = Storage::disk('public')->get($path);
+        return response($image, 200, [
+            'Content-Type' => 'image/jpeg', // Ubah sesuai jenis gambar
+        ]);
+    } else {
+        return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
+    }
+});
 
 Route::get('/bannerImage',[DisplayController::class, 'getImages'])->name('image');
 

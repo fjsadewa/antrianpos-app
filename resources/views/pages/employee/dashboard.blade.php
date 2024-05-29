@@ -168,6 +168,12 @@
             var onQueue = null;
             var isQueueCalled = false;
             var isQueueStart = false;
+            var toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 1500,
+            });
             var loketId = document.querySelector('.card').dataset.loketId;
             getQueue(loketId);
 
@@ -354,10 +360,10 @@
                 return audioFiles;
             }
 
-            function showAntrian(kodeAntrian, nomorAntrian, nomorLoket, namaPetugas, namaPelayanan) {
+            function showAntrian(kodeAntrian, nomorAntrian, nomorLoket, namaPetugas, namaPelayanan, photo) {
                 list = [
                     kodeAntrian, nomorAntrian, nomorLoket, namaPetugas,
-                    namaPelayanan
+                    namaPelayanan, photo
                 ];
                 console.log(list);
 
@@ -387,10 +393,15 @@
                         var nomorLoket = onQueue.nomorLoket;
                         var namaPetugas = onQueue.namaPetugas;
                         var namaPelayanan = onQueue.namaPelayanan;
+                        var photo = onQueue.photo;
 
                         updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
                         showAntrian(kodeAntrian, nomorAntrian, nomorLoket,
-                            namaPetugas, namaPelayanan);
+                            namaPetugas, namaPelayanan, photo);
+                        toast.fire({
+                            icon: "success",
+                            title: "Berhasil melakukan panggilan",
+                        });
                     } else {
                         var token = $('input[name=token]').val();
                         $.ajax({
@@ -408,14 +419,19 @@
                                     var nomorLoket = onQueue.nomorLoket;
                                     var namaPetugas = onQueue.namaPetugas;
                                     var namaPelayanan = onQueue.namaPelayanan;
+                                    var photo = onQueue.photo;
 
                                     updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
                                     showAntrian(kodeAntrian, nomorAntrian, nomorLoket,
-                                        namaPetugas, namaPelayanan);
+                                        namaPetugas, namaPelayanan, photo);
 
                                     isQueueCalled = true;
                                     $("#btn-skip").prop("disabled", false);
                                     $("#btn-start").prop("disabled", false);
+                                    toast.fire({
+                                        icon: "success",
+                                        title: "Berhasil melakukan panggilan",
+                                    });
                                 } else {
                                     console.error("Failed to update queue status:", data
                                         .message);
@@ -451,7 +467,10 @@
                             $("#btn-finish").prop("disabled", false);
 
                             isQueueStart = true;
-                            alert("Mulai Pelayanan.");
+                            toast.fire({
+                                icon: "success",
+                                title: "Mulai Pelayanan",
+                            });
                         },
                         error: function(error) {
                             console.error("Error sending POST request:", error);
@@ -484,8 +503,10 @@
                             isQueueStart = false;
                             getQueue(loketId);
                             console.log(onQueue);
-
-                            alert("berhasil");
+                            toast.fire({
+                                icon: "success",
+                                title: "Selesai! Lanjutkan untuk antrian selanjutnya",
+                            });
                         },
                         error: function(error) {
                             console.error("Error sending POST request:", error);

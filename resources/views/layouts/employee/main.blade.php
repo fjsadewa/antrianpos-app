@@ -62,6 +62,8 @@
         <script src="{{ asset('lte/plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
         <!-- ChartJS -->
         <script src="{{ asset('lte/plugins/chart.js/Chart.min.js') }}"></script>
+        <!-- SweetAlert -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <!-- Socket IO -->
         <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 

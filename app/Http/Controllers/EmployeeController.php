@@ -59,12 +59,14 @@ class EmployeeController extends Controller
             $nomorLoket     = $loket->nomor_loket;
             $namaPetugas    = $loket->employee->name;
             $namaPelayanan  = $antrianDipanggil->kategoriLayanan->nama_pelayanan;
+            $photo = $loket->employee->image;
 
             $antrianDipanggil['kodeAntrian'] = $kodeAntrian;
             $antrianDipanggil['nomorAntrian'] = $nomorAntrian;
             $antrianDipanggil['nomorLoket'] = $nomorLoket;
             $antrianDipanggil['namaPetugas'] = $namaPetugas;
             $antrianDipanggil['namaPelayanan'] = $namaPelayanan;
+            $antrianDipanggil['photo'] = $photo;
 
             return response()->json([
                 'status' => 'success',

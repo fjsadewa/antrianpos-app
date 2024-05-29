@@ -54,13 +54,17 @@ class EmployeeController extends Controller
         ->first();
 
         if ($antrianDipanggil) {
-            $kodeAntrian = $antrianDipanggil->kategoriLayanan->kode_pelayanan;
-            $nomorAntrian = $antrianDipanggil->nomor_urut;
-            $nomorLoket = $loket->nomor_loket;
+            $kodeAntrian    = $antrianDipanggil->kategoriLayanan->kode_pelayanan;
+            $nomorAntrian   = $antrianDipanggil->nomor_urut;
+            $nomorLoket     = $loket->nomor_loket;
+            $namaPetugas    = $loket->employee->name;
+            $namaPelayanan  = $antrianDipanggil->kategoriLayanan->nama_pelayanan;
 
             $antrianDipanggil['kodeAntrian'] = $kodeAntrian;
             $antrianDipanggil['nomorAntrian'] = $nomorAntrian;
             $antrianDipanggil['nomorLoket'] = $nomorLoket;
+            $antrianDipanggil['namaPetugas'] = $namaPetugas;
+            $antrianDipanggil['namaPelayanan'] = $namaPelayanan;
 
             return response()->json([
                 'status' => 'success',

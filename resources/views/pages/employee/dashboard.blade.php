@@ -354,14 +354,43 @@
                 return audioFiles;
             }
 
+            function showAntrian(kodeAntrian, nomorAntrian, nomorLoket, namaPetugas, namaPelayanan) {
+                list = [
+                    kodeAntrian, nomorAntrian, nomorLoket, namaPetugas,
+                    namaPelayanan
+                ];
+                console.log(list);
+
+                $.ajax({
+                    url: "http://localhost:3000/show",
+                    data: {
+                        list: list
+                    },
+                    success: function(data) {
+                        console.log(
+                            "Data sent to localhost:3000:",
+                            data);
+                    },
+                    error: function(error) {
+                        console.error(
+                            "Error sent data to localhost:3000:",
+                            error);
+                    }
+                });
+            }
+
             $("#btn-call").click(function() {
                 if (onQueue) {
                     if (isQueueCalled) {
                         var kodeAntrian = onQueue.kodeAntrian;
                         var nomorAntrian = onQueue.nomorAntrian;
                         var nomorLoket = onQueue.nomorLoket;
+                        var namaPetugas = onQueue.namaPetugas;
+                        var namaPelayanan = onQueue.namaPelayanan;
 
                         updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
+                        showAntrian(kodeAntrian, nomorAntrian, nomorLoket,
+                            namaPetugas, namaPelayanan);
                     } else {
                         var token = $('input[name=token]').val();
                         $.ajax({
@@ -372,12 +401,17 @@
                                 _token: token
                             },
                             success: function(data) {
+
                                 if (onQueue) {
                                     var kodeAntrian = onQueue.kodeAntrian;
                                     var nomorAntrian = onQueue.nomorAntrian;
                                     var nomorLoket = onQueue.nomorLoket;
+                                    var namaPetugas = onQueue.namaPetugas;
+                                    var namaPelayanan = onQueue.namaPelayanan;
 
                                     updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
+                                    showAntrian(kodeAntrian, nomorAntrian, nomorLoket,
+                                        namaPetugas, namaPelayanan);
 
                                     isQueueCalled = true;
                                     $("#btn-skip").prop("disabled", false);

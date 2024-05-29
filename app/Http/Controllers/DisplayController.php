@@ -11,13 +11,31 @@ use Illuminate\Support\Facades\Storage;
 
 class DisplayController extends Controller
 {
-    public function display(){
+    public function displayView(){
         $antrian = antrian::where('status_antrian', 'menunggu')
         ->groupBy('id_kategori_layanan')
         ->selectRaw('id_kategori_layanan, MIN(nomor_urut) AS nomor_urut_terendah')
         ->get();
         // Kembalikan view display antrian dengan data antrian teratas per kategori
         return view('pages.display', compact('antrian'));
+    }
+    
+    public function display(){
+        $antrian = antrian::where('status_antrian', 'menunggu')
+        ->groupBy('id_kategori_layanan')
+        ->selectRaw('id_kategori_layanan, MIN(nomor_urut) AS nomor_urut_terendah')
+        ->with('kategoriLayanan')
+        ->get();
+
+        $dataAntrian = [];
+        foreach ($antrian as $antrianItem) {
+            $dataAntrian[] = [
+                'nomor_urut' => $antrianItem->nomor_urut_terendah,
+                'kode_pelayanan' => $antrianItem->kategoriLayanan->kode_pelayanan, 
+                'nama_pelayanan' => $antrianItem->kategoriLayanan->nama_pelayanan, 
+            ];
+        }
+    return response()->json($dataAntrian);
     }
 
     public function form(){

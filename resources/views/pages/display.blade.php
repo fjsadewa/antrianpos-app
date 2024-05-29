@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-lg-8">
-                <div class="card">
+                <div class="card">  
                     <div class="card-body pt-1 pl-1 pr-1 pb-0">
                         <iframe width="100%" height="460px"
                             src="https://www.youtube.com/embed/UrM8J9NoFjw?autoplay=1&loop=1&controls=0&mute=1"
@@ -75,7 +75,7 @@
         <div class="row text-center pt-2 pb-2">
             @foreach ($antrian as $antrians)
                 <div class="col-lg-3 ">
-                    <div class="card">
+                    <div class="card" id="antrian">
                         <div class="card-header">
                             <h3 class="card-title" style="font-weight: bold; font-size:28px;">
                                 {{ $antrians->kategoriLayanan->nama_pelayanan }}
@@ -93,7 +93,6 @@
                 </div>
             @endforeach
         </div>
-
         <!-- /.card-body -->
     </div>
 

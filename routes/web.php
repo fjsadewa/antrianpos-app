@@ -14,6 +14,7 @@ Route::post('/login_process',[LoginController::class,'login_process'])->name('lo
 Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 
 Route::get('/display',[DisplayController::class,'display'])->name('display');
+Route::get('/displayView',[DisplayController::class,'displayView'])->name('displayView');
 Route::get('/form',[DisplayController::class,'form'])->name('form');
 Route::get('/footer',[DisplayController::class,'getFooter'])->name('footer');
 Route::get('/icon/{filename}', function ($filename) {

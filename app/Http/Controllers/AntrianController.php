@@ -42,7 +42,6 @@ class AntrianController extends Controller
             $day = now()->locale('id')->format('d');
             $month = \Carbon\Carbon::now()->locale('id')->monthName;
             $year = now()->locale('id')->format('Y');
-            //$currentTime = now()->locale('id')->format('d F Y H:i');
             $time = now()->locale('id')->format('H:i');
             $text = $textData->text;
             $curday = "$day $month $year $time";

@@ -52,7 +52,7 @@
                                             <div class="input-group">
                                                 <div class="col-md-1">
                                                     @if ($banner->image_banner)
-                                                        <img src="{{ asset('storage/banner/' . $banner->image_banner) }}"
+                                                        <img src="{{ asset('banner/' . $banner->image_banner) }}"
                                                             alt="" width="100%">
                                                     @endif
                                                 </div>

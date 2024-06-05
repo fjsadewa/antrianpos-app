@@ -207,20 +207,29 @@ class HomeController extends Controller
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
 
-        $photo      = $request->file('image_banner');
-        $filename   = date('y-m-d').$photo->getClientOriginalName();
-        $path       = 'banner/'. $filename;
-        Storage::disk('public')->put($path,file_get_contents($photo));
+        // $photo      = $request->file('image_banner');
+        // $filename   = date('y-m-d').$photo->getClientOriginalName();
+        // $path       = 'banner/'. $filename;
+        // Storage::disk('public')->put($path,file_get_contents($photo));
 
-        //mengirimkan data ke database
-        
+        $photo = $request->file('image_banner');
+        if (!is_dir('banner')) {
+            mkdir('banner', 0755, true);
+        }
+
+        // Mengubah nama file
+        $filename = date('Ymd') . $photo->getClientOriginalName();
+
+        $destinationPath = public_path().'/banner';
+        $photo->move($destinationPath,$filename);
+
         $data['judul']          = $request->judul;
         $data['image_banner']   = $filename;
         
-        //mengirim perintah create ke database
         Banner::create($data);
         return redirect()->route('admin.displaysetting')->with('success','Banner berhasil ditambahkan');
     }
+    
     public function editBanner(Request $request,$id){
         $banner = Banner::find($id);
         return view ('pages.setting.editBanner',compact('banner'));
@@ -237,46 +246,73 @@ class HomeController extends Controller
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
         
         $banner = Banner::find($id);
-        
+
+        if (!$banner) {
+            return redirect()->route('admin.displaysetting')->with('warning', 'Banner dengan ID tersebut tidak ditemukan');
+        }
         //mengirimkan data ke database
-        $data['judul']          = $request->judul;
-        $photo      = $request->file('image_banner');
-        if ($photo) {
-            $filename   = date('y-m-d').$photo->getClientOriginalName();
-            $path       = 'banner/'.$filename;
+        $data['judul']  = $request->judul;
+        $photo          = $request->file('image_banner');
+        // if ($photo) {
+        //     $filename   = date('y-m-d').$photo->getClientOriginalName();
+        //     $path       = 'banner/'.$filename;
             
-            if ($banner->image) {
-                Storage::disk('public')->delete('banner/'.$banner->image_banner);
+        //     if ($banner->image) {
+        //         Storage::disk('public')->delete('banner/'.$banner->image_banner);
+        //     }
+        //     Storage::disk('public')->put($path,file_get_contents($photo));
+
+        //     $data ['image_banner']     = $filename;
+        // }
+
+        if ($photo) {
+            if (!is_dir('banner')) {
+                mkdir('banner', 0755, true);
             }
-            Storage::disk('public')->put($path,file_get_contents($photo));
+    
+            $filename = date('Ymd') . $photo->getClientOriginalName();
+    
+            if ($banner->image_banner) {
+                $oldImagePath = public_path('/banner'. $banner->image_banner);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+    
+            $destinationPath = public_path().'/banner';
+            $photo->move($destinationPath,$filename);
 
-            $data ['image_banner']     = $filename;
+            $data['image_banner'] = $filename;
         }
-
         //mengirim perintah create ke database
-        if($banner){
-            if($banner->update($data)){
-                return redirect()->route('admin.displaysetting')->with('success','Berhasil Melakukan Update Banner!');
-            } else {
-                return redirect()->route('admin.displaysetting')->with('failed','Update Telah Gagal');
-            }
-        }else {
-        return redirect()->route('admin.displaysetting')->with('warning', 'Gambar dengan ID tersebut tidak ditemukan');
+        // if($banner){
+        if($banner->update($data)){
+            return redirect()->route('admin.displaysetting')->with('success','Berhasil Melakukan Update Banner!');
+        } else {
+            return redirect()->route('admin.displaysetting')->with('failed','Update Telah Gagal');
         }
+        // }
     }
 
     public function deleteBanner(Request $request,$id){
         $banner = Banner::find($id);
-
-        if($banner){
-            if($banner->delete()){
-                return redirect()->route('admin.displaysetting')->with('success','Banner berhasil dihapus');
-            } else {
-                return redirect()->route('admin.displaysetting')->with('failed','Penghapusan Gagal');
-            }
-        }else {
-            return redirect()->route('admin.displaysetting')->with('warning', 'Gambar dengan ID tersebut tidak ditemukan');
+        if (!$banner) {
+            return redirect()->route('admin.displaysetting')->with('warning', 'Banner dengan ID tersebut tidak ditemukan');
         }
+
+        if ($banner->image_banner) {
+            $imagePath = public_path('/banner'. $banner->image_banner);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+        // if($banner){
+        if($banner->delete()){
+            return redirect()->route('admin.displaysetting')->with('success','Banner berhasil dihapus');
+        } else {
+            return redirect()->route('admin.displaysetting')->with('failed','Penghapusan Gagal');
+        }
+        // }
     }
 
     public function editFooter(Request $request,$id){

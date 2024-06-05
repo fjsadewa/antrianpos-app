@@ -33,12 +33,14 @@ Route::get('/profile/{filename}', function ($filename) {
     if (Storage::disk('public')->exists($path)) {
         $image = Storage::disk('public')->get($path);
         return response($image, 200, [
-            'Content-Type' => 'image/jpeg', // Ubah sesuai jenis gambar
+            'Content-Type' => 'image/jpeg', 
         ]);
     } else {
         return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
     }
 });
+
+
 
 Route::get('/bannerImage',[DisplayController::class, 'getImages'])->name('image');
 Route::get('/getAntrian',[AntrianController::class, 'getAntrian']);

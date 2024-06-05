@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('footer', function (Blueprint $table) {
+        Schema::create('addtext', function (Blueprint $table) {
             $table->id();
             $table->longText('text');
             $table->timestamps();
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('footer');
+        Schema::dropIfExists('addtext');
     }
 };

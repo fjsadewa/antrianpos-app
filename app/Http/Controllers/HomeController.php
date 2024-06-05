@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\addText;
 use App\Models\Banner;
 use App\Models\Footer;
 use App\Models\Loket;
@@ -306,6 +307,42 @@ class HomeController extends Controller
             }
         }else {
         return redirect()->route('admin.displaysetting')->with('warning', 'Footer dengan ID tersebut tidak ditemukan');
+        }
+    }
+
+    public function printSet(){
+        $text = addText::get();
+        return view('pages.setting.printerSet',compact('text'));
+    }
+
+    public function editText(Request $request,$id){
+        $data = addText::find($id);
+        return view ('pages.setting.editText',compact('data'));
+    }
+
+    public function updateText(Request $request,$id){
+        //melakukan validasi terhadap data yang di inputkan 
+        $validator = Validator::make($request->all(),[
+            'text'         => 'required|string|max:100',
+        ]);
+
+        //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
+        if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
+        
+        $text = addText::find($id);
+        
+        //mengirimkan data ke database
+        $data['text']          = $request->text;
+
+        //mengirim perintah create ke database
+        if($text){
+            if($text->update($data)){
+                return redirect()->route('admin.printSet')->with('success','Berhasil Melakukan Update Text!');
+            } else {
+                return redirect()->route('admin.printSet')->with('failed','Update Telah Gagal');
+            }
+        }else {
+        return redirect()->route('admin.printSet')->with('warning', 'Text tersebut tidak ditemukan');
         }
     }
 }

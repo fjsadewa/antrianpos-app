@@ -30,4 +30,24 @@ class AntrianController extends Controller
         return Response::json(['success' => true, 'dataForm' => $dataForm, 'message' => 'Form antrian berhasil dibuat!'], 200);
     }
 
+    public function getAntrian(){
+        $latestQueue = Antrian::latest()->select('id_kategori_layanan', 'nomor_urut')->first();
+
+        if ($latestQueue) {
+            $serviceInfo = KategoriPelayanan::find($latestQueue->id_kategori_layanan);
+            $kode = $serviceInfo->kode_pelayanan;
+            $nama = $serviceInfo->nama_pelayanan;
+            $currentTime = now()->locale('id')->format('d F Y H:i');
+
+            $data = [
+                "nomor_urut" => $latestQueue->nomor_urut,
+                "kode_pelayanan" => $kode,
+                "nama_pelayanan" => $nama,
+                "timestamp" => $currentTime
+            ];
+            return response()->json($data);
+        } else {
+            return response()->json([], 404);
+        }
+    }
 }

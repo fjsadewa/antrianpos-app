@@ -143,7 +143,6 @@
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
                                             <th>Text</th>
                                             <th>Action</th>
                                         </tr>
@@ -151,17 +150,14 @@
                                     <tbody>
                                         @foreach ($footer as $d)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
                                                 <td> {{ $d->text }}</td>
                                                 <td>
                                                     <div class="row">
-                                                        {{-- <div class="col-md-6"> --}}
                                                         <a href="{{ route('admin.footer.edit', ['id' => $d->id]) }}">
                                                             <button type="button"
                                                                 class="btn btn-sm btn-primary btn-block"><i
                                                                     class="fa fa-pen"></i> Edit</button>
                                                         </a>
-                                                        {{-- </div> --}}
                                                     </div>
                                                 </td>
                                             </tr>

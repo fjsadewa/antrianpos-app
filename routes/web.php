@@ -41,7 +41,7 @@ Route::get('/profile/{filename}', function ($filename) {
 });
 
 Route::get('/bannerImage',[DisplayController::class, 'getImages'])->name('image');
-
+Route::get('/getAntrian',[AntrianController::class, 'getAntrian']);
 
 Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], function(){
     Route::get('/dashboard',[HomeController::class,'dashboard'])->name('dashboard');
@@ -65,6 +65,10 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
 
     Route::get('/editFooter/{id}',[HomeController::class,'editFooter'])->name('footer.edit');
     Route::put('/updateFooter/{id}',[HomeController::class,'updateFooter'])->name('footer.update');
+    
+    Route::get('/printSet',[HomeController::class,'printSet'])->name('printSet');
+    Route::get('/editText/{id}',[HomeController::class,'editText'])->name('text.edit');
+    Route::put('/updateText/{id}',[HomeController::class,'updateText'])->name('text.update');
     
     Route::get('/category',[CounterController::class,'category'])->name('category');
     Route::get('/createCategory',[CounterController::class,'createCategory'])->name('category.create');

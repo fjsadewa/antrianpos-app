@@ -266,18 +266,22 @@ class HomeController extends Controller
         // }
 
         if ($photo) {
-            if (!is_dir('banner')) {
-                mkdir('banner', 0755, true);
-            }
-    
-            $filename = date('Ymd') . $photo->getClientOriginalName();
-    
+            // $filename = $id.".png";
+            
+            // if ($banner->image_banner) {
+                //     $oldImagePath = '/banner'.$banner->image_banner;
+                //     if (file_exists($oldImagePath)) {
+                    //         unlink($oldImagePath);
+                    //     }
+                    // }
             if ($banner->image_banner) {
-                $oldImagePath = public_path('/banner'. $banner->image_banner);
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
+                $imagePath = 'banner/' . $banner->image_banner;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
                 }
             }
+            $filename = date('Ymd') . $photo->getClientOriginalName();
+
     
             $destinationPath = public_path().'/banner';
             $photo->move($destinationPath,$filename);
@@ -301,7 +305,7 @@ class HomeController extends Controller
         }
 
         if ($banner->image_banner) {
-            $imagePath = public_path('/banner'. $banner->image_banner);
+            $imagePath = 'banner/' . $banner->image_banner;
             if (file_exists($imagePath)) {
                 unlink($imagePath);
             }

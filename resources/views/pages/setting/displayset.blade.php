@@ -60,7 +60,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td> {{ $d->judul }}</td>
-                                            <td><img src="{{ url('banner/' . $d->image_banner) }}" alt=""
+                                            <td><img src="{{ asset('banner/' . $d->image_banner) }}" alt=""
                                                     width="75"></td>
                                             <td>
                                                 <div class="row">

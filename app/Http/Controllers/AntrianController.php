@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\addText;
 use App\Models\antrian;
 use App\Models\KategoriPelayanan;
 use Illuminate\Http\Request;
@@ -32,18 +33,25 @@ class AntrianController extends Controller
 
     public function getAntrian(){
         $latestQueue = Antrian::latest()->select('id_kategori_layanan', 'nomor_urut')->first();
+        $textData = addText::first();
 
         if ($latestQueue) {
             $serviceInfo = KategoriPelayanan::find($latestQueue->id_kategori_layanan);
             $kode = $serviceInfo->kode_pelayanan;
             $nama = $serviceInfo->nama_pelayanan;
-            $currentTime = now()->locale('id')->format('d F Y H:i');
-
+            $day = now()->locale('id')->format('d');
+            $month = \Carbon\Carbon::now()->locale('id')->monthName;
+            $year = now()->locale('id')->format('Y');
+            //$currentTime = now()->locale('id')->format('d F Y H:i');
+            $time = now()->locale('id')->format('H:i');
+            $text = $textData->text;
+            $curday = "$day $month $year $time";
             $data = [
                 "nomor_urut" => $latestQueue->nomor_urut,
                 "kode_pelayanan" => $kode,
                 "nama_pelayanan" => $nama,
-                "timestamp" => $currentTime
+                "timestamp" => $curday,
+                "addText" => $text,
             ];
             return response()->json($data);
         } else {

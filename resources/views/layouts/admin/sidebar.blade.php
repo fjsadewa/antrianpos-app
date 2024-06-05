@@ -32,7 +32,7 @@
 
                 <li class="nav-header">Tampilan</li>
                 <li class="nav-item">
-                    <a href="{{ route('display') }}" class="nav-link">
+                    <a href="" class="nav-link">
                         <i class="nav-icon fas fa-tv"></i>
                         <p>
                             Tampilan Utama
@@ -40,7 +40,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('form') }}" class="nav-link">
+                    <a href="" class="nav-link">
                         <i class="nav-icon fas fa-columns"></i>
                         <p>
                             Tampilan Formulir

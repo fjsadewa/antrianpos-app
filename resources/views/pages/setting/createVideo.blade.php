@@ -35,48 +35,48 @@
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
-                                <form>
-                                    <div class="card-body">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Judul</label>
-                                            <input name="judul" type="text"
-                                                class="form-control @error('judul')is-invalid @enderror" id="judul"
-                                                value="" placeholder="Teaser terbaru">
-                                            @error('judul')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="inputTitle">Judul</label>
+                                        <input name="judul" type="text"
+                                            class="form-control @error('judul')is-invalid @enderror" id="judul"
+                                            placeholder="Teaser terbaru">
+                                        @error('judul')
+                                            <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleSelectRounded0">Tipe</label>
+                                        <select name="tipe" required class="custom-select rounded-2"
+                                            id="exampleSelectRounded0">
+                                            <option value="youtube" @selected(old('tipe') === 'youtube')>Youtube</option>
+                                            <option value="local" @selected(old('tipe') === 'local')>Local</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="youtube-form">
+                                        <label for="inputLink">Link Youtube</label>
+                                        <input name="link" type="text"
+                                            class="form-control @error('link')is-invalid @enderror" id="link"
+                                            placeholder="https://youtube.com">
+                                        @error('link')
+                                            <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group" id="local-form">
+                                        <label for="inputFile">Local File</label>
+                                        <div class="custom-file">
+                                            <input type="file" name="customFile"
+                                                class="custom-file-input @error('customFile')is-invalid @enderror"
+                                                id="customFile">
+                                            <label class="custom-file-label" for="customFile">Upload File</label>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="exampleSelectRounded0">Tipe</label>
-                                            <select name="tipe" required class="custom-select rounded-2"
-                                                id="exampleSelectRounded0">
-                                                <option value="youtube" @selected(old('tipe') === 'youtube')>Youtube</option>
-                                                <option value="local" @selected(old('tipe') === 'local')>Local</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group" id="youtube-form">
-                                            <label for="exampleInputEmail1">Link Youtube</label>
-                                            <input name="link" type="text"
-                                                class="form-control @error('link')is-invalid @enderror" id="link"
-                                                placeholder="https://youtube.com">
-                                            @error('link')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group" id="local-form">
-                                            <label for="exampleInputEmail1">Local File</label>
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="customFile">
-                                                <label class="custom-file-label" for="customFile">Upload File</label>
-                                            </div>
-                                        </div>
+                                    </div>
 
-                                    </div>
-                                    <!-- /.card-body -->
-                                    <div class="card-footer">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </form>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
                             </div>
                             <!-- /.card -->
                         </div>
@@ -91,13 +91,19 @@
 @endsection
 
 @section('script')
+    <!-- Get Name File -->
+    <script type="application/javascript">
+        $('input[type="file"]').change(function(e){
+            var fileName = e.target.files[0].name;
+            $('.custom-file-label').html(fileName);
+        });
+    </script>
     <script>
         $(document).ready(function() {
             const selectElement = $('#exampleSelectRounded0');
             const youtubeForm = $('#youtube-form');
             const localForm = $('#local-form');
 
-            // Sembunyikan localForm pada awalnya
             localForm.hide();
 
             selectElement.change(function(event) {
@@ -109,6 +115,21 @@
                     youtubeForm.hide();
                     localForm.show();
                 }
+            });
+            $('form').submit(function(event) {
+                const selectedValue = selectElement.val();
+
+                if (selectedValue === 'youtube' && $('#link').val() === '') {
+                    alert('Link Youtube tidak boleh kosong!');
+                    event.preventDefault(); // Mencegah form submit
+                    return false;
+                } else if (selectedValue === 'local' && $('#customFile').val() === '') {
+                    alert('File video tidak boleh kosong!');
+                    event.preventDefault(); // Mencegah form submit
+                    return false;
+                }
+
+                return true; // Form submit diizinkan
             });
         });
     </script>

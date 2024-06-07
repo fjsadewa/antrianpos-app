@@ -77,4 +77,10 @@ class DisplayController extends Controller
 
         return response()->json($imageUrls);
     }
+
+    public function getBanner(){
+        $banner = Banner::all();
+        $bannerName = $banner->image_banner;
+        return response()->json($bannerName);
+    }
 }

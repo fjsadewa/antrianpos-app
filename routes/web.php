@@ -39,10 +39,49 @@ Route::get('/profile/{filename}', function ($filename) {
         return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
     }
 });
+// Route::get('/img-banner', function () {
+//     $files = Storage::disk('public')->files('banner');
 
+//     $data = [];
+//     foreach ($files as $file) {
+//         $filename = basename($file); 
+//         $fileUrl = Storage::disk('public')->url($file); 
 
+//         $data[] = [
+//             'filename' => $filename,
+//             'url' => $fileUrl,
+//         ];
+//     }
 
-Route::get('/bannerImage',[DisplayController::class, 'getImages'])->name('image');
+//     return response()->json($data);
+// });
+
+Route::get('/img-banner', function () {
+    $basePath = public_path('banner'); 
+    if (!is_dir($basePath)) {
+        return response()->json(['error' => 'Banner folder not found'], 404);
+    }
+
+    $files = scandir($basePath); 
+    $data = [];
+
+    $allowedExtensions = ['jpg', 'jpeg', 'png']; 
+    foreach ($files as $file) {
+        if ($file === '.' || $file === '..') {
+            continue;
+        }
+        $filePath = $basePath . '/' . $file;
+        if (in_array(pathinfo($filePath, PATHINFO_EXTENSION), $allowedExtensions)) {
+            $data[] = [
+                'filename' => $file,
+                'url' => asset('banner/' . $file), 
+            ];
+        }
+    }
+
+    return response()->json($data);
+});
+
 Route::get('/getAntrian',[AntrianController::class, 'getAntrian']);
 
 Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], function(){
@@ -58,6 +97,9 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     Route::get('/displaysetting',[HomeController::class,'displaySetting'])->name('displaysetting');
     Route::get('/createVideo',[HomeController::class,'createVideo'])->name('video.create');
     Route::post('/storeVideo',[HomeController::class,'storeVideo'])->name('video.store');
+    Route::get('/editVideo/{id}',[HomeController::class,'editVideo'])->name('video.edit');
+    Route::put('/updateVideo/{id}',[HomeController::class,'updateVideo'])->name('video.update');
+    Route::delete('/deleteVideo/{id}',[HomeController::class,'deleteVideo'])->name('video.delete');
     
     Route::get('/createaBanner',[HomeController::class,'createBanner'])->name('banner.create');
     Route::post('/storeBanner',[HomeController::class,'storeBanner'])->name('banner.store');

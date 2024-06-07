@@ -32,6 +32,86 @@
                             </a>
                         </div>
                         <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Judul</th>
+                                        <th>Tipe</th>
+                                        <th>Sumber</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($video as $d)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td> {{ $d->judul }}</td>
+                                            <td> {{ $d->tipe }}</td>
+                                            <td> {{ $d->link_sumber }}</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <a href="{{ route('admin.video.edit', ['id' => $d->id]) }}">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-primary btn-block"><i
+                                                                    class="fa fa-pen"></i> Edit</button>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <a data-toggle="modal"
+                                                            data-target="#modal-hapus{{ $d->id }}">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-danger btn-block"><i
+                                                                    class="fa fa-trash"></i> hapus</button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <div class="modal fade" id="modal-hapus{{ $d->id }}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Konfirmasi Hapus Data</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Apakah kamu yakin ingin menghapus video
+                                                            <b>{{ $d->judul }}</b> ?
+                                                        </p>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <form action="{{ route('admin.video.delete', ['id' => $d->id]) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <button type="button" class="btn btn-default"
+                                                                        data-dismiss="modal">Batal</button>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <button type="submit"
+                                                                        class="btn btn-danger">Hapus</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal-dialog -->
+                                        </div>
+                                        <!-- /.modal -->
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <!-- /.card -->
                 </div>

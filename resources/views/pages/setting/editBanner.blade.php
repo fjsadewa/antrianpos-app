@@ -12,7 +12,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="">Banner</a></li>
-                            <li class="breadcrumb-item active">Tambah Gambar</li>
+                            <li class="breadcrumb-item active">Edit Banner</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->

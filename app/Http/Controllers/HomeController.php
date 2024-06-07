@@ -146,9 +146,10 @@ class HomeController extends Controller
 
 
     public function displaySetting(){
+        $video = Video::get();
         $banner = Banner::get();
         $footer = Footer::get();
-        return view('pages.setting.displayset',compact('banner','footer'));
+        return view('pages.setting.displayset',compact('video','banner','footer'));
     }
 
     public function createVideo(){
@@ -156,41 +157,117 @@ class HomeController extends Controller
     }
 
     public function storeVideo(Request $request){
-        $validator = Validator::make($request->all(), [
-            'judul' => 'required|string|max:255',
-            'tipe' => 'required|in:youtube,local',
-            'link_sumber' => 'required|string',
-        ]);
-        if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
-        
-        $data = $request->validated();
-        $judul = $data['judul'];
-        $tipe = $data['tipe'];
-        $linkSumber = $data['link_sumber'];
-        
-        // dd($request->validated());
-        // Menyimpan video berdasarkan tipe
+        $tipe = $request->get('tipe');
         if ($tipe === 'youtube') {
-            // Simpan link Youtube langsung ke database
-            Video::create([
-                'judul' => $judul,
-                'tipe' => $tipe,
-                'link_sumber' => $linkSumber,
+            $this->validate($request, [
+                'judul' => 'required|string|max:255',
+                'tipe'  => 'required|in:youtube,local',
+                'link'  => 'required_if:tipe,youtube|url|nullable',
             ]);
-        } else if ($tipe === 'local') {
-            // Simpan video ke storage dan url ke database
-            $fileName = uniqid() . '.' . $request->file('link_sumber')->getClientOriginalExtension();
-            $request->file('link_sumber')->storeAs('public/videos', $fileName);
-            $linkSumber = storage_path('app/public/videos/') . $fileName;
-    
-            Video::create([
-                'judul' => $judul,
-                'tipe' => $tipe,
-                'link_sumber' => $linkSumber,
+        } else {
+            $this->validate($request, [
+                'judul' => 'required|string|max:255',
+                'tipe'  => 'required|in:youtube,local',
+                'customFile' => 'required_if:tipe,local|file|mimes:mp4,avi',
             ]);
         }
+        $videoData = [];
+        if ($request->tipe === 'youtube') {
+            $videoData['judul']= $request->judul;
+            $videoData['tipe']= $request->tipe;
+            $videoData['link_sumber'] = $request->link;
+        } else {
+            if (!is_dir('banner')) {
+                mkdir('banner', 0755, true);
+            }
+            $videoData['judul']= $request->judul;
+            $videoData['tipe']= $request->tipe;
+            $videoData['link_sumber'] = $request->file('customFile')->getClientOriginalName(); 
+            $vid = $request->file('customFile')->getClientOriginalName();
+            $destinationPath = public_path().'/video';
+            $request->file('customFile')->move($destinationPath,$vid);
+        }
+    
+        Video::create($videoData);
     
         return redirect()->route('admin.displaysetting')->with('success','Video berhasil ditambahkan');
+    }
+
+    public function editVideo(Request $request,$id){
+        $video = Video::find($id);
+        return view ('pages.setting.editVideo',compact('video'));
+    }
+
+    public function updateVideo(Request $request, $id){
+        $video = Video::find($id);
+
+        if (!$video) {
+            return redirect()->route('admin.video.index')->with('error', 'Video tidak ditemukan');
+        }
+
+        $this->validate($request, [
+            'judul' => 'required|string|max:255',
+            'link' => 'required_if:tipe,youtube|url', 
+            'customFile' => 'nullable|file|mimes:mp4,avi', 
+        ]);
+
+        if ($request->tipe === 'youtube') {
+            // Update Youtube video
+            $videoData = [
+                'judul' => $request->judul,
+                'link_sumber' => $request->link
+            ];
+        } else {
+            // Update local video
+            $videoData = [
+                'judul' => $request->judul,
+            ];
+        
+            if ($request->hasFile('customFile')) {
+                if (!is_dir('video')) {
+                    mkdir('video', 0755, true);
+                }
+                if ($video->tipe === 'local') {
+                    $videoPath = 'video/' . $video->link_sumber;
+                    if (file_exists($videoPath)) {
+                        unlink($videoPath);
+                    }
+                }
+                $videoData['link_sumber'] = $request->file('customFile')->getClientOriginalName();
+                $vid = $request->file('customFile')->getClientOriginalName();
+                $destinationPath = public_path().'/video';
+                $request->file('customFile')->move($destinationPath,$vid);
+            } else if ($video->tipe === 'local') {
+                $videoData['link_sumber'] = $video->link_sumber;
+            }
+        }
+        // dd($videoData);
+        if($video->update($videoData)){
+            return redirect()->route('admin.displaysetting')->with('success','Berhasil Melakukan Update Video!');
+        } else {
+            return redirect()->route('admin.displaysetting')->with('failed','Update Telah Gagal');
+        }
+    }
+
+    public function deleteVideo($id){
+        $video = Video::find($id);
+        if (!$video) {
+            return redirect()->route('admin.displaysetting')->with('warning', 'Banner dengan ID tersebut tidak ditemukan');
+        }
+
+        if ($video->tipe === 'local') {
+            $videoPath = 'video/' . $video->link_sumber;
+            if (file_exists($videoPath)) {
+                unlink($videoPath);
+            }
+        }
+        
+        if($video->delete()){
+            return redirect()->route('admin.displaysetting')->with('success','Video berhasil dihapus');
+        } else {
+            return redirect()->route('admin.displaysetting')->with('failed','Penghapusan Gagal');
+        }
+        
     }
 
     public function createBanner(){
@@ -253,27 +330,9 @@ class HomeController extends Controller
         //mengirimkan data ke database
         $data['judul']  = $request->judul;
         $photo          = $request->file('image_banner');
-        // if ($photo) {
-        //     $filename   = date('y-m-d').$photo->getClientOriginalName();
-        //     $path       = 'banner/'.$filename;
-            
-        //     if ($banner->image) {
-        //         Storage::disk('public')->delete('banner/'.$banner->image_banner);
-        //     }
-        //     Storage::disk('public')->put($path,file_get_contents($photo));
-
-        //     $data ['image_banner']     = $filename;
-        // }
 
         if ($photo) {
-            // $filename = $id.".png";
             
-            // if ($banner->image_banner) {
-                //     $oldImagePath = '/banner'.$banner->image_banner;
-                //     if (file_exists($oldImagePath)) {
-                    //         unlink($oldImagePath);
-                    //     }
-                    // }
             if ($banner->image_banner) {
                 $imagePath = 'banner/' . $banner->image_banner;
                 if (file_exists($imagePath)) {
@@ -288,17 +347,15 @@ class HomeController extends Controller
 
             $data['image_banner'] = $filename;
         }
-        //mengirim perintah create ke database
-        // if($banner){
+
         if($banner->update($data)){
             return redirect()->route('admin.displaysetting')->with('success','Berhasil Melakukan Update Banner!');
         } else {
             return redirect()->route('admin.displaysetting')->with('failed','Update Telah Gagal');
         }
-        // }
     }
 
-    public function deleteBanner(Request $request,$id){
+    public function deleteBanner($id){
         $banner = Banner::find($id);
         if (!$banner) {
             return redirect()->route('admin.displaysetting')->with('warning', 'Banner dengan ID tersebut tidak ditemukan');

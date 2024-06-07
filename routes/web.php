@@ -17,6 +17,7 @@ Route::get('/display',[DisplayController::class,'display'])->name('display');
 Route::get('/displayView',[DisplayController::class,'displayView'])->name('displayView');
 Route::get('/form',[DisplayController::class,'form'])->name('form');
 Route::get('/footer',[DisplayController::class,'getFooter'])->name('footer');
+Route::get('/img',[DisplayController::class,'getBanner']);
 Route::get('/icon/{filename}', function ($filename) {
     $path = 'icon-category/' . $filename;
     if (Storage::disk('public')->exists($path)) {
@@ -38,48 +39,6 @@ Route::get('/profile/{filename}', function ($filename) {
     } else {
         return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
     }
-});
-// Route::get('/img-banner', function () {
-//     $files = Storage::disk('public')->files('banner');
-
-//     $data = [];
-//     foreach ($files as $file) {
-//         $filename = basename($file); 
-//         $fileUrl = Storage::disk('public')->url($file); 
-
-//         $data[] = [
-//             'filename' => $filename,
-//             'url' => $fileUrl,
-//         ];
-//     }
-
-//     return response()->json($data);
-// });
-
-Route::get('/img-banner', function () {
-    $basePath = public_path('banner'); 
-    if (!is_dir($basePath)) {
-        return response()->json(['error' => 'Banner folder not found'], 404);
-    }
-
-    $files = scandir($basePath); 
-    $data = [];
-
-    $allowedExtensions = ['jpg', 'jpeg', 'png']; 
-    foreach ($files as $file) {
-        if ($file === '.' || $file === '..') {
-            continue;
-        }
-        $filePath = $basePath . '/' . $file;
-        if (in_array(pathinfo($filePath, PATHINFO_EXTENSION), $allowedExtensions)) {
-            $data[] = [
-                'filename' => $file,
-                'url' => asset('banner/' . $file), 
-            ];
-        }
-    }
-
-    return response()->json($data);
 });
 
 Route::get('/getAntrian',[AntrianController::class, 'getAntrian']);

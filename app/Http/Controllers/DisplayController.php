@@ -60,27 +60,27 @@ class DisplayController extends Controller
         return response()->json($footerData);
     }
 
-    public function getImages(){
-        $images = Storage::files('banner');
-        $imageUrls = [];
+    // public function getImages(){
+    //     $images = Storage::files('banner');
+    //     $imageUrls = [];
 
-        foreach ($images as $image) {
-            $imageUrl = Storage::url($image);
-            $imageInfo = pathinfo($image);
-            $imageName = $imageInfo['filename'];
+    //     foreach ($images as $image) {
+    //         $imageUrl = Storage::url($image);
+    //         $imageInfo = pathinfo($image);
+    //         $imageName = $imageInfo['filename'];
 
-            $imageUrls[] = [
-                'name' => $imageName,
-                'url' => $imageUrl,
-            ];
-        }
+    //         $imageUrls[] = [
+    //             'name' => $imageName,
+    //             'url' => $imageUrl,
+    //         ];
+    //     }
 
-        return response()->json($imageUrls);
-    }
+    //     return response()->json($imageUrls);
+    // }
 
     public function getBanner(){
         $banner = Banner::all();
-        $bannerName = $banner->image_banner;
+        $bannerName = $banner->pluck('image_banner');
         return response()->json($bannerName);
     }
 }

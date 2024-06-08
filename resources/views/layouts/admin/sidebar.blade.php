@@ -32,7 +32,7 @@
 
                 <li class="nav-header">Tampilan</li>
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="http://localhost:3000/display" class="nav-link">
                         <i class="nav-icon fas fa-tv"></i>
                         <p>
                             Tampilan Utama
@@ -40,7 +40,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="http://localhost:3000/" class="nav-link">
                         <i class="nav-icon fas fa-columns"></i>
                         <p>
                             Tampilan Formulir

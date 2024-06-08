@@ -27,9 +27,45 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header" style="display: flex; justify-content: space-between">
                             <label class="card-title" style="flex-grow: 1;">Video</label>
-                            <a href="{{ route('admin.video.create') }}" style="display: inline-block;">
-                                <button class="btn bg-gradient-primary">Tambah Video</button>
-                            </a>
+                            <div style="justify-content: space-between">
+                                <a data-toggle="modal" data-target="#Choice" style="display: inline-block;">
+                                    <button class="btn bg-gradient-primary">Edit Tampilan</button>
+                                </a>
+                                <a href="{{ route('admin.video.create') }}" style="display: inline-block;">
+                                    <button class="btn bg-gradient-primary">Tambah Video</button>
+                                </a>
+                            </div>
+                            <div class="modal fade" id="Choice">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Ubah Sumber Tampilan Video </h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Pilih sumber tampilan video:</p>
+                                            <form action="" method="POST">
+                                                @csrf
+                                                @method('DELETE') <div class="form-group">
+                                                    <input type="radio" name="source" value="option1" id="source1">
+                                                    <label for="source1">Youtube</label><br>
+                                                    <input type="radio" name="source" value="option2" id="source2">
+                                                    <label for="source2">Local</label><br>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">Batal</button>
+                                            <button type="submit" class="btn btn-primary">Ubah</button>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -179,7 +215,8 @@
                                                         </p>
                                                     </div>
                                                     <div class="modal-footer justify-content-between">
-                                                        <form action="{{ route('admin.banner.delete', ['id' => $d->id]) }}"
+                                                        <form
+                                                            action="{{ route('admin.banner.delete', ['id' => $d->id]) }}"
                                                             method="POST">
                                                             @csrf
                                                             @method('DELETE')

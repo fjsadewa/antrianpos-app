@@ -22,15 +22,18 @@ class EmployeeController extends Controller
         }
 
         $kategoriLayananId = $loket->kategori_pelayanan_id;
+        $nmrLoket = $loket->nomor_loket;
         
         $antrian = antrian::where('id_kategori_layanan', $kategoriLayananId)
         ->where('status_antrian', 'menunggu') 
         ->get(); 
         
         $antrianSekarang = antrian::where('id_kategori_layanan', $kategoriLayananId)
+        ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
+            $query->where('nomor_loket', $nmrLoket); })
         ->whereIn('status_antrian', ['dipanggil', 'dilayani']) 
         ->get(); 
-
+        // dd($antrianSekarang);
         $jumlahAntrian = $antrian->count();
 
         $data = ['loket' => $loket, 'antrian' => $antrian, 'antrianSekarang' => $antrianSekarang];
@@ -40,6 +43,7 @@ class EmployeeController extends Controller
 
     public function getAntrian($id){
         $loket = Loket::where('user_id',$id)->first();
+        $nmrLoket = $loket->nomor_loket;
         if ($loket) {
             $kategoriLayananId = $loket->kategori_pelayanan_id;
         } else {
@@ -50,6 +54,8 @@ class EmployeeController extends Controller
         }
 
         $antrianDipanggil = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+        ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
+            $query->where('nomor_loket', $nmrLoket); })
         ->whereIn('status_antrian', ['dipanggil', 'dilayani'])
         ->first();
 
@@ -76,8 +82,10 @@ class EmployeeController extends Controller
         }
 
         $antrianTerkini = Antrian::where('id_kategori_layanan', $kategoriLayananId)
-            ->where('status_antrian', 'menunggu')
-            ->first();
+        // ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
+        //     $query->where('nomor_loket', $nmrLoket); })
+        ->where('status_antrian', 'menunggu')
+        ->first();
     
         if ($antrianTerkini) {
             $kodeAntrian    = $antrianTerkini->kategoriLayanan->kode_pelayanan;
@@ -105,8 +113,11 @@ class EmployeeController extends Controller
         $loket = Loket::where('user_id',$id)->first();
         if($loket){
             $kategoriLayananId = $loket->kategori_pelayanan_id;
+            // $nmrLoket = $loket->nomor_loket;
             
             $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+            // ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
+            //     $query->where('nomor_loket', $nmrLoket); })
             ->where('status_antrian', 'menunggu')
             ->first();
         } else {
@@ -168,9 +179,12 @@ class EmployeeController extends Controller
     public function mulaiAntrian($id){
         $loket = Loket::where('user_id',$id)->first();
         if($loket){
+            $nmrLoket = $loket->nomor_loket;
             $kategoriLayananId = $loket->kategori_pelayanan_id;
             
             $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
+                $query->where('nomor_loket', $nmrLoket); })
             ->where('status_antrian', 'dipanggil')
             ->first();
         } else {
@@ -200,8 +214,11 @@ class EmployeeController extends Controller
         $loket = Loket::where('user_id',$id)->first();
         if($loket){
             $kategoriLayananId = $loket->kategori_pelayanan_id;
-            
+            $nmrLoket = $loket->nomor_loket;
+
             $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
+                $query->where('nomor_loket', $nmrLoket); })
             ->where('status_antrian', 'dilayani')
             ->first();
         } else {

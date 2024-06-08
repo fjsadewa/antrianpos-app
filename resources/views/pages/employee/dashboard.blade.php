@@ -168,6 +168,7 @@
             var onQueue = null;
             var isQueueCalled = false;
             var isQueueStart = false;
+            const timeoutInterval = 60000;
             var toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -176,6 +177,10 @@
             });
             var loketId = document.querySelector('.card').dataset.loketId;
             getQueue(loketId);
+
+            setTimeout(() => {
+                window.location.reload();
+            }, timeoutInterval);
 
             function getQueue($loketId) {
                 $.ajax({
@@ -188,6 +193,7 @@
                             console.log(onQueue);
                             var kodeAntrian = onQueue.kodeAntrian;
                             var nomorAntrian = onQueue.nomorAntrian;
+                            var nomorLoket = onQueue.nomorLoket;
                             $('#modal-text').text('Apakah kamu yakin ingin melewati nomor antrian ' +
                                 kodeAntrian + ' - ' + nomorAntrian + '?');
 
@@ -432,6 +438,7 @@
                                         icon: "success",
                                         title: "Berhasil melakukan panggilan",
                                     });
+                                    window.location.reload();
                                 } else {
                                     console.error("Failed to update queue status:", data
                                         .message);
@@ -541,6 +548,7 @@
                             console.log(onQueue);
 
                             $('#modal-skip').modal('hide');
+                            window.location.reload();
                         },
                         error: function(error) {
                             console.error("Error sending POST request:", error);

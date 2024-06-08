@@ -54,6 +54,7 @@ class EmployeeController extends Controller
         }
 
         $antrianDipanggil = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+        ->whereDate('tanggal', now())
         ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
             $query->where('nomor_loket', $nmrLoket); })
         ->whereIn('status_antrian', ['dipanggil', 'dilayani'])
@@ -84,6 +85,7 @@ class EmployeeController extends Controller
         $antrianTerkini = Antrian::where('id_kategori_layanan', $kategoriLayananId)
         // ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
         //     $query->where('nomor_loket', $nmrLoket); })
+        ->whereDate('tanggal', now())
         ->where('status_antrian', 'menunggu')
         ->first();
     
@@ -118,6 +120,7 @@ class EmployeeController extends Controller
             $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
             // ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
             //     $query->where('nomor_loket', $nmrLoket); })
+            ->whereDate('tanggal', now())
             ->where('status_antrian', 'menunggu')
             ->first();
         } else {
@@ -151,6 +154,7 @@ class EmployeeController extends Controller
             $kategoriLayananId = $loket->kategori_pelayanan_id;
             
             $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->whereDate('tanggal', now())
             ->where('status_antrian', 'dipanggil')
             ->first();
         } else {
@@ -185,6 +189,7 @@ class EmployeeController extends Controller
             $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
             ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
                 $query->where('nomor_loket', $nmrLoket); })
+            ->whereDate('tanggal', now())
             ->where('status_antrian', 'dipanggil')
             ->first();
         } else {
@@ -219,6 +224,7 @@ class EmployeeController extends Controller
             $antrianTerdepan = Antrian::where('id_kategori_layanan', $kategoriLayananId)
             ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
                 $query->where('nomor_loket', $nmrLoket); })
+            ->whereDate('tanggal', now())
             ->where('status_antrian', 'dilayani')
             ->first();
         } else {

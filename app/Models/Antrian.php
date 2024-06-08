@@ -19,6 +19,7 @@ class antrian extends Model
         'waktu_panggil',
         'id_loket_layani',
         'waktu_selesai_layani',
+        'tanggal'
     ];
 
     public function kategoriLayanan()

@@ -13,15 +13,16 @@ class DisplayController extends Controller
 {
     public function displayView(){
         $antrian = antrian::where('status_antrian', 'menunggu')
+        ->whereDate('tanggal', now())
         ->groupBy('id_kategori_layanan')
         ->selectRaw('id_kategori_layanan, MIN(nomor_urut) AS nomor_urut_terendah')
         ->get();
-        // Kembalikan view display antrian dengan data antrian teratas per kategori
         return view('pages.display', compact('antrian'));
     }
     
     public function display(){
         $antrian = antrian::where('status_antrian', 'menunggu')
+        ->whereDate('tanggal', now())
         ->groupBy('id_kategori_layanan')
         ->selectRaw('id_kategori_layanan, MIN(nomor_urut) AS nomor_urut_terendah')
         ->with('kategoriLayanan')

@@ -12,18 +12,22 @@ class AntrianController extends Controller
 {
     public function createAntrian($id){
         $kategoriLayanan = KategoriPelayanan::find($id);
+        $tanggalHariIni = now()->format('Y-m-d');
 
         if (!$kategoriLayanan) {
             return Response::json(['success' => false, 'message' => 'Kategori layanan tidak ditemukan'], 404);
         }
 
         // Hitung nomor urut baru
-        $nomorUrutBaru = antrian::where('id_kategori_layanan', $kategoriLayanan->id)->max('nomor_urut') + 1;
+        $nomorUrutBaru = antrian::where('id_kategori_layanan', $kategoriLayanan->id)
+            ->whereDate('tanggal', now())
+            ->max('nomor_urut') + 1;
 
         // Buat antrian baru
         $dataForm = [
             'id_kategori_layanan' => $kategoriLayanan->id,
             'nomor_urut' => $nomorUrutBaru,
+            'tanggal' => $tanggalHariIni,
             'status_antrian' => 'menunggu',
         ];
 
@@ -32,7 +36,9 @@ class AntrianController extends Controller
     }
 
     public function getAntrian(){
-        $latestQueue = Antrian::latest()->select('id_kategori_layanan', 'nomor_urut')->first();
+        $latestQueue = Antrian::latest()->select('id_kategori_layanan', 'nomor_urut')
+            ->whereDate('tanggal', now())
+            ->first();
         $textData = addText::first();
 
         if ($latestQueue) {

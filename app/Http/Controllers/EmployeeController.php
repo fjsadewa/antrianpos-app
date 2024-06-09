@@ -6,6 +6,7 @@ use App\Models\antrian;
 use App\Models\Loket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use DataTables;
 
 class EmployeeController extends Controller
 {
@@ -248,6 +249,57 @@ class EmployeeController extends Controller
                 'message' => 'Antrian tidak ditemukan',
             ]);
         }
+    }
+
+    public function antrianSekarangData(Request $request){
+        // die();
+        if($request->ajax()){
+            $userId = Auth::user()->id; 
+            $loket = Loket::where('user_id', $userId)->first(); 
+        
+
+            $kategoriLayananId = $loket->kategori_pelayanan_id;
+            $nmrLoket = $loket->nomor_loket;
+            
+            $data = antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
+                $query->where('nomor_loket', $nmrLoket); })
+            ->whereIn('status_antrian', ['dipanggil', 'dilayani']) 
+            ->with(['kategoriLayanan'=>function($query){
+                $query->select('id','kode_pelayanan','nama_pelayanan');
+            }])
+            ->get(); 
+            
+            // return response()->json($data);
+            return Datatables::of($data)
+                    ->make(true);
+        }
+        
+    }
+
+    public function antrianData(Request $request){
+        // die();
+        if($request->ajax()){
+            $userId = Auth::user()->id; 
+            $loket = Loket::where('user_id', $userId)->first(); 
+        
+
+            $kategoriLayananId = $loket->kategori_pelayanan_id;
+            $nmrLoket = $loket->nomor_loket;
+            
+            $data = antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->where('status_antrian', 'menunggu')  
+            ->with(['kategoriLayanan'=>function($query){
+                $query->select('id','kode_pelayanan','nama_pelayanan');
+            }])
+            ->get(); 
+            
+            // return response()->json($data);
+            return Datatables::of($data)
+                    ->addIndexColumn()
+                    ->make(true);
+        }
+        
     }
 }
 

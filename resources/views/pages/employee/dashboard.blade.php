@@ -2,6 +2,11 @@
 
 @section('title', 'Dashboard Loket - Pos Indonesia')
 
+@section('style')
+<link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+@endsection
+
 @section('content')
     <div class="content-wrapper">
         <!-- Main content -->
@@ -96,7 +101,8 @@
                             <h3 class="card-title"> Antrian Saat Ini</h3>
                         </div><!-- /.card-header -->
                         <div class="card-body">
-                            <table id="example1" class="table table-bordered table-striped">
+                        
+                            <table id="example1" class="table table-bordered table-striped antrian-sekarang-table">
                                 <thead>
                                     <tr>
                                         <th>Kode Antrian</th>
@@ -105,13 +111,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data['antrianSekarang'] as $as)
-                                        <tr>
-                                            <td>{{ $as->kategoriLayanan->kode_pelayanan }}</td>
-                                            <td>{{ $as->nomor_urut }}</td>
-                                            <td>{{ $as->kategoriLayanan->nama_pelayanan }}</td>
-                                        </tr>
-                                    @endforeach
+                                    
                                 </tbody>
                             </table>
                         </div><!-- /.card-body -->
@@ -125,7 +125,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <table id="example1" class="table table-bordered table-striped">
+                            <table id="example1" class="table table-bordered table-striped antrian-table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -135,14 +135,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data['antrian'] as $antrian)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $antrian->kategoriLayanan->kode_pelayanan }}</td>
-                                            <td>{{ $antrian->nomor_urut }}</td>
-                                            <td>{{ $antrian->kategoriLayanan->nama_pelayanan }}</td>
-                                        </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
                         </div><!-- /.card-body -->
@@ -161,6 +153,10 @@
 
 @endsection
 @section('script')
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
     <script>
         $(document).ready(function() {
             var pointer = 0;
@@ -175,16 +171,67 @@
                 showConfirmButton: false,
                 timer: 1500,
             });
+
+            var antrianSekarangTable = $('.antrian-sekarang-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ url('datatable/antrianSekarangData') }}",
+        columnDefs: [ {
+            targets: 0,
+            searchable: false,
+            render: function(data, type, row, meta){
+                return data.kategori_layanan.kode_pelayanan;
+            },
+        },{
+            targets: 2,
+            searchable: false,
+            render: function(data, type, row, meta){
+                return data.kategori_layanan.nama_pelayanan;
+            },
+        }],
+        columns: [
+            {data: null, name: 'kode_antrian'},
+            {data: 'nomor_urut', name: 'nomor_antrian'},
+            {data: null, name: 'jenis_pelayanan'}
+        ]
+    });
+
+    var antrianTable = $('.antrian-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ url('datatable/antrianData') }}",
+        columnDefs: [ {
+            targets: 1,
+            searchable: false,
+            render: function(data, type, row, meta){
+                return data.kategori_layanan.kode_pelayanan;
+            },
+        },{
+            targets: 3,
+            searchable: false,
+            render: function(data, type, row, meta){
+                return data.kategori_layanan.nama_pelayanan;
+            },
+        }],
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: null, name: 'kode_antrian'},
+            {data: 'nomor_urut', name: 'nomor_antrian'},
+            {data: null, name: 'jenis_pelayanan'}
+        ]
+    });
+
+
             var loketId = document.querySelector('.card').dataset.loketId;
             getQueue(loketId);
 
-            setTimeout(() => {
-                window.location.reload();
-            }, timeoutInterval);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, timeoutInterval);
 
             function getQueue($loketId) {
                 $.ajax({
-                    url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
+                    url: "{{url('employee/dashboard-employee')}}/" +
                         loketId + "/getAntrian",
                     method: "GET",
                     success: function(data) {
@@ -411,7 +458,7 @@
                     } else {
                         var token = $('input[name=token]').val();
                         $.ajax({
-                            url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
+                            url: "{{url('employee/dashboard-employee')}}/" +
                                 loketId + "/panggilAntrian",
                             method: "POST",
                             data: {
@@ -438,7 +485,9 @@
                                         icon: "success",
                                         title: "Berhasil melakukan panggilan",
                                     });
-                                    window.location.reload();
+                                    // window.location.reload();
+                                    antrianSekarangTable.ajax.reload();
+                                    antrianTable.ajax.reload();
                                 } else {
                                     console.error("Failed to update queue status:", data
                                         .message);
@@ -458,7 +507,7 @@
                 if (isQueueCalled && onQueue) {
                     var token = $('input[name=token]').val();
                     $.ajax({
-                        url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
+                        url: "{{url('employee/dashboard-employee')}}/" +
                             loketId +
                             "/mulaiAntrian",
                         method: "POST",
@@ -490,7 +539,7 @@
                 if (isQueueStart && onQueue) {
                     var token = $('input[name=token]').val();
                     $.ajax({
-                        url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
+                        url: "{{url('employee/dashboard-employee')}}/" +
                             loketId +
                             "/selesai",
                         method: "POST",
@@ -510,6 +559,8 @@
                             isQueueStart = false;
                             getQueue(loketId);
                             console.log(onQueue);
+                            antrianSekarangTable.ajax.reload();
+                            antrianTable.ajax.reload();
                             toast.fire({
                                 icon: "success",
                                 title: "Selesai! Lanjutkan untuk antrian selanjutnya",
@@ -526,7 +577,7 @@
                 if (isQueueCalled && onQueue) {
                     var token = $('input[name=token]').val();
                     $.ajax({
-                        url: "http://localhost/laravel-10/antrianpos-app/public/employee/dashboard-employee/" +
+                        url: "{{url('employee/dashboard-employee')}}/" +
                             loketId +
                             "/lewatiAntrian",
                         method: "POST",
@@ -548,7 +599,9 @@
                             console.log(onQueue);
 
                             $('#modal-skip').modal('hide');
-                            window.location.reload();
+                            // window.location.reload();
+                            antrianSekarangTable.ajax.reload();
+                            antrianTable.ajax.reload();
                         },
                         error: function(error) {
                             console.error("Error sending POST request:", error);
@@ -558,6 +611,7 @@
             });
         });
     </script>
+    
 @endsection
 
 {{--  

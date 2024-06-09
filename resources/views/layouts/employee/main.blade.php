@@ -16,6 +16,8 @@
         <link rel="stylesheet" href="{{ asset('lte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
         <!-- Theme style -->
         <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css') }}">
+
+        @yield('style')
     </head>
 
     <body class="hold-transition light-mode sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed">

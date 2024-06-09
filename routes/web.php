@@ -96,3 +96,7 @@ Route::group(['prefix'=>'employee','middleware'=> ['auth'],'as'=> 'employee.'], 
     Route::post('/dashboard-employee/{id}/mulaiAntrian',[EmployeeController::class,'mulaiAntrian'])->name('mulaiAntrian');
     Route::post('/dashboard-employee/{id}/selesai',[EmployeeController::class,'selesai'])->name('selesai');
 });
+
+Route::get('/datatable/antrianSekarangData',[EmployeeController::class,'antrianSekarangData'])->name('antrianSekarangData');
+Route::get('/datatable/antrianData',[EmployeeController::class,'antrianData'])->name('antrianData');
+

@@ -18,6 +18,7 @@ Route::get('/displayView',[DisplayController::class,'displayView'])->name('displ
 Route::get('/form',[DisplayController::class,'form'])->name('form');
 Route::get('/footer',[DisplayController::class,'getFooter'])->name('footer');
 Route::get('/img',[DisplayController::class,'getBanner']);
+Route::get('/vid',[DisplayController::class,'getVideo']);
 Route::get('/icon/{filename}', function ($filename) {
     $path = 'icon-category/' . $filename;
     if (Storage::disk('public')->exists($path)) {
@@ -68,6 +69,8 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
 
     Route::get('/editFooter/{id}',[HomeController::class,'editFooter'])->name('footer.edit');
     Route::put('/updateFooter/{id}',[HomeController::class,'updateFooter'])->name('footer.update');
+
+    Route::put('/updateDisplaySet',[HomeController::class,'updateDisplaySet'])->name('setting.update');
     
     Route::get('/printSet',[HomeController::class,'printSet'])->name('printSet');
     Route::get('/editText/{id}',[HomeController::class,'editText'])->name('text.edit');
@@ -95,6 +98,9 @@ Route::group(['prefix'=>'employee','middleware'=> ['auth'],'as'=> 'employee.'], 
     Route::post('/dashboard-employee/{id}/lewatiAntrian',[EmployeeController::class,'lewatiAntrian'])->name('lewatiAntrian');
     Route::post('/dashboard-employee/{id}/mulaiAntrian',[EmployeeController::class,'mulaiAntrian'])->name('mulaiAntrian');
     Route::post('/dashboard-employee/{id}/selesai',[EmployeeController::class,'selesai'])->name('selesai');
+
+    Route::get('/history/{id}',[EmployeeController::class,'history'])->name('locket.history');
+
 });
 
 Route::get('/datatable/antrianSekarangData',[EmployeeController::class,'antrianSekarangData'])->name('antrianSekarangData');

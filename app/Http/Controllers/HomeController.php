@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\addText;
 use App\Models\Banner;
+use App\Models\DisplaySet;
 use App\Models\Footer;
 use App\Models\Loket;
 use App\Models\User;
@@ -144,12 +145,12 @@ class HomeController extends Controller
         }
     }
 
-
     public function displaySetting(){
         $video = Video::get();
         $banner = Banner::get();
         $footer = Footer::get();
-        return view('pages.setting.displayset',compact('video','banner','footer'));
+        $setting = DisplaySet::first();
+        return view('pages.setting.displayset',compact('video','banner','footer','setting'));
     }
 
     public function createVideo(){
@@ -418,20 +419,16 @@ class HomeController extends Controller
     }
 
     public function updateText(Request $request,$id){
-        //melakukan validasi terhadap data yang di inputkan 
         $validator = Validator::make($request->all(),[
             'text'         => 'required|string|max:100',
         ]);
 
-        //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
         
         $text = addText::find($id);
         
-        //mengirimkan data ke database
         $data['text']          = $request->text;
 
-        //mengirim perintah create ke database
         if($text){
             if($text->update($data)){
                 return redirect()->route('admin.printSet')->with('success','Berhasil Melakukan Update Text!');
@@ -442,4 +439,17 @@ class HomeController extends Controller
         return redirect()->route('admin.printSet')->with('warning', 'Text tersebut tidak ditemukan');
         }
     }
+
+    public function updateDisplaySet(Request $request){
+        $validatedData = $request->validate([
+            'status' => 'required|in:youtube,local', 
+        ]);
+
+        $setting = DisplaySet::find(1); 
+        $setting->status = $validatedData['status'];
+        $setting->save();
+
+        return redirect()->route('admin.displaysetting')->with('success', 'Sumber tampilan video berhasil diubah!');
+    }
+
 }

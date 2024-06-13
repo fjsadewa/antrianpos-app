@@ -23,6 +23,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('employee.locket.history', ['id' => $data['loket']->employee->id]) }}"
+                        class="nav-link">
+                        <i class="nav-icon fas fa-solid fa-book"></i>
+                        <p>
+                            Riwayat Antrian
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('logout') }}" class="nav-link">
                         <i class="nav-icon fas fa-sign-out-alt"></i>
                         <p>

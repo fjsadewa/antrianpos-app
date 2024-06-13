@@ -26,8 +26,10 @@ class EmployeeController extends Controller
         $nmrLoket = $loket->nomor_loket;
         
         $antrian = antrian::where('id_kategori_layanan', $kategoriLayananId)
+        ->whereDate('tanggal', now())
         ->where('status_antrian', 'menunggu') 
-        ->get(); 
+        ->get();
+        
         
         $antrianSekarang = antrian::where('id_kategori_layanan', $kategoriLayananId)
         ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
@@ -56,9 +58,9 @@ class EmployeeController extends Controller
 
         $antrianDipanggil = Antrian::where('id_kategori_layanan', $kategoriLayananId)
         ->whereDate('tanggal', now())
+        ->whereIn('status_antrian', ['dipanggil', 'dilayani'])
         ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
             $query->where('nomor_loket', $nmrLoket); })
-        ->whereIn('status_antrian', ['dipanggil', 'dilayani'])
         ->first();
 
         if ($antrianDipanggil) {
@@ -257,7 +259,6 @@ class EmployeeController extends Controller
             $userId = Auth::user()->id; 
             $loket = Loket::where('user_id', $userId)->first(); 
         
-
             $kategoriLayananId = $loket->kategori_pelayanan_id;
             $nmrLoket = $loket->nomor_loket;
             
@@ -285,14 +286,16 @@ class EmployeeController extends Controller
         
 
             $kategoriLayananId = $loket->kategori_pelayanan_id;
-            $nmrLoket = $loket->nomor_loket;
+            
             
             $data = antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->whereDate('tanggal', now())
             ->where('status_antrian', 'menunggu')  
             ->with(['kategoriLayanan'=>function($query){
                 $query->select('id','kode_pelayanan','nama_pelayanan');
             }])
             ->get(); 
+            
             
             // return response()->json($data);
             return Datatables::of($data)
@@ -300,6 +303,25 @@ class EmployeeController extends Controller
                     ->make(true);
         }
         
+    }
+
+    public function history($id){
+        $userId = Auth::user()->id; 
+        $loket = Loket::where('user_id', $userId)->first();
+
+        if (!$loket) {
+            return redirect()->back()->withError('Loket tidak ditemukan');
+        }
+        $kategoriLayananId = $loket->kategori_pelayanan_id;
+
+        $antrian = antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->where('status_antrian', 'selesai') 
+            ->get(); 
+
+            
+        $data = ['loket' => $loket, 'antrian' => $antrian];
+        return view ('pages.employee.history',compact('data'));
+        // return response()->json($data);
     }
 }
 

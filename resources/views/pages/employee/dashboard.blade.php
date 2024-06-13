@@ -3,8 +3,8 @@
 @section('title', 'Dashboard Loket - Pos Indonesia')
 
 @section('style')
-<link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -101,7 +101,7 @@
                             <h3 class="card-title"> Antrian Saat Ini</h3>
                         </div><!-- /.card-header -->
                         <div class="card-body">
-                        
+
                             <table id="example1" class="table table-bordered table-striped antrian-sekarang-table">
                                 <thead>
                                     <tr>
@@ -111,7 +111,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                 </tbody>
                             </table>
                         </div><!-- /.card-body -->
@@ -153,10 +153,9 @@
 
 @endsection
 @section('script')
-<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
-
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script>
         $(document).ready(function() {
             var pointer = 0;
@@ -171,67 +170,80 @@
                 showConfirmButton: false,
                 timer: 1500,
             });
-
             var antrianSekarangTable = $('.antrian-sekarang-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ url('datatable/antrianSekarangData') }}",
-        columnDefs: [ {
-            targets: 0,
-            searchable: false,
-            render: function(data, type, row, meta){
-                return data.kategori_layanan.kode_pelayanan;
-            },
-        },{
-            targets: 2,
-            searchable: false,
-            render: function(data, type, row, meta){
-                return data.kategori_layanan.nama_pelayanan;
-            },
-        }],
-        columns: [
-            {data: null, name: 'kode_antrian'},
-            {data: 'nomor_urut', name: 'nomor_antrian'},
-            {data: null, name: 'jenis_pelayanan'}
-        ]
-    });
-
-    var antrianTable = $('.antrian-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ url('datatable/antrianData') }}",
-        columnDefs: [ {
-            targets: 1,
-            searchable: false,
-            render: function(data, type, row, meta){
-                return data.kategori_layanan.kode_pelayanan;
-            },
-        },{
-            targets: 3,
-            searchable: false,
-            render: function(data, type, row, meta){
-                return data.kategori_layanan.nama_pelayanan;
-            },
-        }],
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: null, name: 'kode_antrian'},
-            {data: 'nomor_urut', name: 'nomor_antrian'},
-            {data: null, name: 'jenis_pelayanan'}
-        ]
-    });
-
-
+                processing: true,
+                serverSide: true,
+                ajax: "{{ url('datatable/antrianSekarangData') }}",
+                columnDefs: [{
+                    targets: 0,
+                    searchable: false,
+                    render: function(data, type, row, meta) {
+                        return data.kategori_layanan.kode_pelayanan;
+                    },
+                }, {
+                    targets: 2,
+                    searchable: false,
+                    render: function(data, type, row, meta) {
+                        return data.kategori_layanan.nama_pelayanan;
+                    },
+                }],
+                columns: [{
+                        data: null,
+                        name: 'kode_antrian'
+                    },
+                    {
+                        data: 'nomor_urut',
+                        name: 'nomor_antrian'
+                    },
+                    {
+                        data: null,
+                        name: 'jenis_pelayanan'
+                    }
+                ]
+            });
+            var antrianTable = $('.antrian-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ url('datatable/antrianData') }}",
+                columnDefs: [{
+                    targets: 1,
+                    searchable: false,
+                    render: function(data, type, row, meta) {
+                        return data.kategori_layanan.kode_pelayanan;
+                    },
+                }, {
+                    targets: 3,
+                    searchable: false,
+                    render: function(data, type, row, meta) {
+                        return data.kategori_layanan.nama_pelayanan;
+                    },
+                }],
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: null,
+                        name: 'kode_antrian'
+                    },
+                    {
+                        data: 'nomor_urut',
+                        name: 'nomor_antrian'
+                    },
+                    {
+                        data: null,
+                        name: 'jenis_pelayanan'
+                    }
+                ]
+            });
             var loketId = document.querySelector('.card').dataset.loketId;
             getQueue(loketId);
-
             // setTimeout(() => {
             //     window.location.reload();
             // }, timeoutInterval);
-
             function getQueue($loketId) {
                 $.ajax({
-                    url: "{{url('employee/dashboard-employee')}}/" +
+                    url: "{{ url('employee/dashboard-employee') }}/" +
                         loketId + "/getAntrian",
                     method: "GET",
                     success: function(data) {
@@ -243,7 +255,6 @@
                             var nomorLoket = onQueue.nomorLoket;
                             $('#modal-text').text('Apakah kamu yakin ingin melewati nomor antrian ' +
                                 kodeAntrian + ' - ' + nomorAntrian + '?');
-
                             if (onQueue.status_antrian === "dipanggil") {
                                 isQueueCalled = true;
                                 console.log("Queue is called:", isQueueCalled);
@@ -254,7 +265,6 @@
                                 isQueueCalled = false;
                                 console.log("Queue is not called:", isQueueCalled);
                             }
-
                             // Update button states based on queue status
                             if (isQueueCalled) {
                                 $("#btn-call").prop("disabled", false);
@@ -290,7 +300,6 @@
                         "bel.wav",
                         "antrian-nomor.wav"
                     ];
-
                     var parsedKodeAntrian = parseKodeAntrian(kodeAntrian);
                     if (parsedKodeAntrian.kodeAntrian.length > 0) {
                         for (var i in parsedKodeAntrian.kodeAntrian) {
@@ -302,7 +311,6 @@
                     sequence.push(...parseNumberToAudioFiles(nomorLoket));
                     sequence.push("bel.wav");
                     console.log(sequence);
-
                     $.ajax({
                         url: "http://localhost:3000/call",
                         data: {
@@ -343,7 +351,6 @@
             function procesTens(number, audioFiles) {
                 var tensDigit = Math.floor(number / 10) % 10;
                 var unitsDigit = number % 10;
-
                 if (tensDigit === 1 && unitsDigit >= 1 && unitsDigit <= 9) {
                     audioFiles.push("angka/" + (tensDigit * 10 + unitsDigit) + ".wav");
                 } else if (tensDigit >= 2 && unitsDigit === 0) {
@@ -358,52 +365,42 @@
 
             function parseNumberToAudioFiles(number) {
                 var audioFiles = [];
-
                 var numDigits = 0;
                 var tempNumber = number;
                 while (tempNumber > 0) {
                     numDigits++;
                     tempNumber = Math.floor(tempNumber / 10);
                 }
-
                 switch (numDigits) {
                     case 1:
                         audioFiles.push("angka/" + (number % 10) + ".wav");
                         break;
-
                     case 2:
                         procesTens(number, audioFiles);
                         break;
-
                     case 3:
                         var hundredsDigit = Math.floor(number / 100) % 10;
                         var tensDigit = Math.floor(number / 10) % 10;
                         var unitsDigit = number % 10;
-
                         if (hundredsDigit === 1 && tensDigit === 0 && unitsDigit === 0) {
                             audioFiles.push("angka/100.wav");
                             break;
                         }
-
                         if (hundredsDigit > 0) {
                             audioFiles.push("angka/" + hundredsDigit + "00.wav");
                         }
                         procesTens(number, audioFiles);
                         break;
-
                     case 4:
                         var thousandsDigit = Math.floor(number / 1000) % 10;
                         var hundredsDigit = Math.floor(number / 100) % 10;
-
                         if (thousandsDigit === 1 && hundredsDigit === 0 && tensDigit === 0 && unitsDigit === 0) {
                             audioFiles.push("angka/1000.wav");
                             break;
                         }
-
                         if (thousandsDigit > 0) {
                             audioFiles.push("angka/" + thousandsDigit + "000.wav");
                         }
-
                         if (hundredsDigit > 0) {
                             audioFiles.push("angka/" + hundredsDigit + "00.wav");
                         }
@@ -419,7 +416,6 @@
                     namaPelayanan, photo
                 ];
                 console.log(list);
-
                 $.ajax({
                     url: "http://localhost:3000/show",
                     data: {
@@ -437,7 +433,6 @@
                     }
                 });
             }
-
             $("#btn-call").click(function() {
                 if (onQueue) {
                     if (isQueueCalled) {
@@ -447,7 +442,6 @@
                         var namaPetugas = onQueue.namaPetugas;
                         var namaPelayanan = onQueue.namaPelayanan;
                         var photo = onQueue.photo;
-
                         updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
                         showAntrian(kodeAntrian, nomorAntrian, nomorLoket,
                             namaPetugas, namaPelayanan, photo);
@@ -458,14 +452,13 @@
                     } else {
                         var token = $('input[name=token]').val();
                         $.ajax({
-                            url: "{{url('employee/dashboard-employee')}}/" +
+                            url: "{{ url('employee/dashboard-employee') }}/" +
                                 loketId + "/panggilAntrian",
                             method: "POST",
                             data: {
                                 _token: token
                             },
                             success: function(data) {
-
                                 if (onQueue) {
                                     var kodeAntrian = onQueue.kodeAntrian;
                                     var nomorAntrian = onQueue.nomorAntrian;
@@ -473,11 +466,9 @@
                                     var namaPetugas = onQueue.namaPetugas;
                                     var namaPelayanan = onQueue.namaPelayanan;
                                     var photo = onQueue.photo;
-
                                     updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
                                     showAntrian(kodeAntrian, nomorAntrian, nomorLoket,
                                         namaPetugas, namaPelayanan, photo);
-
                                     isQueueCalled = true;
                                     $("#btn-skip").prop("disabled", false);
                                     $("#btn-start").prop("disabled", false);
@@ -492,7 +483,6 @@
                                     console.error("Failed to update queue status:", data
                                         .message);
                                 }
-
                             },
                             error: function(error) {
                                 console.error("Error sending POST request:", error);
@@ -502,12 +492,11 @@
                     localStorage.setItem("sequenceDiputar", true);
                 }
             });
-
             $("#btn-start").click(function() {
                 if (isQueueCalled && onQueue) {
                     var token = $('input[name=token]').val();
                     $.ajax({
-                        url: "{{url('employee/dashboard-employee')}}/" +
+                        url: "{{ url('employee/dashboard-employee') }}/" +
                             loketId +
                             "/mulaiAntrian",
                         method: "POST",
@@ -516,12 +505,10 @@
                             antrianId: onQueue.id
                         },
                         success: function(data) {
-
                             $("#btn-call").prop("disabled", true);
                             $("#btn-skip").prop("disabled", true);
                             $("#btn-start").prop("disabled", true);
                             $("#btn-finish").prop("disabled", false);
-
                             isQueueStart = true;
                             toast.fire({
                                 icon: "success",
@@ -534,12 +521,11 @@
                     });
                 }
             });
-
             $("#btn-finish").click(function() {
                 if (isQueueStart && onQueue) {
                     var token = $('input[name=token]').val();
                     $.ajax({
-                        url: "{{url('employee/dashboard-employee')}}/" +
+                        url: "{{ url('employee/dashboard-employee') }}/" +
                             loketId +
                             "/selesai",
                         method: "POST",
@@ -548,13 +534,11 @@
                             antrianId: onQueue.id
                         },
                         success: function(data) {
-
                             onQueue = null;
                             $("#btn-call").prop("disabled", false);
                             $("#btn-skip").prop("disabled", true);
                             $("#btn-start").prop("disabled", true);
                             $("#btn-finish").prop("disabled", true);
-
                             isQueueCalled = false;
                             isQueueStart = false;
                             getQueue(loketId);
@@ -572,12 +556,11 @@
                     });
                 }
             });
-
             $("#btn-next").click(function() {
                 if (isQueueCalled && onQueue) {
                     var token = $('input[name=token]').val();
                     $.ajax({
-                        url: "{{url('employee/dashboard-employee')}}/" +
+                        url: "{{ url('employee/dashboard-employee') }}/" +
                             loketId +
                             "/lewatiAntrian",
                         method: "POST",
@@ -586,18 +569,14 @@
                             antrianId: onQueue.id
                         },
                         success: function(data) {
-
                             onQueue = null;
                             $("#btn-call").prop("disabled", true);
                             $("#btn-skip").prop("disabled", true);
                             $("#btn-start").prop("disabled", true);
-
                             alert("Antrian telah dilewati.");
-
                             isQueueCalled = false;
                             getQueue(loketId);
                             console.log(onQueue);
-
                             $('#modal-skip').modal('hide');
                             // window.location.reload();
                             antrianSekarangTable.ajax.reload();
@@ -611,9 +590,7 @@
             });
         });
     </script>
-    
 @endsection
-
 {{--  
 // const socket = io();
 // var sequence = [
@@ -642,7 +619,7 @@
 // console.log('ended');
 // // enable button/link
 // if (pointer < sequence.length) { // pointer++; // changeAudio(pointer); // } else { // function
-    parseNumberToAudioFiles(number) { // var audioFiles=[]; // while (number> 0) {
+    //parseNumberToAudioFiles(number) { // var audioFiles=[]; // while (number> 0) {
     // var digit = number % 10;
     // audioFiles.unshift("angka/" + digit + ".wav");
     // number = Math.floor(number / 10);

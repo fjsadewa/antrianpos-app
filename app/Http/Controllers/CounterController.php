@@ -159,7 +159,6 @@ class CounterController extends Controller
         return view ('pages.counter.edit',compact('data_counter','categories','user'));
     }
 
-
     public function updateCounter(Request $request, $id){
         //melakukan validasi terhadap data yang di inputkan 
         $validator = Validator::make($request->all(),[

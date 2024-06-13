@@ -38,34 +38,47 @@
                             <div class="modal fade" id="Choice">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Ubah Sumber Tampilan Video </h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Pilih sumber tampilan video:</p>
-                                            <form action="" method="POST">
-                                                @csrf
-                                                @method('DELETE') <div class="form-group">
-                                                    <input type="radio" name="source" value="option1" id="source1">
-                                                    <label for="source1">Youtube</label><br>
-                                                    <input type="radio" name="source" value="option2" id="source2">
-                                                    <label for="source2">Local</label><br>
+                                        <form action="{{ route('admin.setting.update') }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Ubah Sumber Tampilan Video</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {{-- <p>Pilih sumber tampilan video:</p> --}}
+
+                                                <div class="form-group">
+                                                    <label for="status">Status Saat Ini:</label>
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="statusYoutube" name="status"
+                                                            value="youtube" class="custom-control-input"
+                                                            @if ($setting->status === 'youtube') checked @endif>
+                                                        <label class="custom-control-label"
+                                                            for="statusYoutube">Youtube</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" id="statusLocal" name="status" value="local"
+                                                            class="custom-control-input"
+                                                            @if ($setting->status === 'local') checked @endif>
+                                                        <label class="custom-control-label" for="statusLocal">Local</label>
+                                                    </div>
                                                 </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default"
-                                                data-dismiss="modal">Batal</button>
-                                            <button type="submit" class="btn btn-primary">Ubah</button>
-                                        </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default"
+                                                    data-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-primary">Ubah</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <!-- /.modal-content -->
                                 </div>
-                                <!-- /.modal-dialog -->
                             </div>
+
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">

@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\antrian;
 use App\Models\Banner;
+use App\Models\DisplaySet;
 use App\Models\Footer;
 use App\Models\KategoriPelayanan;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 
 class DisplayController extends Controller
 {
@@ -36,7 +39,7 @@ class DisplayController extends Controller
                 'nama_pelayanan' => $antrianItem->kategoriLayanan->nama_pelayanan, 
             ];
         }
-    return response()->json($dataAntrian);
+        return response()->json($dataAntrian);
     }
 
     public function form(){
@@ -84,4 +87,44 @@ class DisplayController extends Controller
         $bannerName = $banner->pluck('image_banner');
         return response()->json($bannerName);
     }
+
+    public function getVideo() {
+        $status = DisplaySet::first();
+        if (!$status) {
+            return response()->json(['error' => 'No DisplaySet record found'], 404);
+        }
+        $videoType = $status->status; 
+
+        $video = Video::where('tipe', $videoType);
+        if ($video->count() === 0) {
+            return response()->json(['error' => 'No video found for type: ' . $videoType], 404);
+        }
+        $videoData = $video->get()->map(function ($videoItem) {
+            return [
+                'judul' => $videoItem->judul,
+                'link_sumber' => $videoItem->link_sumber,
+            ];
+        })->toArray();
+        
+        $response = json_encode([
+            'status' => $videoType,
+            'data' => $videoData,
+        ]);
+        return response()->json($response);
+    }
 }
+
+// if ($videoType === 'youtube') {
+        //     $video = Video::where('tipe', 'youtube')->get();
+        // } else {
+        //     $video = Video::where('tipe', 'local')->get();
+        // } 
+        
+        // $videoData = []; 
+        // foreach ($video as $videoItem) {
+        //     $videoData[] = [
+        //         'judul' => $videoItem->judul,
+        //         'link_sumber' => $videoItem->link_sumber,
+        //     ];
+        // }
+        // $response = array_merge(['status' => $videoType], ['data' => $videoData]);

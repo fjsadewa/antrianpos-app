@@ -18,13 +18,11 @@
             </div><!-- /.container-fluid -->
         </div>
         <!-- /.content-header -->
-
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-
                         <div class="card">
                             <div class="card-header">
                                 <a href="{{ route('admin.user.create') }}">
@@ -48,7 +46,7 @@
                                         @foreach ($data as $d)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td><img src="{{ asset('storage/photo-profile/' . $d->image) }}"
+                                                <td><img src="{{ url('storage/photo-profile/' . $d->image) }}"
                                                         alt="" width="50"></td>
                                                 <td>{{ $d->name }}</td>
                                                 <td>{{ $d->email }}</td>
@@ -79,7 +77,6 @@
                                                     </div>
                                                 </td>
                                             </tr>
-
                                             <div class="modal fade" id="modal-hapus{{ $d->id }}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
@@ -120,7 +117,6 @@
                                             </div>
                                             <!-- /.modal -->
                                         @endforeach
-
                                     </tbody>
                                 </table>
                             </div>

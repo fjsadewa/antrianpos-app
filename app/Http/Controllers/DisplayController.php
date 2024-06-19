@@ -95,11 +95,11 @@ class DisplayController extends Controller
         }
         $videoType = $status->status; 
 
-        $video = Video::where('tipe', $videoType);
+        $video = Video::where('tipe', $videoType)->get();
         if ($video->count() === 0) {
             return response()->json(['error' => 'No video found for type: ' . $videoType], 404);
         }
-        $videoData = $video->get()->map(function ($videoItem) {
+        $videoData = $video->map(function ($videoItem) {
             return [
                 'judul' => $videoItem->judul,
                 'link_sumber' => $videoItem->link_sumber,

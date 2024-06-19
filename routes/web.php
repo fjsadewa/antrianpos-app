@@ -89,6 +89,8 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     Route::get('/editCounter/{id}',[CounterController::class,'editCounter'])->name('counter.edit');
     Route::put('/updateCounter/{id}',[CounterController::class,'updateCounter'])->name('counter.update');
     Route::delete('/deleteCounter/{id}',[CounterController::class,'deleteCounter'])->name('counter.delete');
+    
+    Route::get('/move',[HomeController::class,'moveData'])->name('moveData');
 });
 
 Route::group(['prefix'=>'employee','middleware'=> ['auth'],'as'=> 'employee.'], function(){

@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class antrianHistory extends Model
-{
+class antrianHistory extends Model{
     use HasFactory;
     protected $table = 'antrian_historys';
 

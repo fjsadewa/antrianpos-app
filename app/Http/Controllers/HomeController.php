@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\addText;
+use App\Models\antrian;
+use App\Models\antrianHistory;
 use App\Models\Banner;
 use App\Models\DisplaySet;
 use App\Models\Footer;
@@ -452,4 +454,22 @@ class HomeController extends Controller
         return redirect()->route('admin.displaysetting')->with('success', 'Sumber tampilan video berhasil diubah!');
     }
 
+    public function moveData(){
+        $antrians = antrian::all();
+        foreach ($antrians as $antrian) {
+            $antrianHistory = new AntrianHistory;
+            $antrianHistory->id_kategori_layanan = $antrian->id_kategori_layanan;
+            $antrianHistory->nomor_urut = $antrian->nomor_urut;
+            $antrianHistory->status_antrian = $antrian->status_antrian;
+            $antrianHistory->id_loket_panggil = $antrian->id_loket_panggil;
+            $antrianHistory->waktu_panggil = $antrian->waktu_panggil;
+            $antrianHistory->id_loket_layani = $antrian->id_loket_layani;
+            $antrianHistory->waktu_selesai_layani = $antrian->waktu_selesai_layani;
+            $antrianHistory->tanggal = $antrian->tanggal;
+            $antrianHistory->save();
+
+            $antrian->delete();
+        }
+    return redirect()->route('admin.dashboard')->with('success', 'Data berhasil dipindahkan !');
+    }
 }

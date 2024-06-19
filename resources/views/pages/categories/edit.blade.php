@@ -68,7 +68,7 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputFile">Photo Profile</label>
+                                            <label for="exampleInputFile">Icon Kategori</label>
                                             <div class="input-group">
                                                 <div class="col-md-1">
                                                     @if ($data_category->image)

@@ -32,6 +32,7 @@ class EmployeeController extends Controller
         
         
         $antrianSekarang = antrian::where('id_kategori_layanan', $kategoriLayananId)
+        ->whereDate('tanggal', now())
         ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
             $query->where('nomor_loket', $nmrLoket); })
         ->whereIn('status_antrian', ['dipanggil', 'dilayani']) 
@@ -263,6 +264,7 @@ class EmployeeController extends Controller
             $nmrLoket = $loket->nomor_loket;
             
             $data = antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->whereDate('tanggal', now())
             ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
                 $query->where('nomor_loket', $nmrLoket); })
             ->whereIn('status_antrian', ['dipanggil', 'dilayani']) 

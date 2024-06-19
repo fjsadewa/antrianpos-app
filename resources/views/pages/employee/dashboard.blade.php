@@ -253,6 +253,9 @@
                             var kodeAntrian = onQueue.kodeAntrian;
                             var nomorAntrian = onQueue.nomorAntrian;
                             var nomorLoket = onQueue.nomorLoket;
+                            var namaPetugas = onQueue.namaPetugas;
+                            var namaPelayanan = onQueue.namaPelayanan;
+                            var photo = onQueue.photo;
                             $('#modal-text').text('Apakah kamu yakin ingin melewati nomor antrian ' +
                                 kodeAntrian + ' - ' + nomorAntrian + '?');
                             if (onQueue.status_antrian === "dipanggil") {

@@ -64,7 +64,7 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputFile">Photo Profile</label>
+                                            <label for="exampleInputFile">Icon Kategori</label>
                                             <div class="input-group">
                                                 <div class="custom-file">
                                                     <input name="photo" type="file"

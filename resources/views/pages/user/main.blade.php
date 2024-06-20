@@ -46,8 +46,8 @@
                                         @foreach ($data as $d)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td><img src="{{ url('storage/photo-profile/' . $d->image) }}"
-                                                        alt="" width="50"></td>
+                                                <td><img src="{{ url('photo-profile/' . $d->image) }}" alt=""
+                                                        width="50"></td>
                                                 <td>{{ $d->name }}</td>
                                                 <td>{{ $d->email }}</td>
                                                 <td>

@@ -7,6 +7,7 @@ use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/login',[LoginController::class,'login'])->name('login');
@@ -31,9 +32,9 @@ Route::get('/icon/{filename}', function ($filename) {
     }
 });
 Route::get('/profile/{filename}', function ($filename) {
-    $path = 'photo-profile/' . $filename;
-    if (Storage::disk('public')->exists($path)) {
-        $image = Storage::disk('public')->get($path);
+    $path = 'public/photo-profile/' . $filename;
+    if (File::exists($path)) {
+        $image = file_get_contents($path);
         return response($image, 200, [
             'Content-Type' => 'image/jpeg', 
         ]);

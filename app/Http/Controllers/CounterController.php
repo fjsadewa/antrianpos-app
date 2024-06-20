@@ -39,9 +39,15 @@ class CounterController extends Controller
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
 
         $photo      = $request->file('photo');
+        if (!is_dir('icon-category')) {
+            mkdir('icon-category', 0755, true);
+        }
         $filename   = date('y-m-d').$photo->getClientOriginalName();
-        $path       = 'icon-category/'. $filename;
-        Storage::disk('public')->put($path,file_get_contents($photo));
+        //$path       = 'icon-category/'. $filename;
+        //Storage::disk('public')->put($path,file_get_contents($photo));
+
+        $destinationPath = public_path().'/icon-category';
+        $photo->move($destinationPath,$filename);
 
         //mengirimkan data ke database
         $data_category['kode_pelayanan']    = $request->kode_pelayanan;
@@ -73,20 +79,31 @@ class CounterController extends Controller
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
         
         $data = KategoriPelayanan::find($id);
-        
+        if (!$data) {
+            return redirect()->route('admin.category')->with('warning', 'Kategori dengan ID tersebut tidak ditemukan');
+        }
+
         //mengirimkan data ke database
         $data_category['kode_pelayanan']    = $request->kode_pelayanan;
         $data_category['nama_pelayanan']    = $request->nama_pelayanan;
         $data_category['deskripsi']         = $request->deskripsi;
         $photo      = $request->file('photo');
         if ($photo) {
-            $filename   = date('y-m-d').$photo->getClientOriginalName();
-            $path       = 'icon-category/'.$filename;
-            
             if ($data->image) {
-                Storage::disk('public')->delete('icon-category/'.$data->image);
+                $imagePath = 'icon-category/' . $data->image;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
-            Storage::disk('public')->put($path,file_get_contents($photo));
+            $filename   = date('y-m-d').$photo->getClientOriginalName();
+            //$path       = 'icon-category/'.$filename;
+            $destinationPath = public_path().'/icon-category';
+            $photo->move($destinationPath,$filename);
+
+            //if ($data->image) {
+            //    Storage::disk('public')->delete('icon-category/'.$data->image);
+            //}
+            //Storage::disk('public')->put($path,file_get_contents($photo));
 
             $data_category ['image']     = $filename;
         }
@@ -99,13 +116,22 @@ class CounterController extends Controller
                 return redirect()->route('admin.category')->with('failed','Update Telah Gagal');
             }
         }else {
-        return redirect()->route('admin.category')->with('warning', 'User dengan ID tersebut tidak ditemukan');
+        return redirect()->route('admin.category')->with('warning', 'Kategori dengan ID tersebut tidak ditemukan');
         }
     }
 
     public function deleteCategory($id){
         $data_category = KategoriPelayanan::find($id);
+        if (!$data_category) {
+            return redirect()->route('admin.category')->with('warning', 'Kategori dengan ID tersebut tidak ditemukan');
+        }
 
+        if ($data_category->image) {
+            $imagePath = 'icon-category/' . $data_category->image;
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
         if($data_category){
             if($data_category->delete()){
                 return redirect()->route('admin.category')->with('success','Kategori berhasil dihapus');

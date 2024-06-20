@@ -72,7 +72,7 @@
                                             <div class="input-group">
                                                 <div class="col-md-1">
                                                     @if ($data_category->image)
-                                                        <img src="{{ asset('storage/icon-category/' . $data_category->image) }}"
+                                                        <img src="{{ url('icon-category/' . $data_category->image) }}"
                                                             alt="" width="100%">
                                                     @endif
                                                 </div>

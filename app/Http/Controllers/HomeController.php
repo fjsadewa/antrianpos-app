@@ -52,11 +52,14 @@ class HomeController extends Controller
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
 
         $photo      = $request->file('photo');
+        if (!is_dir('photo-profile')) {
+            mkdir('photo-profile', 0755, true);
+        }
         $filename   = date('y-m-d').$photo->getClientOriginalName();
-        $path       = 'photo-profile/'.$filename;
-
-        Storage::disk('public')->put($path,file_get_contents($photo));
-        
+        //$path       = 'photo-profile/'.$filename;
+        //Storage::disk('public')->put($path,file_get_contents($photo));
+        $destinationPath = public_path().'/photo-profile';
+        $photo->move($destinationPath,$filename);
         //mengirimkan data ke database
         $data['name']       = $request->nama;
         $data['email']      = $request->email;
@@ -78,7 +81,6 @@ class HomeController extends Controller
     public function edit(Request $request,$id){
         $data = User::find($id);
         $roles = Role::all();
-
         return view ('pages.user.edit',compact('data','roles'));
     }
 
@@ -94,7 +96,10 @@ class HomeController extends Controller
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
         
-        $find = User::find($id);
+        $user = User::find($id);
+        if (!$user) {
+            return redirect()->route('admin.user.edit')->with('warning', 'User dengan ID tersebut tidak ditemukan');
+        }
         //mengirimkan data ke database
         $data['name']       = $request->nama;
         $data['email']      = $request->email;
@@ -103,26 +108,34 @@ class HomeController extends Controller
         }
         $photo      = $request->file('photo');
         if ($photo) {
-            $filename   = date('y-m-d').$photo->getClientOriginalName();
-            $path       = 'photo-profile/'.$filename;
-            
-            if ($find->image) {
-                Storage::disk('public')->delete('photo-profile/'.$find->image);
+            if ($user->image) {
+                $imagePath = 'photo-profile/' . $user->image;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
-            Storage::disk('public')->put($path,file_get_contents($photo));
+            $filename   = date('y-m-d').$photo->getClientOriginalName();
+            //$path       = 'photo-profile/'.$filename;
+            $destinationPath = public_path().'/photo-profile';
+            $photo->move($destinationPath,$filename);
+
+            //if ($find->image) {
+            //    Storage::disk('public')->delete('photo-profile/'.$find->image);
+            //}
+            //Storage::disk('public')->put($path,file_get_contents($photo));
 
             $data ['image']     = $filename;
         }
         
         if ($request->role == 1) {
-            $find->syncRoles(['admin']);
+            $user->syncRoles(['admin']);
         } else {
-            $find->syncRoles(['employee']);
+            $user->syncRoles(['employee']);
         }
         
         //mengirim perintah update ke database
-        if($find){
-            if($find->update($data)){
+        if($user){
+            if($user->update($data)){
                 return redirect()->route('admin.user')->with('success','Berhasil Melakukan Update! ');
             } else {
                 return redirect()->route('admin.user')->with('failed','Update gagal Gagal');
@@ -135,7 +148,16 @@ class HomeController extends Controller
 
     public function delete(Request $request,$id){
         $data = User::find($id);
+        if (!$data) {
+            return redirect()->route('admin.user')->with('warning', 'User dengan ID tersebut tidak ditemukan');
+        }
 
+        if ($data->image) {
+            $imagePath = 'photo-profile/' . $data->image;
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
         if($data){
             if($data->delete($data)){
                 return redirect()->route('admin.user')->with('success','Pengguna berhasil dihapus');
@@ -470,6 +492,6 @@ class HomeController extends Controller
 
             $antrian->delete();
         }
-    return redirect()->route('admin.dashboard')->with('success', 'Data berhasil dipindahkan !');
+        return redirect()->route('admin.dashboard')->with('success', 'Data berhasil dipindahkan !');
     }
 }

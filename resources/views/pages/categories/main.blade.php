@@ -52,8 +52,8 @@
                                                 <td> {{ $d->kode_pelayanan }}</td>
                                                 <td> {{ $d->nama_pelayanan }}</td>
                                                 <td> {{ $d->deskripsi }}</td>
-                                                <td><img src="{{ url('storage/icon-category/' . $d->image) }}"
-                                                        alt="" width="50"></td>
+                                                <td><img src="{{ url('icon-category/' . $d->image) }}" alt=""
+                                                        width="50"></td>
                                                 <td>
                                                     <div class="row">
                                                         <div class="col-md-6">

@@ -76,10 +76,16 @@
                                             <select name="role"
                                                 class="custom-select rounded-2  @error('role')is-invalid @enderror"
                                                 id="exampleSelectRounded0">
-                                                @foreach ($roles as $role)
+                                                {{-- @foreach ($roles as $role)
                                                     <option
                                                         value="{{ $role->id }} {{ in_array($role->id, $data->roles->pluck('id')->toArray()) ? 'selected' : '' }}">
                                                         {{ $role->name }}</option>
+                                                @endforeach --}}
+                                                @foreach ($roles as $role)
+                                                    <option value="{{ $role->id }}"
+                                                        {{ $data->roles->contains($role->id) ? 'selected' : ($role->id == $data->role_id ? 'selected' : '') }}>
+                                                        {{ $role->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                             @error('role')
@@ -91,7 +97,7 @@
                                             <div class="input-group">
                                                 <div class="col-md-1">
                                                     @if ($data->image)
-                                                        <img src="{{ asset('storage/photo-profile/' . $data->image) }}"
+                                                        <img src="{{ url('photo-profile/' . $data->image) }}"
                                                             alt="" width="100%">
                                                     @endif
                                                 </div>

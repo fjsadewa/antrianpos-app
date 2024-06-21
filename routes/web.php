@@ -7,7 +7,6 @@ use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/login',[LoginController::class,'login'])->name('login');
@@ -20,23 +19,45 @@ Route::get('/form',[DisplayController::class,'form'])->name('form');
 Route::get('/footer',[DisplayController::class,'getFooter'])->name('footer');
 Route::get('/img',[DisplayController::class,'getBanner']);
 Route::get('/vid',[DisplayController::class,'getVideo']);
+// Route::get('/icon/{filename}', function ($filename) {
+//     $path = 'icon-category/' . $filename;
+//     if (Storage::disk('public')->exists($path)) {
+//         $image = Storage::disk('public')->get($path);
+//         return response($image, 200, [
+//             'Content-Type' => 'image/jpeg', // Ubah sesuai jenis gambar
+//         ]);
+//     } else {
+//         return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
+//     }
+// });
 Route::get('/icon/{filename}', function ($filename) {
     $path = 'icon-category/' . $filename;
-    if (Storage::disk('public')->exists($path)) {
-        $image = Storage::disk('public')->get($path);
+    if (file_exists(public_path($path))) {
+        $image = file_get_contents(public_path($path));
         return response($image, 200, [
-            'Content-Type' => 'image/jpeg', // Ubah sesuai jenis gambar
+            'Content-Type' => 'image/jpeg',
         ]);
     } else {
         return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
     }
 });
+// Route::get('/profile/{filename}', function ($filename) {
+//     $path = 'photo-profile/' . $filename;
+//     if (Storage::disk('public')->exists($path)) {
+//         $image = Storage::disk('public')->get($path);
+//         return response($image, 200, [
+//             'Content-Type' => 'image/jpeg', 
+//         ]);
+//     } else {
+//         return response()->json(['error' => 'Gambar tidak ditemukan'], 404);
+//     }
+// });
 Route::get('/profile/{filename}', function ($filename) {
-    $path = 'public/photo-profile/' . $filename;
-    if (File::exists($path)) {
-        $image = file_get_contents($path);
+    $path = 'photo-profile/' . $filename;
+    if (file_exists(public_path($path))) {
+        $image = file_get_contents(public_path($path));
         return response($image, 200, [
-            'Content-Type' => 'image/jpeg', 
+            'Content-Type' => 'image/jpeg',
         ]);
     } else {
         return response()->json(['error' => 'Gambar tidak ditemukan'], 404);

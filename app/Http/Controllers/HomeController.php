@@ -183,6 +183,12 @@ class HomeController extends Controller
 
     public function storeVideo(Request $request){
         $tipe = $request->get('tipe');
+        $existingVideoCount = Video::where('tipe', 'youtube')->count();
+
+        if ($existingVideoCount > 0) {
+            return redirect()->route('admin.video.create')->with('failed','Video Youtube hanya boleh ada 1');
+        }
+
         if ($tipe === 'youtube') {
             $this->validate($request, [
                 'judul' => 'required|string|max:255',
@@ -227,7 +233,7 @@ class HomeController extends Controller
         $video = Video::find($id);
 
         if (!$video) {
-            return redirect()->route('admin.video.index')->with('error', 'Video tidak ditemukan');
+            return redirect()->route('admin.video.index')->with('failed', 'Video tidak ditemukan');
         }
 
         $this->validate($request, [

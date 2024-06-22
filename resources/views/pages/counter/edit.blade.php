@@ -39,6 +39,21 @@
                                 <form>
                                     <div class="card-body">
                                         <div class="form-group">
+                                            <label for="exampleSelectRounded0">Nama Petugas</label>
+                                            <select name="user_id"
+                                                class="custom-select rounded-2 @error('user_id')is-invalid @enderror"
+                                                id="exampleSelectRounded0">
+                                                @foreach ($user as $employee)
+                                                    <option value="{{ $employee->id }}"
+                                                        {{ $data_counter->employee->id == $employee->id ? 'selected' : '' }}>
+                                                        {{ $employee->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('user_id')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
                                             <label for="exampleInputEmail1">Nomor Loket</label>
                                             <input name="nomor_loket" type="text"
                                                 class="form-control @error('nomor_loket')is-invalid @enderror"
@@ -68,22 +83,6 @@
                                                 <option value="tertutup" @selected(old('status') === 'tertutup')>Tutup</option>
                                             </select>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="exampleSelectRounded0">Nama Petugas</label>
-                                            <select name="user_id"
-                                                class="custom-select rounded-2 @error('user_id')is-invalid @enderror"
-                                                id="exampleSelectRounded0">
-                                                @foreach ($user as $employee)
-                                                    <option value="{{ $employee->id }}"
-                                                        {{ $data_counter->employee->user_id == $employee->id ? 'selected' : '' }}>
-                                                        {{ $employee->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('user_id')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-
                                     </div>
                                     <!-- /.card-body -->
                                     <div class="card-footer">

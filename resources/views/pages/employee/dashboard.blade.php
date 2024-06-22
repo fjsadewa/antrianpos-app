@@ -150,14 +150,34 @@
         <source id="mp3_src" src="" type="audio/wav">
         Your browser does not support the audio element.
     </audio> --}}
-
 @endsection
+
 @section('script')
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script>
         $(document).ready(function() {
+            if (!localStorage.getItem('popUpShownToday')) {
+                Swal.fire({
+                    title: 'Judul Pop Up',
+                    text: 'Isi pop up Anda di sini.',
+                    confirmButton: {
+                        text: 'Tutup Pop Up',
+                        allowOutsideClick: false // Tombol tidak bisa di-skip
+                    },
+                    showCancelButton: false // Tidak ada tombol "Batal"
+                    // allowEscapeKey: false // Tombol "Esc" tidak bisa di-tekan
+                }).then(function(result) {
+                    if (result.isConfirmed) {
+                        localStorage.setItem('popUpShownToday', true);
+                        console.log("Tombol pop up sudah ditekan hari ini.");
+                    }
+                });
+            }
+            if (localStorage.getItem('popUpShownToday')) {
+                console.log("Pop up sudah ditampilkan hari ini.");
+            }
             var pointer = 0;
             var sequence = [];
             var onQueue = null;
@@ -253,9 +273,7 @@
                             var kodeAntrian = onQueue.kodeAntrian;
                             var nomorAntrian = onQueue.nomorAntrian;
                             var nomorLoket = onQueue.nomorLoket;
-                            var namaPetugas = onQueue.namaPetugas;
-                            var namaPelayanan = onQueue.namaPelayanan;
-                            var photo = onQueue.photo;
+
                             $('#modal-text').text('Apakah kamu yakin ingin melewati nomor antrian ' +
                                 kodeAntrian + ' - ' + nomorAntrian + '?');
                             if (onQueue.status_antrian === "dipanggil") {

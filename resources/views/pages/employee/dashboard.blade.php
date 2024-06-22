@@ -158,26 +158,6 @@
     <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script>
         $(document).ready(function() {
-            if (!localStorage.getItem('popUpShownToday')) {
-                Swal.fire({
-                    title: 'Judul Pop Up',
-                    text: 'Isi pop up Anda di sini.',
-                    confirmButton: {
-                        text: 'Tutup Pop Up',
-                        allowOutsideClick: false // Tombol tidak bisa di-skip
-                    },
-                    showCancelButton: false // Tidak ada tombol "Batal"
-                    // allowEscapeKey: false // Tombol "Esc" tidak bisa di-tekan
-                }).then(function(result) {
-                    if (result.isConfirmed) {
-                        localStorage.setItem('popUpShownToday', true);
-                        console.log("Tombol pop up sudah ditekan hari ini.");
-                    }
-                });
-            }
-            if (localStorage.getItem('popUpShownToday')) {
-                console.log("Pop up sudah ditampilkan hari ini.");
-            }
             var pointer = 0;
             var sequence = [];
             var onQueue = null;

@@ -14,7 +14,8 @@ class EmployeeController extends Controller
         $this->middleware(['role_or_permission:employee|view_admin']);
         }
 
-    public function dashboardEmployee(Request $request){
+    
+        public function dashboardEmployee(Request $request){
         $userId = Auth::user()->id; 
         $loket = Loket::where('user_id', $userId)->first(); 
         

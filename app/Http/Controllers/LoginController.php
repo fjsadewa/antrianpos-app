@@ -30,10 +30,11 @@ class LoginController extends Controller
             $user = auth()->user();
             $role = $user->roles->first();
             $userId = $user->id;
-            $cacheKey = 'login_function_' . $user->id . '_' . date('Y-m-d') . '_' . $user->created_at->format('YmdHi');
-
+            //$cacheKey = 'login_function_' . $user->id . '_' . date('Y-m-d') . '_' . $user->created_at->format('YmdHi');
+            $cacheKey = 'login_function_' . date('Y-m-d');
             if (!Cache::has($cacheKey)) {
-                $this->moveData($user->created_at->format('Y-m-d'));
+                //$this->moveData($user->created_at->format('Y-m-d'));
+                $this->moveData(date('Y-m-d'));
                 Cache::put($cacheKey, true, now()->addDay());
             }
 

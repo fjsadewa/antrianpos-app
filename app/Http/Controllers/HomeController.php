@@ -12,10 +12,12 @@ use App\Models\Loket;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
+use Yajra\DataTables\Facades\DataTables;
 
 class HomeController extends Controller
 {
@@ -499,5 +501,19 @@ class HomeController extends Controller
             $antrian->delete();
         }
         return redirect()->route('admin.dashboard')->with('success', 'Data berhasil dipindahkan !');
+    }
+    
+    public function allHistory(Request $request){
+        $antrianHistory = AntrianHistory::selectRaw('tanggal, 
+                    SUM(CASE WHEN status_antrian = "MENUNGGU" THEN 1 ELSE 0 END) AS jumlah_menunggu,
+                    SUM(CASE WHEN status_antrian = "DIPANGGIL" THEN 1 ELSE 0 END) AS jumlah_dipanggil,
+                    SUM(CASE WHEN status_antrian = "DILAYANI" THEN 1 ELSE 0 END) AS jumlah_dilayani,
+                    SUM(CASE WHEN status_antrian = "SELESAI" THEN 1 ELSE 0 END) AS jumlah_selesai,
+                    SUM(CASE WHEN status_antrian = "LEWATI" THEN 1 ELSE 0 END) AS jumlah_dilewati')
+        ->groupBy('tanggal')
+        ->get();
+
+        return DataTables::of($antrianHistory)
+            ->make(true);
     }
 }

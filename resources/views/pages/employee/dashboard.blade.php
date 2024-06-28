@@ -2,11 +2,6 @@
 
 @section('title', 'Dashboard Loket - Pos Indonesia')
 
-@section('style')
-    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-@endsection
-
 @section('content')
     <div class="content-wrapper">
         <!-- Main content -->
@@ -19,7 +14,7 @@
                         <div class="card-body box-profile">
                             <div class="text-center">
                                 <img class="img-fluid img-circle"
-                                    src="{{ asset('storage/photo-profile/' . $data['loket']->employee->image) }}"
+                                    src="{{ url('photo-profile/' . $data['loket']->employee->image) }}"
                                     alt="User profile picture">
                             </div>
 
@@ -35,7 +30,7 @@
                                         class="float-right">{{ $data['loket']->kategoriPelayanan->nama_pelayanan }}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Pelayanan Hari Ini</b> <a class="float-right">-</a>
+                                    <b>Pelayanan Hari Ini</b><a class="float-right">{{ $jumlahPelayanan }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -153,9 +148,6 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script>
         $(document).ready(function() {
             var pointer = 0;

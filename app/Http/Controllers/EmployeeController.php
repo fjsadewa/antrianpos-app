@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\antrian;
+use App\Models\antrianHistory;
 use App\Models\Loket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,7 @@ class EmployeeController extends Controller
         }
 
     
-        public function dashboardEmployee(Request $request){
+    public function dashboardEmployee(Request $request){
         $userId = Auth::user()->id; 
         $loket = Loket::where('user_id', $userId)->first(); 
         
@@ -25,6 +26,7 @@ class EmployeeController extends Controller
 
         $kategoriLayananId = $loket->kategori_pelayanan_id;
         $nmrLoket = $loket->nomor_loket;
+        $idLoket = $loket->id;
         
         $antrian = antrian::where('id_kategori_layanan', $kategoriLayananId)
         ->whereDate('tanggal', now())
@@ -38,12 +40,20 @@ class EmployeeController extends Controller
             $query->where('nomor_loket', $nmrLoket); })
         ->whereIn('status_antrian', ['dipanggil', 'dilayani']) 
         ->get(); 
+
+        $list = antrian::where('id_loket_layani',$idLoket)
+        ->where('id_kategori_layanan', $kategoriLayananId)
+        ->whereDate('tanggal', now())
+        ->where('status_antrian', 'selesai') 
+        ->get(); 
+        
         // dd($antrianSekarang);
         $jumlahAntrian = $antrian->count();
+        $jumlahPelayanan = $list->count();
 
         $data = ['loket' => $loket, 'antrian' => $antrian, 'antrianSekarang' => $antrianSekarang];
 
-        return view('pages.employee.dashboard', compact('data','jumlahAntrian')); 
+        return view('pages.employee.dashboard', compact('data','jumlahAntrian','jumlahPelayanan')); 
     }
 
     public function getAntrian($id){
@@ -278,7 +288,6 @@ class EmployeeController extends Controller
             return Datatables::of($data)
                     ->make(true);
         }
-        
     }
 
     public function antrianData(Request $request){
@@ -287,9 +296,7 @@ class EmployeeController extends Controller
             $userId = Auth::user()->id; 
             $loket = Loket::where('user_id', $userId)->first(); 
         
-
             $kategoriLayananId = $loket->kategori_pelayanan_id;
-            
             
             $data = antrian::where('id_kategori_layanan', $kategoriLayananId)
             ->whereDate('tanggal', now())
@@ -299,13 +306,10 @@ class EmployeeController extends Controller
             }])
             ->get(); 
             
-            
-            // return response()->json($data);
             return Datatables::of($data)
                     ->addIndexColumn()
                     ->make(true);
         }
-        
     }
 
     public function history($id){
@@ -316,15 +320,35 @@ class EmployeeController extends Controller
             return redirect()->back()->withError('Loket tidak ditemukan');
         }
         $kategoriLayananId = $loket->kategori_pelayanan_id;
+        $loketId =  $loket->id;
 
-        $antrian = antrian::where('id_kategori_layanan', $kategoriLayananId)
-            ->where('status_antrian', 'selesai') 
-            ->get(); 
-
-            
-        $data = ['loket' => $loket, 'antrian' => $antrian];
+    
+        $data = ['loket' => $loket, 'kategori' => $kategoriLayananId];
         return view ('pages.employee.history',compact('data'));
-        // return response()->json($data);
+    }
+
+    public function userHistory(Request $request){
+        $userId = Auth::user()->id;
+        $loket = Loket::where('user_id', $userId)->first();
+
+        if (!$loket) {
+            return response()->json([
+                'message' => 'Loket tidak ditemukan',
+            ], 404);
+        }
+
+        $loketId = $loket->id;
+
+        $antrianHistory = AntrianHistory::where('id_loket_panggil', $loketId)
+            ->selectRaw('tanggal, 
+                        SUM(CASE WHEN status_antrian = "DIPANGGIL" THEN 1 ELSE 0 END) AS jumlah_dipanggil,
+                        SUM(CASE WHEN status_antrian = "SELESAI" THEN 1 ELSE 0 END) AS jumlah_selesai,
+                        SUM(CASE WHEN status_antrian = "LEWATI" THEN 1 ELSE 0 END) AS jumlah_dilewati')
+            ->groupBy('tanggal')
+            ->get();
+
+        return Datatables::of($antrianHistory)
+            ->make(true);
     }
 }
 

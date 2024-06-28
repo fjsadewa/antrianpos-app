@@ -129,4 +129,7 @@ Route::group(['prefix'=>'employee','middleware'=> ['auth'],'as'=> 'employee.'], 
 
 Route::get('/datatable/antrianSekarangData',[EmployeeController::class,'antrianSekarangData'])->name('antrianSekarangData');
 Route::get('/datatable/antrianData',[EmployeeController::class,'antrianData'])->name('antrianData');
+Route::get('/datatable/userHistory',[EmployeeController::class,'userHistory'])->name('userHistory');
+
+Route::get('/datatable/allHistory',[HomeController::class,'allHistory'])->name('allHistory');
 

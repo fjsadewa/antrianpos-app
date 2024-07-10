@@ -305,15 +305,16 @@
                     sequence.push("bel.wav");
                     console.log(sequence);
                     $.ajax({
-                        url: "http://localhost:3000/call",
+                        url: "192.168.5.160:3000/call",
+                        //url: "http://localhost:3000/call",
                         data: {
                             sequence: sequence
                         },
                         success: function(data) {
-                            console.log("Sequence sound updated and sent to localhost:3000:", data);
+                            console.log("Sequence sound updated and sent to 192.168.5.160:3000", data);
                         },
                         error: function(error) {
-                            console.error("Error sending sequence data to localhost:3000:", error);
+                            console.error("Error sending sequence data to 192.168.5.160:3000", error);
                         }
                     });
                 } else {
@@ -410,18 +411,19 @@
                 ];
                 console.log(list);
                 $.ajax({
-                    url: "http://localhost:3000/show",
+                    //url: "http://localhost:3000/show",
+                    url: "192.168.5.160:3000/show",
                     data: {
                         list: list
                     },
                     success: function(data) {
                         console.log(
-                            "Data sent to localhost:3000:",
+                            "Data sent to 192.168.5.160:3000",
                             data);
                     },
                     error: function(error) {
                         console.error(
-                            "Error sent data to localhost:3000:",
+                            "Error sent data to 192.168.5.160:3000",
                             error);
                     }
                 });

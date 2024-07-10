@@ -305,7 +305,7 @@
                     sequence.push("bel.wav");
                     console.log(sequence);
                     $.ajax({
-                        url: "192.168.5.160:3000/call",
+                        url: "http://192.168.5.160:3000/call",
                         //url: "http://localhost:3000/call",
                         data: {
                             sequence: sequence
@@ -412,7 +412,7 @@
                 console.log(list);
                 $.ajax({
                     //url: "http://localhost:3000/show",
-                    url: "192.168.5.160:3000/show",
+                    url: "http://192.168.5.160:3000/show",
                     data: {
                         list: list
                     },

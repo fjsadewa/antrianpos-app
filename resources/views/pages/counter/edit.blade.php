@@ -43,6 +43,7 @@
                                             <select name="user_id"
                                                 class="custom-select rounded-2 @error('user_id')is-invalid @enderror"
                                                 id="exampleSelectRounded0">
+                                                <option value="" {{ is_null($data_counter->user_id) ? 'selected' : '' }}>Tidak ada</option>
                                                 @foreach ($user as $employee)
                                                     <option value="{{ $employee->id }}"
                                                         {{ $data_counter->employee->id == $employee->id ? 'selected' : '' }}>

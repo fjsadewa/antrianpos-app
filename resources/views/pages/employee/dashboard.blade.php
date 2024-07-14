@@ -13,7 +13,7 @@
                     <div class="card" data-loket-id="{{ $data['loket']->employee->id }}">
                         <div class="card-body box-profile">
                             <div class="text-center">
-                                <img class="img-fluid img-circle"
+                                <img class="img-fluid" style="width: 100%; max-width:200px; height:auto; border-radius:10%;"
                                     src="{{ url('photo-profile/' . $data['loket']->employee->image) }}"
                                     alt="User profile picture">
                             </div>

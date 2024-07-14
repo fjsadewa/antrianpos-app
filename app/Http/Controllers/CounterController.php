@@ -80,7 +80,7 @@ class CounterController extends Controller
         
         $data = KategoriPelayanan::find($id);
         if (!$data) {
-            return redirect()->route('admin.category')->with('warning', 'Kategori dengan ID tersebut tidak ditemukan');
+            return redirect()->route('admin.category')->with('failed', 'Kategori dengan ID tersebut tidak ditemukan');
         }
 
         //mengirimkan data ke database
@@ -116,14 +116,14 @@ class CounterController extends Controller
                 return redirect()->route('admin.category')->with('failed','Update Telah Gagal');
             }
         }else {
-        return redirect()->route('admin.category')->with('warning', 'Kategori dengan ID tersebut tidak ditemukan');
+        return redirect()->route('admin.category')->with('failed', 'Kategori dengan ID tersebut tidak ditemukan');
         }
     }
 
     public function deleteCategory($id){
         $data_category = KategoriPelayanan::find($id);
         if (!$data_category) {
-            return redirect()->route('admin.category')->with('warning', 'Kategori dengan ID tersebut tidak ditemukan');
+            return redirect()->route('admin.category')->with('failed', 'Kategori dengan ID tersebut tidak ditemukan');
         }
 
         if ($data_category->image) {
@@ -139,7 +139,7 @@ class CounterController extends Controller
                 return redirect()->route('admin.category')->with('failed','Penghapusan Gagal');
             }
         }else {
-            return redirect()->route('admin.category')->with('warning', 'Kategori dengan ID tersebut tidak ditemukan');
+            return redirect()->route('admin.category')->with('failed', 'Kategori dengan ID tersebut tidak ditemukan');
         }
     }
 
@@ -160,8 +160,8 @@ class CounterController extends Controller
         $validator = Validator::make($request->all(),[
             'nomor_loket'           => 'required|integer|unique:lokets,nomor_loket',
             'status'                => 'required|in:terbuka,tertutup',
-            'kategori_pelayanan_id' => 'required|integer|exists:kategori_pelayanans,id',
-            'user_id'               => 'required|integer|exists:users,id|unique:lokets,user_id,'.$request->id.',id'
+            'kategori_pelayanan_id' => 'nullable|integer|exists:kategori_pelayanans,id',
+            'user_id'               => 'nullable|integer|exists:users,id|unique:lokets,user_id,'.$request->id.',id'
         ]);
 
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
@@ -190,8 +190,8 @@ class CounterController extends Controller
         $validator = Validator::make($request->all(),[
             'nomor_loket'           => 'required|integer|unique:lokets,nomor_loket,'.$request->id.',id',
             'status'                => 'required|in:terbuka,tertutup',
-            'kategori_pelayanan_id' => 'required|integer|exists:kategori_pelayanans,id',
-            'user_id'               => 'required|integer|exists:users,id|unique:lokets,user_id,'.$request->id.',id'
+            'kategori_pelayanan_id' => 'nullable|integer|exists:kategori_pelayanans,id',
+            'user_id'               => 'nullable|integer|exists:users,id|unique:lokets,user_id,'.$request->id.',id'
         ]);
 
         //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
@@ -211,7 +211,7 @@ class CounterController extends Controller
                 return redirect()->route('admin.counter')->with('failed','Update Telah Gagal');
             }
         }else {
-        return redirect()->route('admin.counter')->with('warning', 'User dengan ID tersebut tidak ditemukan');
+        return redirect()->route('admin.counter')->with('failed', 'User dengan ID tersebut tidak ditemukan');
         }
     }
 
@@ -220,12 +220,12 @@ class CounterController extends Controller
 
         if($data_counter){
             if($data_counter->delete()){
-                return redirect()->route('admin.counter')->with('success','Kategori berhasil dihapus');
+                return redirect()->route('admin.counter')->with('success','Loket berhasil dihapus');
             } else {
                 return redirect()->route('admin.counter')->with('failed','Penghapusan Gagal');
             }
         }else {
-            return redirect()->route('admin.counter')->with('warning', 'Kategori dengan ID tersebut tidak ditemukan');
+            return redirect()->route('admin.counter')->with('failed', 'Loket dengan ID tersebut tidak ditemukan');
         }
     }
 }

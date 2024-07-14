@@ -26,6 +26,7 @@ class AntrianController extends Controller
         // Buat antrian baru
         $dataForm = [
             'id_kategori_layanan' => $kategoriLayanan->id,
+            'nama_pelayanan' => $kategoriLayanan->nama_pelayanan,
             'nomor_urut' => $nomorUrutBaru,
             'tanggal' => $tanggalHariIni,
             'status_antrian' => 'menunggu',

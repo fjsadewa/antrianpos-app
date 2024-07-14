@@ -148,6 +148,7 @@ class EmployeeController extends Controller
         if ($antrianTerdepan !=null) {
             $antrianTerdepan->status_antrian = 'dipanggil';
             $antrianTerdepan->id_loket_panggil = $loket->id;
+            $antrianTerdepan->nama_petugas = $loket->employee->name;
             $antrianTerdepan->waktu_panggil = now();
             $antrianTerdepan->save();
 

@@ -57,7 +57,9 @@ class LoginController extends Controller
         foreach ($antrians as $antrian) {
             $antrianHistory = new AntrianHistory;
             $antrianHistory->id_kategori_layanan = $antrian->id_kategori_layanan;
+            $antrianHistory->nama_pelayanan = $antrian->nama_pelayanan;
             $antrianHistory->nomor_urut = $antrian->nomor_urut;
+            $antrianHistory->nama_petugas = $antrian->nama_petugas;
             $antrianHistory->status_antrian = $antrian->status_antrian;
             $antrianHistory->id_loket_panggil = $antrian->id_loket_panggil;
             $antrianHistory->waktu_panggil = $antrian->waktu_panggil;

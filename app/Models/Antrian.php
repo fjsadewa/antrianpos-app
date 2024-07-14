@@ -12,7 +12,9 @@ class antrian extends Model{
 
     protected $fillable = [
         'id_kategori_layanan',
+        'nama_pelayanan',
         'nomor_urut',
+        'nama_petugas',
         'status_antrian',
         'id_loket_panggil',
         'waktu_panggil',
@@ -23,21 +25,32 @@ class antrian extends Model{
 
     public function kategoriLayanan()
     {
-        return $this->belongsTo(KategoriPelayanan::class, 'id_kategori_layanan');
+        return $this->belongsTo(KategoriPelayanan::class, 'id_kategori_layanan')->withDefault();
     }
 
     public function loketPanggil()
     {
-        return $this->belongsTo(Loket::class, 'id_loket_panggil');
+        return $this->belongsTo(Loket::class, 'id_loket_panggil')->withDefault();
     }
 
     public function loketLayani()
     {
-        return $this->belongsTo(Loket::class, 'id_loket_layani');
+        return $this->belongsTo(Loket::class, 'id_loket_layani')->withDefault();
     }
 
     public function employee()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class,'user_id')->withDefault();
+    }
+
+    public function getNamaPelayananAttribute()
+    {
+        return $this->kategoriLayanan->nama_pelayanan ?? null;
+    }
+
+    public function getNamaPetugasAttribute()
+    {
+        $loket = $this->loketPanggil ?? $this->loketLayani;
+        return $loket ? $loket->employee->name : null;
     }
 }

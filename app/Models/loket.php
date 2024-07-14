@@ -25,12 +25,12 @@ class Loket extends Model
 
     public function kategoriPelayanan()
     {
-        return $this->belongsTo(KategoriPelayanan::class,'kategori_pelayanan_id');
+        return $this->belongsTo(KategoriPelayanan::class,'kategori_pelayanan_id')->withDefault();
     }
 
     public function employee()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class,'user_id')->withDefault();
     }
 
 }

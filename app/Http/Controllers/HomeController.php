@@ -46,7 +46,7 @@ class HomeController extends Controller
             'nama'      => 'required',
             'email'     => 'required|email',
             'password'  => 'required',
-            'photo'     => 'required|mimes:png,jpg,jpeg|max:2048',
+            'photo'     => 'mimes:png,jpg,jpeg|max:2048',
             'role'      => 'required'
         ]);
 
@@ -54,19 +54,24 @@ class HomeController extends Controller
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
 
         $photo      = $request->file('photo');
-        if (!is_dir('photo-profile')) {
-            mkdir('photo-profile', 0755, true);
+        if ($photo){
+            if (!is_dir('photo-profile')) {
+                mkdir('photo-profile', 0755, true);
+            }
+            $filename   = date('y-m-d').$photo->getClientOriginalName();
+            //$path       = 'photo-profile/'.$filename;
+            //Storage::disk('public')->put($path,file_get_contents($photo));
+            $destinationPath = public_path().'/photo-profile';
+            $photo->move($destinationPath,$filename);
+
+            $data['image']      = $filename;
         }
-        $filename   = date('y-m-d').$photo->getClientOriginalName();
-        //$path       = 'photo-profile/'.$filename;
-        //Storage::disk('public')->put($path,file_get_contents($photo));
-        $destinationPath = public_path().'/photo-profile';
-        $photo->move($destinationPath,$filename);
+        
         //mengirimkan data ke database
         $data['name']       = $request->nama;
         $data['email']      = $request->email;
         $data['password']   = Hash::make($request->password);
-        $data['image']      = $filename;
+        
 
         //mengirim perintah create ke database
         $user = User::create($data);
@@ -100,7 +105,7 @@ class HomeController extends Controller
         
         $user = User::find($id);
         if (!$user) {
-            return redirect()->route('admin.user.edit')->with('warning', 'User dengan ID tersebut tidak ditemukan');
+            return redirect()->route('admin.user.edit')->with('failed', 'User dengan ID tersebut tidak ditemukan');
         }
         //mengirimkan data ke database
         $data['name']       = $request->nama;
@@ -143,15 +148,15 @@ class HomeController extends Controller
                 return redirect()->route('admin.user')->with('failed','Update gagal Gagal');
             }
         }else {
-        return redirect()->route('admin.user')->with('warning', 'User dengan ID tersebut tidak ditemukan');
+        return redirect()->route('admin.user')->with('failed', 'User dengan ID tersebut tidak ditemukan');
         }
 
     }
 
-    public function delete(Request $request,$id){
+    public function delete($id){
         $data = User::find($id);
         if (!$data) {
-            return redirect()->route('admin.user')->with('warning', 'User dengan ID tersebut tidak ditemukan');
+            return redirect()->route('admin.user')->with('failed', 'User dengan ID tersebut tidak ditemukan');
         }
 
         if ($data->image) {
@@ -161,13 +166,22 @@ class HomeController extends Controller
             }
         }
         if($data){
-            if($data->delete($data)){
-                return redirect()->route('admin.user')->with('success','Pengguna berhasil dihapus');
+            $lokets = Loket::where('user_id', $id)->get();
+                
+            if ($lokets->isEmpty()) {
+                return redirect()->route('admin.user')->with('failed', 'Tidak ada loket yang ditemukan dengan user_id tersebut');
+            }
+            foreach ($lokets as $loket) {
+                $loket->status = 'tertutup';
+                $loket->save();
+            }
+            if($data->delete()){
+                return redirect()->route('admin.user')->with('success','Pengguna berhasil dihapus! Segera cek data loket, untuk memastikan loket tidak ada yang kosong');
             } else {
                 return redirect()->route('admin.user')->with('failed','Penghapusan Gagal');
             }
         }else {
-            return redirect()->route('admin.user')->with('warning', 'User dengan ID tersebut tidak ditemukan');
+            return redirect()->route('admin.user')->with('failed', 'User dengan ID tersebut tidak ditemukan');
         }
     }
 
@@ -285,7 +299,7 @@ class HomeController extends Controller
     public function deleteVideo($id){
         $video = Video::find($id);
         if (!$video) {
-            return redirect()->route('admin.displaysetting')->with('warning', 'Banner dengan ID tersebut tidak ditemukan');
+            return redirect()->route('admin.displaysetting')->with('failed', 'Banner dengan ID tersebut tidak ditemukan');
         }
 
         if ($video->tipe === 'local') {
@@ -358,7 +372,7 @@ class HomeController extends Controller
         $banner = Banner::find($id);
 
         if (!$banner) {
-            return redirect()->route('admin.displaysetting')->with('warning', 'Banner dengan ID tersebut tidak ditemukan');
+            return redirect()->route('admin.displaysetting')->with('failed', 'Banner dengan ID tersebut tidak ditemukan');
         }
         //mengirimkan data ke database
         $data['judul']  = $request->judul;
@@ -391,7 +405,7 @@ class HomeController extends Controller
     public function deleteBanner($id){
         $banner = Banner::find($id);
         if (!$banner) {
-            return redirect()->route('admin.displaysetting')->with('warning', 'Banner dengan ID tersebut tidak ditemukan');
+            return redirect()->route('admin.displaysetting')->with('failed', 'Banner dengan ID tersebut tidak ditemukan');
         }
 
         if ($banner->image_banner) {
@@ -436,7 +450,7 @@ class HomeController extends Controller
                 return redirect()->route('admin.displaysetting')->with('failed','Update Telah Gagal');
             }
         }else {
-        return redirect()->route('admin.displaysetting')->with('warning', 'Footer dengan ID tersebut tidak ditemukan');
+        return redirect()->route('admin.displaysetting')->with('failed', 'Footer dengan ID tersebut tidak ditemukan');
         }
     }
 
@@ -468,7 +482,7 @@ class HomeController extends Controller
                 return redirect()->route('admin.printSet')->with('failed','Update Telah Gagal');
             }
         }else {
-        return redirect()->route('admin.printSet')->with('warning', 'Text tersebut tidak ditemukan');
+        return redirect()->route('admin.printSet')->with('failed', 'Text tersebut tidak ditemukan');
         }
     }
 
@@ -489,7 +503,9 @@ class HomeController extends Controller
         foreach ($antrians as $antrian) {
             $antrianHistory = new AntrianHistory;
             $antrianHistory->id_kategori_layanan = $antrian->id_kategori_layanan;
+            $antrianHistory->nama_pelayanan = $antrian->nama_pelayanan;
             $antrianHistory->nomor_urut = $antrian->nomor_urut;
+            $antrianHistory->nama_petugas = $antrian->nama_petugas;
             $antrianHistory->status_antrian = $antrian->status_antrian;
             $antrianHistory->id_loket_panggil = $antrian->id_loket_panggil;
             $antrianHistory->waktu_panggil = $antrian->waktu_panggil;

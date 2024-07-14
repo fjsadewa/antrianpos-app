@@ -88,6 +88,9 @@
                                                         <div class="modal-body">
                                                             <p>Apakah kamu yakin ingin menghapus data
                                                                 <b>{{ $d->nama_pelayanan }}</b> ?
+                                                                <br>
+                                                                <b>Pastikan sudah melakukan backup data terlebih dahulu </b>
+                                                                karena akan berpengaruh pada data antrian!
                                                             </p>
                                                         </div>
                                                         <div class="modal-footer justify-content-between">

@@ -48,21 +48,9 @@
                                         @foreach ($data_counter->sortBy('nomor_loket') as $d)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>
-                                                    @if ($d->employee)
-                                                        {{ $d->employee->name }}
-                                                    @else
-                                                        -
-                                                    @endif
-                                                </td>
+                                                <td>{{ $d->employee->name ?? '-' }}</td>
                                                 <td>{{ $d->nomor_loket }}</td>
-                                                <td>
-                                                    @if ($d->kategoriPelayanan)
-                                                        {{ $d->kategoriPelayanan->nama_pelayanan }}
-                                                    @else
-                                                        -
-                                                    @endif
-                                                </td>
+                                                <td> {{ $d->kategoriPelayanan->nama_pelayanan ?? '-' }}</td>
                                                 <td>{{ $d->status }}</td>
                                                 <td>
                                                     <div class="row">
@@ -96,8 +84,12 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
+
                                                             <p>Apakah kamu yakin ingin menghapus nomor loket
                                                                 <b>{{ $d->nomor_loket }}</b> ?
+                                                                <br>
+                                                                <b>Pastikan sudah melakukan backup data terlebih dahulu </b>
+                                                                karena akan berpengaruh pada data antrian!
                                                             </p>
                                                         </div>
                                                         <div class="modal-footer justify-content-between">

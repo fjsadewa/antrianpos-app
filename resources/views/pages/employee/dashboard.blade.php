@@ -230,24 +230,29 @@
             });
             var loketId = document.querySelector('.card').dataset.loketId;
             getQueue(loketId);
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, timeoutInterval);
+
             function getQueue($loketId) {
                 $.ajax({
                     url: "{{ url('employee/dashboard-employee') }}/" +
                         loketId + "/getAntrian",
                     method: "GET",
-                    success: function(data) {
-                        if (data.data) {
-                            onQueue = data.data;
-                            console.log(onQueue);
+                    success: function(list) {
+                        if (list.data) {
+                            onQueue = list.data;
+                            console.log("Antrian teratas: ", onQueue);
                             var kodeAntrian = onQueue.kodeAntrian;
                             var nomorAntrian = onQueue.nomorAntrian;
                             var nomorLoket = onQueue.nomorLoket;
+                            var namaPetugas = onQueue.namaPetugas;
+                            var namaPelayanan = onQueue.namaPelayanan;
+                            var photo = onQueue.photo;
 
-                            $('#modal-text').text('Apakah kamu yakin ingin melewati nomor antrian ' +
-                                kodeAntrian + ' - ' + nomorAntrian + '?');
+                            showModal(
+                                `Apakah kamu yakin ingin melewati nomor antrian ${onQueue.kodeAntrian} - ${onQueue.nomorAntrian}?`
+                            );
+
+                            // $('#modal-text').text('Apakah kamu yakin ingin melewati nomor antrian ' +
+                            //     kodeAntrian + ' - ' + nomorAntrian + '?');
                             if (onQueue.status_antrian === "dipanggil") {
                                 isQueueCalled = true;
                                 console.log("Queue is called:", isQueueCalled);
@@ -258,7 +263,7 @@
                                 isQueueCalled = false;
                                 console.log("Queue is not called:", isQueueCalled);
                             }
-                            // Update button states based on queue status
+                            // Update status tombol
                             if (isQueueCalled) {
                                 $("#btn-call").prop("disabled", false);
                                 $("#btn-skip").prop("disabled", false);
@@ -285,6 +290,10 @@
                         }
                     }
                 });
+            }
+
+            function showModal(message) {
+                $('#modal-text').text(message);
             }
 
             function updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket) {
@@ -428,15 +437,16 @@
                     }
                 });
             }
+
             $("#btn-call").click(function() {
+                var kodeAntrian = onQueue.kodeAntrian;
+                var nomorAntrian = onQueue.nomorAntrian;
+                var nomorLoket = onQueue.nomorLoket;
+                var namaPetugas = onQueue.namaPetugas;
+                var namaPelayanan = onQueue.namaPelayanan;
+                var photo = onQueue.photo;
                 if (onQueue) {
                     if (isQueueCalled) {
-                        var kodeAntrian = onQueue.kodeAntrian;
-                        var nomorAntrian = onQueue.nomorAntrian;
-                        var nomorLoket = onQueue.nomorLoket;
-                        var namaPetugas = onQueue.namaPetugas;
-                        var namaPelayanan = onQueue.namaPelayanan;
-                        var photo = onQueue.photo;
                         updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
                         showAntrian(kodeAntrian, nomorAntrian, nomorLoket,
                             namaPetugas, namaPelayanan, photo);
@@ -455,12 +465,6 @@
                             },
                             success: function(data) {
                                 if (onQueue) {
-                                    var kodeAntrian = onQueue.kodeAntrian;
-                                    var nomorAntrian = onQueue.nomorAntrian;
-                                    var nomorLoket = onQueue.nomorLoket;
-                                    var namaPetugas = onQueue.namaPetugas;
-                                    var namaPelayanan = onQueue.namaPelayanan;
-                                    var photo = onQueue.photo;
                                     updateSequenceSuara(kodeAntrian, nomorAntrian, nomorLoket);
                                     showAntrian(kodeAntrian, nomorAntrian, nomorLoket,
                                         namaPetugas, namaPelayanan, photo);
@@ -583,6 +587,11 @@
                     });
                 }
             });
+            setInterval(() => {
+                const loketId = document.querySelector('.card').dataset.loketId;
+                getQueue(loketId);
+                antrianTable.ajax.reload();
+            }, 5000);
         });
     </script>
 @endsection

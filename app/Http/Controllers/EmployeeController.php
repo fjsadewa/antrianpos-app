@@ -33,13 +33,12 @@ class EmployeeController extends Controller
         ->where('status_antrian', 'menunggu') 
         ->get();
         
-        
-        $antrianSekarang = antrian::where('id_kategori_layanan', $kategoriLayananId)
-        ->whereDate('tanggal', now())
-        ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
-            $query->where('nomor_loket', $nmrLoket); })
-        ->whereIn('status_antrian', ['dipanggil', 'dilayani']) 
-        ->get(); 
+        // $antrianSekarang = antrian::where('id_kategori_layanan', $kategoriLayananId)
+        // ->whereDate('tanggal', now())
+        // ->whereHas('loketPanggil', function ($query) use ($nmrLoket) {
+        //     $query->where('nomor_loket', $nmrLoket); })
+        // ->whereIn('status_antrian', ['dipanggil', 'dilayani']) 
+        // ->get(); 
 
         $list = antrian::where('id_loket_layani',$idLoket)
         ->where('id_kategori_layanan', $kategoriLayananId)
@@ -51,7 +50,7 @@ class EmployeeController extends Controller
         $jumlahAntrian = $antrian->count();
         $jumlahPelayanan = $list->count();
 
-        $data = ['loket' => $loket, 'antrian' => $antrian, 'antrianSekarang' => $antrianSekarang];
+        $data = ['loket' => $loket, 'antrian' => $antrian];
 
         return view('pages.employee.dashboard', compact('data','jumlahAntrian','jumlahPelayanan')); 
     }
@@ -108,10 +107,16 @@ class EmployeeController extends Controller
             $kodeAntrian    = $antrianTerkini->kategoriLayanan->kode_pelayanan;
             $nomorAntrian   = $antrianTerkini->nomor_urut;
             $nomorLoket     = $loket->nomor_loket;
+            $namaPetugas    = $loket->employee->name;
+            $namaPelayanan  = $antrianTerkini->kategoriLayanan->nama_pelayanan;
+            $photo = $loket->employee->image;
     
             $antrianTerkini['kodeAntrian']= $kodeAntrian;
             $antrianTerkini['nomorAntrian']= $nomorAntrian;
             $antrianTerkini['nomorLoket']= $nomorLoket;
+            $antrianTerkini['namaPetugas'] = $namaPetugas;
+            $antrianTerkini['namaPelayanan'] = $namaPelayanan;
+            $antrianTerkini['photo'] = $photo;
 
             return response()->json([
                 'status' => 'success',

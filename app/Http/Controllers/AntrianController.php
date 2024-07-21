@@ -6,6 +6,7 @@ use App\Models\addText;
 use App\Models\antrian;
 use App\Models\KategoriPelayanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Response;
 
 class AntrianController extends Controller
@@ -33,7 +34,12 @@ class AntrianController extends Controller
         ];
 
         antrian::create($dataForm);
+        $this->sendSocketNotification();
         return Response::json(['success' => true, 'dataForm' => $dataForm, 'message' => 'Form antrian berhasil dibuat!'], 200);
+    }
+
+    private function sendSocketNotification(){
+        Http::post('http://localhost:3000/notify');
     }
 
     public function getAntrian(){

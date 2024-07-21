@@ -11,10 +11,12 @@ use App\Models\Footer;
 use App\Models\Loket;
 use App\Models\User;
 use App\Models\Video;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
@@ -26,8 +28,41 @@ class HomeController extends Controller
     $this->middleware(['role:admin','permission:view_admin']);
     }
 
-    public function dashboard(){
-        return view ('pages.user.dashboard');
+    public function dashboard(Request $request){
+        $currentMonth = $request->input('month', Carbon::now()->format('m'));
+        $currentYear = $request->input('year', Carbon::now()->format('Y'));
+
+        $graphData = AntrianHistory::selectRaw('DATE(tanggal) as date, COUNT(*) as count')
+            ->whereMonth('tanggal', $currentMonth)
+            ->whereYear('tanggal', $currentYear)
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        $counts = AntrianHistory::selectRaw('
+            COUNT(CASE WHEN status_antrian = "menunggu" THEN 1 END) as menunggu,
+            COUNT(CASE WHEN status_antrian = "dipanggil" THEN 1 END) as terpanggil,
+            COUNT(CASE WHEN status_antrian = "selesai" THEN 1 END) as terlayani,
+            COUNT(CASE WHEN status_antrian = "lewati" THEN 1 END) as terlewati
+        ')
+        ->whereMonth('tanggal', $currentMonth)
+        ->whereYear('tanggal', $currentYear)
+        ->first();
+        
+        $kategoriTransaksi = AntrianHistory::select('id_kategori_layanan', DB::raw('count(*) as total'))
+        ->whereMonth('tanggal', $currentMonth)
+        ->whereYear('tanggal', $currentYear)
+        ->groupBy('id_kategori_layanan')
+        ->with('kategoriLayanan')
+        ->get();
+
+        return view ('pages.user.dashboard', [
+            'graphData' => $graphData,
+            'counts' => $counts,
+            'selectedMonth' => $currentMonth,
+            'selectedYear' => $currentYear,
+            'kategoriTransaksi' => $kategoriTransaksi
+        ]);
     }
 
     public function user(){
@@ -518,7 +553,16 @@ class HomeController extends Controller
         }
         return redirect()->route('admin.dashboard')->with('success', 'Data berhasil dipindahkan !');
     }
+
+    public function history(){
+        return view ('pages.history.transactionHistory');
+    }
     
+    public function loketHistory(){
+        $loket= Loket::orderBy('nomor_loket', 'asc')->get();;
+        return view ('pages.history.detailHistory',compact('loket'));
+    }
+
     public function allHistory(Request $request){
         $antrianHistory = AntrianHistory::selectRaw('tanggal, 
                     SUM(CASE WHEN status_antrian = "MENUNGGU" THEN 1 ELSE 0 END) AS jumlah_menunggu,
@@ -532,4 +576,27 @@ class HomeController extends Controller
         return DataTables::of($antrianHistory)
             ->make(true);
     }
+
+    public function detailHistory(Request $request){
+        $loketId = $request->input('loket_id');
+        Log::info('Received loket_id: ', ['loket_id' => $loketId]);
+
+        $antrianHistory = AntrianHistory::selectRaw('tanggal, nama_petugas,
+                    SUM(CASE WHEN status_antrian = "MENUNGGU" THEN 1 ELSE 0 END) AS jumlah_menunggu,
+                    SUM(CASE WHEN status_antrian = "DIPANGGIL" THEN 1 ELSE 0 END) AS jumlah_dipanggil,
+                    SUM(CASE WHEN status_antrian = "DILAYANI" THEN 1 ELSE 0 END) AS jumlah_dilayani,
+                    SUM(CASE WHEN status_antrian = "SELESAI" THEN 1 ELSE 0 END) AS jumlah_selesai,
+                    SUM(CASE WHEN status_antrian = "LEWATI" THEN 1 ELSE 0 END) AS jumlah_dilewati')
+            ->when($loketId, function ($query, $loketId) {
+                return $query->where('id_loket_panggil', $loketId);
+            })
+            ->groupBy('tanggal','nama_petugas')
+            ->get();
+
+        Log::info('Antrian history data: ', ['data' => $antrianHistory]);
+
+        return DataTables::of($antrianHistory)
+            ->make(true);
+    }
+
 }

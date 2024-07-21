@@ -112,7 +112,11 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     Route::put('/updateCounter/{id}',[CounterController::class,'updateCounter'])->name('counter.update');
     Route::delete('/deleteCounter/{id}',[CounterController::class,'deleteCounter'])->name('counter.delete');
     
+    Route::get('/history',[HomeController::class, 'history'])->name('history');
+    Route::get('/loket-history',[HomeController::class, 'loketHistory'])->name('loketHistory');
+
     Route::get('/move',[HomeController::class,'moveData'])->name('moveData');
+
 });
 
 Route::group(['prefix'=>'employee','middleware'=> ['auth'],'as'=> 'employee.'], function(){
@@ -132,4 +136,7 @@ Route::get('/datatable/antrianData',[EmployeeController::class,'antrianData'])->
 Route::get('/datatable/userHistory',[EmployeeController::class,'userHistory'])->name('userHistory');
 
 Route::get('/datatable/allHistory',[HomeController::class,'allHistory'])->name('allHistory');
+Route::get('/datatable/detailHistory',[HomeController::class,'detailHistory'])->name('detailHistory');
+Route::get('employee/dashboard-employee/{loketId}/getJumlahAntrianBelumTerpanggil', [EmployeeController::class, 'getJumlahAntrianBelumTerpanggil']);
+Route::get('employee/dashboard-employee/{loketId}/getJumlahPelayananHariIni', [EmployeeController::class, 'getJumlahPelayananHariIni']);
 

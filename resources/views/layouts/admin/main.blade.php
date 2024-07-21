@@ -65,6 +65,7 @@
         <script src="{{ asset('lte/plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
         <!-- ChartJS -->
         <script src="{{ asset('lte/plugins/chart.js/Chart.min.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <!-- SweetAlert -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>

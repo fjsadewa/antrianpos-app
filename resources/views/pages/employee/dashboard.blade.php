@@ -30,7 +30,8 @@
                                         class="float-right">{{ $data['loket']->kategoriPelayanan->nama_pelayanan }}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Pelayanan Hari Ini</b><a class="float-right">{{ $jumlahPelayanan }}</a>
+                                    <b>Pelayanan Hari Ini</b><a class="float-right"
+                                        id="jumlah-pelayanan">{{ $jumlahPelayanan }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -115,7 +116,8 @@
                     <div class="row card">
                         <div class="card-header p-2">
                             <h3 class="card-title "> Antrian Belum Terpanggil
-                                <span class="right badge badge-warning ml-2">{{ $jumlahAntrian }} Menunggu</span>
+                                <span class="right badge badge-warning ml-2" id="jumlah-antrian">{{ $jumlahAntrian }}
+                                    Menunggu</span>
                             </h3>
                         </div>
                         <!-- /.card-header -->
@@ -438,6 +440,41 @@
                 });
             }
 
+            function updateJumlahAntrian() {
+                var loketId = {{ $data['loket']->id }};
+                $.ajax({
+                    url: "{{ url('employee/dashboard-employee') }}/" + loketId +
+                        "/getJumlahAntrianBelumTerpanggil",
+                    method: "GET",
+                    success: function(response) {
+                        if (response.jumlahAntrianBelumTerpanggil !== undefined) {
+                            $('#jumlah-antrian').text(response.jumlahAntrianBelumTerpanggil +
+                                ' Menunggu');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error getting jumlah antrian:", error);
+                    }
+                });
+            }
+
+            function updateJumlahPelayanan() {
+                var loketId = {{ $data['loket']->id }};
+                $.ajax({
+                    url: "{{ url('employee/dashboard-employee') }}/" + loketId +
+                        "/getJumlahPelayananHariIni",
+                    method: "GET",
+                    success: function(response) {
+                        if (response.jumlahPelayananHariIni !== undefined) {
+                            $('#jumlah-pelayanan').text(response.jumlahPelayananHariIni);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error getting jumlah pelayanan:", error);
+                    }
+                });
+            }
+
             $("#btn-call").click(function() {
                 var kodeAntrian = onQueue.kodeAntrian;
                 var nomorAntrian = onQueue.nomorAntrian;
@@ -544,6 +581,7 @@
                             console.log(onQueue);
                             antrianSekarangTable.ajax.reload();
                             antrianTable.ajax.reload();
+                            updateJumlahPelayanan();
                             toast.fire({
                                 icon: "success",
                                 title: "Selesai! Lanjutkan untuk antrian selanjutnya",
@@ -591,6 +629,7 @@
                 const loketId = document.querySelector('.card').dataset.loketId;
                 getQueue(loketId);
                 antrianTable.ajax.reload();
+                updateJumlahAntrian();
             }, 5000);
         });
     </script>

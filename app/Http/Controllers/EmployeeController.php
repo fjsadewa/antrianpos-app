@@ -13,8 +13,7 @@ class EmployeeController extends Controller
 {
     public function __construct(){
         $this->middleware(['role_or_permission:employee|view_admin']);
-        }
-
+    }
     
     public function dashboardEmployee(Request $request){
         $userId = Auth::user()->id; 
@@ -46,11 +45,11 @@ class EmployeeController extends Controller
         ->where('status_antrian', 'selesai') 
         ->get(); 
         
-        // dd($antrianSekarang);
+        // dd($list);
         $jumlahAntrian = $antrian->count();
         $jumlahPelayanan = $list->count();
 
-        $data = ['loket' => $loket, 'antrian' => $antrian];
+        $data = ['loket' => $loket];
 
         return view('pages.employee.dashboard', compact('data','jumlahAntrian','jumlahPelayanan')); 
     }
@@ -257,6 +256,8 @@ class EmployeeController extends Controller
 
         if ($antrianTerdepan !=null) {
             $antrianTerdepan->status_antrian = 'selesai';
+            $antrianTerdepan->id_loket_layani = $loket->id;
+            $antrianTerdepan->waktu_selesai_layani = now();
             $antrianTerdepan->save();
 
             return response()->json([
@@ -356,6 +357,40 @@ class EmployeeController extends Controller
         return Datatables::of($antrianHistory)
             ->make(true);
     }
+
+    public function getJumlahAntrianBelumTerpanggil($loketId) {
+        $loket = Loket::find($loketId);
+        if (!$loket) {
+            return response()->json(['error' => 'Loket tidak ditemukan'], 404);
+        }
+
+        $kategoriLayananId = $loket->kategori_pelayanan_id;
+
+        $jumlahAntrianBelumTerpanggil = Antrian::where('id_kategori_layanan', $kategoriLayananId)
+            ->whereDate('tanggal', now())
+            ->where('status_antrian', 'menunggu')
+            ->count();
+
+        return response()->json(['jumlahAntrianBelumTerpanggil' => $jumlahAntrianBelumTerpanggil]);
+    }
+
+    public function getJumlahPelayananHariIni($loketId) {
+        $loket = Loket::find($loketId);
+        if (!$loket) {
+            return response()->json(['error' => 'Loket tidak ditemukan'], 404);
+        }
+
+        $kategoriLayananId = $loket->kategori_pelayanan_id;
+
+        $jumlahPelayananHariIni = Antrian::where('id_loket_layani', $loketId)
+            ->where('id_kategori_layanan', $kategoriLayananId)
+            ->whereDate('tanggal', now())
+            ->where('status_antrian', 'selesai')
+            ->count();
+
+        return response()->json(['jumlahPelayananHariIni' => $jumlahPelayananHariIni]);
+    }
+
 }
 
 // $audio = [];

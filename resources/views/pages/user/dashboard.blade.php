@@ -85,34 +85,58 @@
                     <div class="col-md-4">
                         @if ($kategoriTransaksi->isEmpty())
                             <div class="card">
-                                <div class="card-body text-center">
-                                    <p>Data pada bulan ini kosong.</p>
-                                    <img src="https://via.placeholder.com/150" alt="No Data" class="img-fluid">
+                                <div class="card-header border-0">
+                                    <h3 class="card-title">Kategori</h3>
+                                </div>
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-striped table-valign-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         @else
                             <!-- Info Boxes -->
-                            <div class="row">
-                                @foreach ($kategoriTransaksi as $kategori)
-                                    <div class="col-12">
-                                        <div class="info-box mb-3">
-                                            <span class="info-box-icon bg-primary elevation-1"><i
-                                                    class="fas fa-tags"></i></span>
-                                            <div class="info-box-content">
-                                                <span
-                                                    class="info-box-text">{{ $kategori->kategoriLayanan->nama_pelayanan }}</span>
-                                                <span class="info-box-number">{{ $kategori->total }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
+                            <div class="card">
+                                <div class="card-header border-0">
+                                    <h3 class="card-title">Kategori</h3>
+                                </div>
+                                <div class="card-body table-responsive p-0">
+                                    <table class="table table-striped table-valign-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($kategoriTransaksi as $kategori)
+                                                <tr>
+                                                    <td>
+                                                        {{ $kategori->kategoriLayanan->nama_pelayanan }}
+                                                    </td>
+                                                    <td>{{ $kategori->total }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        @endif
                     </div>
-                    <!-- /.col -->
+                    @endif
                 </div>
+                <!-- /.col -->
             </div>
-        </section>
+    </div>
+    </section>
     </div>
 @endsection
 

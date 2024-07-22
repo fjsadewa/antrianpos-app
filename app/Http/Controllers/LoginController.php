@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\antrian;
 use App\Models\antrianHistory;
+use App\Models\Loket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class LoginController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware('guest')->except('logout');
+    // }
 
     public function login(){
         return view('auth.login');
@@ -28,8 +33,21 @@ class LoginController extends Controller
 
         if (Auth::attempt($data)){
             $user = auth()->user();
+            
+            // $loket = Loket::where('user_id', $user->id)->first();
+
+            // if ($loket) {
+            //     $activeUsers = Loket::where('nomor_loket', $loket->nomor_loket)
+            //                         ->where('user_id', '!=', $user->id)
+            //                         ->exists();
+
+            //     if ($activeUsers) {
+            //         Auth::logout();
+            //         return redirect()->route('login')->with('failed','Loket ini sudah digunakan oleh pengguna lain.');
+            //     }
+            // }
+
             $role = $user->roles->first();
-            $userId = $user->id;
             //$cacheKey = 'login_function_' . $user->id . '_' . date('Y-m-d') . '_' . $user->created_at->format('YmdHi');
             $cacheKey = 'login_function_' . date('Y-m-d');
             if (!Cache::has($cacheKey)) {
@@ -41,7 +59,7 @@ class LoginController extends Controller
             if($role-> name === 'admin'){
                 return redirect()->route('admin.dashboard');
             } elseif ($role-> name === 'employee') {;
-                return redirect()->route('employee.dashboardEmployee',['id'=>$userId]);
+                return redirect()->route('employee.dashboardEmployee',['id'=>$user->id]);
             } else{
                 return redirect()->route('login')->with('failed','Anda tidak memiliki Akses');
             }
@@ -50,8 +68,7 @@ class LoginController extends Controller
         };
     }
 
-    private function moveData($userLoginDate)
-    {
+    private function moveData($userLoginDate){
         $antrians = Antrian::all();
 
         foreach ($antrians as $antrian) {

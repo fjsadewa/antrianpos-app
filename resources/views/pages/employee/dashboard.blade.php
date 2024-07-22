@@ -19,7 +19,6 @@
                             </div>
 
                             <h3 class="profile-username text-center">{{ $data['loket']->employee->name }}</h3>
-                            <p class="text-muted text-center">Software Engineer</p>
 
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
@@ -313,7 +312,7 @@
                     sequence.push(...parseNumberToAudioFiles(nomorAntrian));
                     sequence.push("silahkan-ke-loket.wav");
                     sequence.push(...parseNumberToAudioFiles(nomorLoket));
-                    sequence.push("bel.wav");
+                    // sequence.push("bel.wav");
                     console.log(sequence);
                     $.ajax({
                         url: "http://192.168.5.160:3000/call",

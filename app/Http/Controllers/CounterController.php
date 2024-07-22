@@ -158,7 +158,7 @@ class CounterController extends Controller
     public function storeCounter(Request $request){
         //melakukan validasi terhadap data yang di inputkan 
         $validator = Validator::make($request->all(),[
-            'nomor_loket'           => 'required|integer|unique:lokets,nomor_loket',
+            'nomor_loket'           => 'required|integer',
             'status'                => 'required|in:terbuka,tertutup',
             'kategori_pelayanan_id' => 'nullable|integer|exists:kategori_pelayanans,id',
             'user_id'               => 'nullable|integer|exists:users,id|unique:lokets,user_id,'.$request->id.',id'
@@ -188,7 +188,7 @@ class CounterController extends Controller
     public function updateCounter(Request $request, $id){
         //melakukan validasi terhadap data yang di inputkan 
         $validator = Validator::make($request->all(),[
-            'nomor_loket'           => 'required|integer|unique:lokets,nomor_loket,'.$request->id.',id',
+            'nomor_loket'           => 'required|integer',
             'status'                => 'required|in:terbuka,tertutup',
             'kategori_pelayanan_id' => 'nullable|integer|exists:kategori_pelayanans,id',
             'user_id'               => 'nullable|integer|exists:users,id|unique:lokets,user_id,'.$request->id.',id'

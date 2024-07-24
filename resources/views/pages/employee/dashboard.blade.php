@@ -311,7 +311,8 @@
                     }
                     sequence.push(...parseNumberToAudioFiles(nomorAntrian));
                     if (onQueue.namaPelayanan = "Customer Service") {
-                        seqeuence.push("ke-cs.wav");
+                        //sequence.push("silahkan-ke-customer-service.wav");
+                        sequence.push("ke-cs.wav");
                     } else {
                         sequence.push("silahkan-ke-loket.wav");
                     }

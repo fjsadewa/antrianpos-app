@@ -3,7 +3,7 @@
 
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Security-Policy" name="viewport" content="width=device-width, initial-scale=1, upgrade-insecure-requests"> 
 
         <title>POS INDONESIA | Sistem Antrian</title>
 

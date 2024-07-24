@@ -310,7 +310,11 @@
                         }
                     }
                     sequence.push(...parseNumberToAudioFiles(nomorAntrian));
-                    sequence.push("silahkan-ke-loket.wav");
+                    if (onQueue.namaPelayanan = "Customer Service") {
+                        seqeuence.push("ke-cs.wav");
+                    } else {
+                        sequence.push("silahkan-ke-loket.wav");
+                    }
                     sequence.push(...parseNumberToAudioFiles(nomorLoket));
                     // sequence.push("bel.wav");
                     console.log(sequence);

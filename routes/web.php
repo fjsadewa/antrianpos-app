@@ -17,6 +17,7 @@ Route::get('/display',[DisplayController::class,'display'])->name('display');
 Route::get('/displayView',[DisplayController::class,'displayView'])->name('displayView');
 Route::get('/form',[DisplayController::class,'form'])->name('form');
 Route::get('/footer',[DisplayController::class,'getFooter'])->name('footer');
+Route::get('/header',[DisplayController::class,'getHeader'])->name('header');
 Route::get('/img',[DisplayController::class,'getBanner']);
 Route::get('/vid',[DisplayController::class,'getVideo']);
 // Route::get('/icon/{filename}', function ($filename) {
@@ -88,6 +89,9 @@ Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], functi
     Route::get('/editBanner/{id}',[HomeController::class,'editBanner'])->name('banner.edit');
     Route::put('/updateBanner/{id}',[HomeController::class,'updateBanner'])->name('banner.update');
     Route::delete('/deleteBanner/{id}',[HomeController::class,'deleteBanner'])->name('banner.delete');
+
+    Route::get('/editCabang/{id}',[HomeController::class,'editCabang'])->name('cabang.edit');
+    Route::put('/updateCabang/{id}',[HomeController::class,'updateCabang'])->name('cabang.update');
 
     Route::get('/editFooter/{id}',[HomeController::class,'editFooter'])->name('footer.edit');
     Route::put('/updateFooter/{id}',[HomeController::class,'updateFooter'])->name('footer.update');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\antrian;
 use App\Models\Banner;
+use App\Models\Cabang;
 use App\Models\DisplaySet;
 use App\Models\Footer;
 use App\Models\KategoriPelayanan;
@@ -62,6 +63,18 @@ class DisplayController extends Controller
         }
 
         return response()->json($footerData);
+    }
+
+    public function getHeader(){
+        $cabangData = Cabang::first();
+
+        if (!$cabangData) {
+            return response()->json([
+                'message' => 'Data tidak ditemukan',
+            ], 404);
+        }
+
+        return response()->json($cabangData);
     }
 
     // public function getImages(){

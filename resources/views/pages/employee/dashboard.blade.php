@@ -310,7 +310,7 @@
                         }
                     }
                     sequence.push(...parseNumberToAudioFiles(nomorAntrian));
-                    if (onQueue.namaPelayanan = "Customer Service") {
+                    if (onQueue.namaPelayanan == "Customer Service") {
                         //sequence.push("silahkan-ke-customer-service.wav");
                         sequence.push("ke-cs.wav");
                     } else {

@@ -6,6 +6,7 @@ use App\Models\addText;
 use App\Models\antrian;
 use App\Models\antrianHistory;
 use App\Models\Banner;
+use App\Models\Cabang;
 use App\Models\DisplaySet;
 use App\Models\Footer;
 use App\Models\Loket;
@@ -224,8 +225,9 @@ class HomeController extends Controller
         $video = Video::get();
         $banner = Banner::get();
         $footer = Footer::get();
+        $cabang = Cabang::get();
         $setting = DisplaySet::first();
-        return view('pages.setting.displayset',compact('video','banner','footer','setting'));
+        return view('pages.setting.displayset',compact('video','banner','footer','cabang','setting'));
     }
 
     public function createVideo(){
@@ -456,6 +458,37 @@ class HomeController extends Controller
             return redirect()->route('admin.displaysetting')->with('failed','Penghapusan Gagal');
         }
         // }
+    }
+
+    public function editCabang(Request $request,$id){
+        $data = Cabang::find($id);
+        return view ('pages.setting.editCabang',compact('data'));
+    }
+
+    public function updateCabang(Request $request,$id){
+        //melakukan validasi terhadap data yang di inputkan 
+        $validator = Validator::make($request->all(),[
+            'text'         => 'required|string|max:255',
+        ]);
+
+        //jika validasi gagal maka akan dikembalikan ke halaman sebelumnya dengan tambahan error
+        if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
+        
+        $cabang = Cabang::find($id);
+        
+        //mengirimkan data ke database
+        $data['text']          = $request->text;
+
+        //mengirim perintah create ke database
+        if($cabang){
+            if($cabang->update($data)){
+                return redirect()->route('admin.displaysetting')->with('success','Berhasil Melakukan Update Nama Kantor Cabang!');
+            } else {
+                return redirect()->route('admin.displaysetting')->with('failed','Update Telah Gagal');
+            }
+        }else {
+        return redirect()->route('admin.displaysetting')->with('failed', 'Data dengan ID tersebut tidak ditemukan');
+        }
     }
 
     public function editFooter(Request $request,$id){

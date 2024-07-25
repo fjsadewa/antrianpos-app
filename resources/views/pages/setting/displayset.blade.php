@@ -258,6 +258,47 @@
                     </div>
                     <!-- /.card -->
                 </div>
+                <!-- Cabang -->
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- general form elements -->
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <label class="card-title">Nama Cabang</label>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <div class="card-body">
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Text</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($cabang as $d)
+                                            <tr>
+                                                <td> {{ $d->text }}</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <a href="{{ route('admin.cabang.edit', ['id' => $d->id]) }}">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-primary btn-block"><i
+                                                                    class="fa fa-pen"></i> Edit</button>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
                 <!-- Footer -->
                 <div class="row">
                     <!-- left column -->

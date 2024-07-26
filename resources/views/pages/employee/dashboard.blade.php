@@ -248,7 +248,6 @@
                 });
             }
 
-
             function getQueue($loketId) {
                 $.ajax({
                     url: "{{ url('employee/dashboard-employee') }}/" +
@@ -335,7 +334,7 @@
                     }
                     sequence.push(...parseNumberToAudioFiles(nomorLoket));
                     // sequence.push("bel.wav");
-                    console.log(sequence);
+                    console.log("ini list suara:", sequence);
                     $.ajax({
                         url: "http://" + serverIP + ":3000/call",
                         data: {
@@ -378,6 +377,8 @@
                 var unitsDigit = number % 10;
                 if (tensDigit === 1 && unitsDigit >= 1 && unitsDigit <= 9) {
                     audioFiles.push("angka/" + (tensDigit * 10 + unitsDigit) + ".wav");
+                } else if (tensDigit === 1 && unitsDigit === 0) {
+                    audioFiles.push("angka/10.wav")
                 } else if (tensDigit >= 2 && unitsDigit === 0) {
                     audioFiles.push("angka/" + tensDigit + "0.wav");
                 } else if (tensDigit >= 2 && unitsDigit >= 1 && unitsDigit <= 9) {
@@ -567,15 +568,16 @@
                             antrianId: onQueue.id
                         },
                         success: function(data) {
+                            isQueueStart = true;
                             $("#btn-call").prop("disabled", true);
                             $("#btn-skip").prop("disabled", true);
                             $("#btn-start").prop("disabled", true);
                             $("#btn-finish").prop("disabled", false);
-                            isQueueStart = true;
                             toast.fire({
                                 icon: "success",
                                 title: "Mulai Pelayanan",
                             });
+                            location.reload();
                         },
                         error: function(error) {
                             console.error("Error sending POST request:", error);

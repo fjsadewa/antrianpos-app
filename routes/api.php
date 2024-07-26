@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\DisplayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/createForm/{id}',[AntrianController::class,'createAntrian'])->name('form.create');
+Route::get('/ip-server',[DisplayController::class,'getIP'])->name('IPServer');
 

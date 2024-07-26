@@ -14,6 +14,45 @@
         <!-- /.content-header -->
         <section class="content">
             <div class="container-fluid">
+                <div class="row d-flex align-items-center">
+                    <div class="form-group mr-2">
+                        <label for="nomor_ip">IP Server</label>
+                        <input type="text" class="form-control" id="nomor_ip" name="nomor_ip"
+                            value="{{ $ip_address }}" readonly>
+                    </div>
+                    <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target="#editIPModal">
+                        Edit IP
+                    </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="editIPModal" tabindex="-1" role="dialog" aria-labelledby="editIPModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editIPModalLabel">Edit IP</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editIPForm" action="{{ route('admin.update.ip') }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="form-group">
+                                        <label for="nomor_ip_modal">IP Server</label>
+                                        <input type="text" class="form-control" id="nomor_ip_modal" name="nomor_ip"
+                                            value="{{ $ip_address == '-' ? '' : $ip_address }}">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" form="editIPForm">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <!-- Left col -->
                     <div class="col-md-8">

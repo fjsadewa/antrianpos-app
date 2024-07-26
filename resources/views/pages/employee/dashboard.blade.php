@@ -150,6 +150,7 @@
 
 @section('script')
     <script>
+        let serverIP = null;
         $(document).ready(function() {
             var pointer = 0;
             var sequence = [];
@@ -231,6 +232,22 @@
             });
             var loketId = document.querySelector('.card').dataset.loketId;
             getQueue(loketId);
+            getServerIP();
+
+            function getServerIP() {
+                return $.ajax({
+                    url: "{{ url('/api/ip-server') }}",
+                    method: 'GET',
+                    success: function(response) {
+                        serverIP = response.nomor_ip;
+                        console.log(serverIP);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching IP:", status, error);
+                    }
+                });
+            }
+
 
             function getQueue($loketId) {
                 $.ajax({
@@ -320,8 +337,7 @@
                     // sequence.push("bel.wav");
                     console.log(sequence);
                     $.ajax({
-                        url: "http://192.168.5.160:3000/call",
-                        //url: "http://localhost:3000/call",
+                        url: "http://" + serverIP + ":3000/call",
                         data: {
                             sequence: sequence
                         },
@@ -420,25 +436,31 @@
             }
 
             function showAntrian(kodeAntrian, nomorAntrian, nomorLoket, namaPetugas, namaPelayanan, photo) {
+                var namaLoket = null;
+                if (onQueue.namaPelayanan == "Customer Service") {
+                    namaLoket = 'CS';
+                } else {
+                    namaLoket = 'Loket';
+                }
+
                 list = [
                     kodeAntrian, nomorAntrian, nomorLoket, namaPetugas,
-                    namaPelayanan, photo
+                    namaPelayanan, photo, namaLoket
                 ];
                 console.log(list);
                 $.ajax({
-                    //url: "http://localhost:3000/show",
-                    url: "http://192.168.5.160:3000/show",
+                    url: "http://" + serverIP + ":3000/show",
                     data: {
                         list: list
                     },
                     success: function(data) {
                         console.log(
-                            "Data sent to 192.168.5.160:3000",
+                            "Data successfully sent:",
                             data);
                     },
                     error: function(error) {
                         console.error(
-                            "Error sent data to 192.168.5.160:3000",
+                            "Error in sending data:",
                             error);
                     }
                 });

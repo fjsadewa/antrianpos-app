@@ -9,6 +9,7 @@ use App\Models\Banner;
 use App\Models\Cabang;
 use App\Models\DisplaySet;
 use App\Models\Footer;
+use App\Models\IP;
 use App\Models\Loket;
 use App\Models\User;
 use App\Models\Video;
@@ -30,6 +31,8 @@ class HomeController extends Controller
     }
 
     public function dashboard(Request $request){
+        $ip_server = IP::first();
+        $ip_address = $ip_server ? ($ip_server->nomor_ip ?? '-') : '-';
         $currentMonth = $request->input('month', Carbon::now()->format('m'));
         $currentYear = $request->input('year', Carbon::now()->format('Y'));
 
@@ -62,8 +65,24 @@ class HomeController extends Controller
             'counts' => $counts,
             'selectedMonth' => $currentMonth,
             'selectedYear' => $currentYear,
-            'kategoriTransaksi' => $kategoriTransaksi
+            'kategoriTransaksi' => $kategoriTransaksi,
+            'ip_address' => $ip_address
         ]);
+    }
+
+    public function updateIP(Request $request)
+    {
+        $request->validate([
+            'nomor_ip' => 'required|ip'
+        ]);
+
+        $ip_server = IP::first(); 
+        if ($ip_server) {
+            $ip_server->nomor_ip = $request->nomor_ip;
+            $ip_server->save();
+        }
+
+        return redirect()->route('admin.dashboard')->with('success', 'IP Server updated successfully');
     }
 
     public function user(){

@@ -70,6 +70,8 @@ Route::get('/getAntrian',[AntrianController::class, 'getAntrian']);
 Route::group(['prefix'=>'admin','middleware'=> ['auth'],'as'=> 'admin.'], function(){
     Route::get('/dashboard',[HomeController::class,'dashboard'])->name('dashboard');
     Route::get('/user',[HomeController::class,'user'])->name('user');
+
+    Route::put('/dashboard/update-ip', [HomeController::class, 'updateIP'])->name('update.ip');
     
     Route::get('/create',[HomeController::class,'createUser'])->name('user.create');
     Route::post('/store',[HomeController::class,'store'])->name('user.store');

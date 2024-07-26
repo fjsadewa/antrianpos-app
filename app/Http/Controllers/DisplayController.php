@@ -7,6 +7,7 @@ use App\Models\Banner;
 use App\Models\Cabang;
 use App\Models\DisplaySet;
 use App\Models\Footer;
+use App\Models\IP;
 use App\Models\KategoriPelayanan;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -75,6 +76,18 @@ class DisplayController extends Controller
         }
 
         return response()->json($cabangData);
+    }
+
+    public function getIP(){
+        $ip_server = IP::first();
+
+        if (!$ip_server) {
+            return response()->json([
+                'message' => 'Data tidak ditemukan',
+            ], 404);
+        }
+
+        return response()->json(['nomor_ip' => $ip_server->nomor_ip]);
     }
 
     // public function getImages(){

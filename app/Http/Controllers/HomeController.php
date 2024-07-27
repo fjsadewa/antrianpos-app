@@ -70,8 +70,7 @@ class HomeController extends Controller
         ]);
     }
 
-    public function updateIP(Request $request)
-    {
+    public function updateIP(Request $request){
         $request->validate([
             'nomor_ip' => 'required|ip'
         ]);

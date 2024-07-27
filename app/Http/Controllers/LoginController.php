@@ -33,26 +33,13 @@ class LoginController extends Controller
 
         if (Auth::attempt($data)){
             $user = auth()->user();
-            
-            // $loket = Loket::where('user_id', $user->id)->first();
-
-            // if ($loket) {
-            //     $activeUsers = Loket::where('nomor_loket', $loket->nomor_loket)
-            //                         ->where('user_id', '!=', $user->id)
-            //                         ->exists();
-
-            //     if ($activeUsers) {
-            //         Auth::logout();
-            //         return redirect()->route('login')->with('failed','Loket ini sudah digunakan oleh pengguna lain.');
-            //     }
-            // }
 
             $role = $user->roles->first();
             //$cacheKey = 'login_function_' . $user->id . '_' . date('Y-m-d') . '_' . $user->created_at->format('YmdHi');
             $cacheKey = 'login_function_' . date('Y-m-d');
             if (!Cache::has($cacheKey)) {
                 //$this->moveData($user->created_at->format('Y-m-d'));
-                $this->moveData(date('Y-m-d'));
+                $this->moveData();
                 Cache::put($cacheKey, true, now()->addDay());
             }
 
@@ -68,7 +55,7 @@ class LoginController extends Controller
         };
     }
 
-    private function moveData($userLoginDate){
+    private function moveData(){
         $antrians = Antrian::all();
 
         foreach ($antrians as $antrian) {
@@ -82,7 +69,7 @@ class LoginController extends Controller
             $antrianHistory->waktu_panggil = $antrian->waktu_panggil;
             $antrianHistory->id_loket_layani = $antrian->id_loket_layani;
             $antrianHistory->waktu_selesai_layani = $antrian->waktu_selesai_layani;
-            $antrianHistory->tanggal = $userLoginDate;
+            $antrianHistory->tanggal = $antrian->tanggal;
             $antrianHistory->save();
 
             $antrian->delete();

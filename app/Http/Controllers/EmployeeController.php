@@ -336,6 +336,7 @@ class EmployeeController extends Controller
 
     public function userHistory(Request $request){
         $userId = Auth::user()->id;
+        $userName = Auth::user()->name;
         $loket = Loket::where('user_id', $userId)->first();
 
         if (!$loket) {
@@ -347,6 +348,8 @@ class EmployeeController extends Controller
         $loketId = $loket->id;
 
         $antrianHistory = AntrianHistory::where('id_loket_panggil', $loketId)
+            ->whereHas('loketPanggil.employee', function($query) use ($userName) {
+                $query->where('name', $userName);})
             ->selectRaw('tanggal, 
                         SUM(CASE WHEN status_antrian = "DIPANGGIL" THEN 1 ELSE 0 END) AS jumlah_dipanggil,
                         SUM(CASE WHEN status_antrian = "SELESAI" THEN 1 ELSE 0 END) AS jumlah_selesai,
